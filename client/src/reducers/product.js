@@ -40,7 +40,6 @@ export default function productReducer(state = initialState, action) {
     case FETCH_PRODUCT_ATTRIBUTES_FAILED:
       return { ...state, error: true };
     case CLEAR_PRODUCT_DETAILS:
-      return { ...state, productDetails: {}, productAttributes: [] };
     case CLEAR_SEARCH_PRODUCTS:
       return { ...state, ...initialState };
     default:
