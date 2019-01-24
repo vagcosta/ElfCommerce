@@ -1,5 +1,5 @@
 const assert = require('assert');
-const Product = require('../product');
+const { Product } = require('../product');
 
 describe('Create a new product object', () => {
   it('should return a new product object', () => {

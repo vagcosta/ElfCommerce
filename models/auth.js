@@ -10,9 +10,7 @@ require('dotenv').load();
 const { host, user, password, database, tokenSecret } = process.env;
 var db = new MySQL(host, user, password, database);
 
-function OAuth2Request() {
-  ;
-}
+function OAuth2Request() { }
 
 function OAuth2Response(id, accessToken, refreshToken) {
   this.userId = id;
@@ -20,7 +18,7 @@ function OAuth2Response(id, accessToken, refreshToken) {
   this.refreshToken = refreshToken;
 }
 
-OAuth2Request.prototype.auth = function (username, pwd, grantType, scope) {
+OAuth2Request.prototype.authByPassword = function (username, pwd) {
   return new Promise((resolve, reject) => {
     db.query(
       `select code, password, salt, token, urt.status as tokenStatus, store_id as storeId
@@ -105,11 +103,10 @@ OAuth2Request.prototype.validateToken = function (token) {
         .utc()
         .format('YYYY-MM-DD HH:mm:ss')}' order by id desc limit 1`,
       (error, results) => {
-
         if (error || results.length == 0) {
           reject(new UnauthorisedError('Unauthorised request.'));
         } else {
-          resolve('Token validated.');
+          resolve({ valid: true, message: 'Token validated.' });
         }
       }
     );
@@ -122,15 +119,13 @@ OAuth2Request.prototype.refreshToken = function (token) {
       `select user_id as userId from user_refresh_token where token='${token}' and status=1 order by id desc limit 1`,
       (error, results) => {
         if (error) {
-
           reject(new UnauthorisedError('Unauthorised request.'));
         } else if (results.length > 0) {
           const userId = results[0].userId;
           db.query(
-            `select id, code, salt from user where id='${userId}' and status=1`,
+            `select code, salt from user where code='${userId}' and status=1`,
             (error, results) => {
               if (error || results.length == 0) {
-
                 reject(new UnauthorisedError('Unauthorised request.'));
               } else {
                 const { code } = results[0];
@@ -145,12 +140,11 @@ OAuth2Request.prototype.refreshToken = function (token) {
                   tokenSecret
                 );
                 db.query(
-                  `insert into user_access_token(token, user_id, expired_on) values('${accessToken}', ${userId}, '${moment
+                  `insert into user_access_token(token, user_id, expired_on) values('${accessToken}', '${userId}', '${moment
                     .utc()
                     .add(1, 'hour')
                     .format('YYYY-MM-DD HH:mm:ss')}')`,
                   error => {
-
                     if (error) {
                       reject(new UnauthorisedError('Unauthorised request.'));
                     } else {
@@ -162,7 +156,6 @@ OAuth2Request.prototype.refreshToken = function (token) {
             }
           );
         } else {
-
           reject(new UnauthorisedError('Refresh token expired.'));
         }
       }

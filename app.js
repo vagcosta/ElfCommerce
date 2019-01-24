@@ -110,20 +110,22 @@ app.get('/currencies', authMiddleware, async (req, res) => {
 
 app.post('/auth', async (req, res) => {
   try {
+    let data = null;
     if (!req.body.refreshToken) {
       const auth = new OAuth2Request();
-      const data = await auth.auth(
-        req.body.username,
-        req.body.password,
-        req.body.grantType,
-        req.body.scope
-      );
-      //TODO: call another function to get store code
+      if (req.body.grantType === 'password') {
+
+        //TODO: Check for req.body.scope
+        data = await auth.authByPassword(
+          req.body.username,
+          req.body.password,
+        );
+      }
 
       res.send(data);
     } else {
       const auth = new OAuth2Request();
-      const data = await auth.refreshToken(req.body.refreshToken);
+      data = await auth.refreshToken(req.body.refreshToken);
       res.send(data);
     }
   } catch (err) {

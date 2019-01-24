@@ -27,7 +27,8 @@
     "build:client": "cd client && yarn build",
     "client": "cd client && yarn start",
     "server": "nodemon app.local.js",
-    "test:server": "nyc --reporter=text mocha \"./models/tests/**/*.js\"",
+    "test:server": "mocha \"./models/tests/**/*.js\"",
+    "coverage:server": "nyc --reporter=text mocha \"./models/tests/**/*.js\"",
     "serverless": "claudia update --handler lambda.handler --deploy-proxy-api",
     "db:migrate": "node ./db/migrate.js"
   },
