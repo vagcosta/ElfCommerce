@@ -151,5 +151,7 @@
   "sys.pending": "Pending",
   "sys.paid": "Paid",
   "sys.shipped": "Shipped",
-  "sys.completed": "Completed"
+  "sys.completed": "Completed",
+  "sys.noStock": "No stock",
+  "sys.normal": "Normal"
 }

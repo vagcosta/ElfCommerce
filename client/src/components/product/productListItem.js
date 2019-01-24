@@ -28,10 +28,30 @@ const ProductListItem = props => {
       <td>{currencySign + numeral(price).format('0,0.00')}</td>
       <td>{quantity}</td>
       <td>
-        <Badge color={status ? 'success' : 'danger'}>
-          {status
-            ? formatMessage({ id: 'sys.active' })
-            : formatMessage({ id: 'sys.inactive' })}
+        <Badge color={
+          (status => {
+            switch (status) {
+              case 0:
+                return 'light';
+              case 1:
+                return 'success';
+              case 2:
+                return 'warning';
+            }
+          })(status)
+        }>
+          {
+            (status => {
+              switch (status) {
+                case 0:
+                  return formatMessage({ id: 'sys.inactive' });
+                case 1:
+                  return formatMessage({ id: 'sys.normal' });
+                case 2:
+                  return formatMessage({ id: 'sys.noStock' });
+              }
+            })(status)
+          }
         </Badge>
       </td>
       <td style={{ textAlign: 'right' }}>
