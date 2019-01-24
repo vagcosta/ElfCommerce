@@ -10,11 +10,8 @@ require('dotenv').load();
 const { host, user, password, database, tokenSecret } = process.env;
 var db = new MySQL(host, user, password, database);
 
-function OAuth2Request(username, password, grantType, scope) {
-  this.username = username || '';
-  this.password = password || '';
-  this.grantType = grantType || '';
-  this.scope = scope || '';
+function OAuth2Request() {
+  ;
 }
 
 function OAuth2Response(id, accessToken, refreshToken) {
@@ -23,13 +20,13 @@ function OAuth2Response(id, accessToken, refreshToken) {
   this.refreshToken = refreshToken;
 }
 
-OAuth2Request.prototype.auth = function () {
+OAuth2Request.prototype.auth = function (username, pwd, grantType, scope) {
   return new Promise((resolve, reject) => {
     db.query(
       `select code, password, salt, token, urt.status as tokenStatus, store_id as storeId
        from user
        left join user_refresh_token as urt on user.code = urt.user_id
-       where email='${this.username}' and user.status=1`,
+       where email='${username}' and user.status=1`,
       (error, results) => {
         // Check if account is valid and active
         if (error || results.length == 0) {
@@ -44,7 +41,7 @@ OAuth2Request.prototype.auth = function () {
             storeId,
           } = results[0];
 
-          if (password === md5(`${this.password + salt}`)) {
+          if (password === md5(`${pwd + salt}`)) {
             // If password matched then generating new access token
             const accessToken = jwt.sign(
               {

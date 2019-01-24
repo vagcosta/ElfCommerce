@@ -111,13 +111,13 @@ app.get('/currencies', authMiddleware, async (req, res) => {
 app.post('/auth', async (req, res) => {
   try {
     if (!req.body.refreshToken) {
-      const auth = new OAuth2Request(
+      const auth = new OAuth2Request();
+      const data = await auth.auth(
         req.body.username,
         req.body.password,
         req.body.grantType,
         req.body.scope
       );
-      const data = await auth.auth();
       //TODO: call another function to get store code
 
       res.send(data);
