@@ -6,9 +6,6 @@ const {
   OAuth2Request,
   OAuth2Response,
 } = require('../auth');
-const {
-  UnauthorisedError,
-} = require('../../exceptions');
 
 const expect = chai.expect;
 
