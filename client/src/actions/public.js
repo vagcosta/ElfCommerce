@@ -6,6 +6,10 @@ export const FETCH_COUNTRIES = 'FETCH_COUNTRIES';
 export const FETCH_COUNTRIES_SUCCESS = 'FETCH_COUNTRIES_SUCCESS';
 export const FETCH_COUNTRIES_FAILED = 'FETCH_COUNTRIES_FAILED';
 
+export const UPLOAD_FILE = 'UPLOAD_FILE';
+export const UPLOAD_FILE_SUCCESS = 'UPLOAD_FILE_SUCCESS';
+export const UPLOAD_FILE_FAILED = 'UPLOAD_FILE_FAILED';
+
 export function fetchCurrencies() {
   return { type: FETCH_CURRENCIES };
 }
@@ -29,3 +33,16 @@ export function fetchCountriesSuccess(data) {
 export function fetchCountriesFailed() {
   return { type: FETCH_COUNTRIES_FAILED };
 }
+
+export function uploadFile(data) {
+  return { type: UPLOAD_FILE, value: data };
+}
+
+export function uploadFileSuccess(data) {
+  return { type: UPLOAD_FILE_SUCCESS, value: data };
+}
+
+export function uploadFileFailed() {
+  return { type: UPLOAD_FILE_FAILED };
+}
+

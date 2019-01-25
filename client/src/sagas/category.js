@@ -85,6 +85,7 @@ export function* upsertCategory(action) {
       url: `${config.apiDomain}/stores/${action.value.storeId}/categories${value.mode === 'new' ? '' : '/' + value.categoryId}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
+        'Content-Type': 'application/json',
       },
       data: value,
     });

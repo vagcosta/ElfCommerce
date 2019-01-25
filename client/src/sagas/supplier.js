@@ -61,6 +61,7 @@ export function* upsertSupplier(action) {
       url: `${config.apiDomain}/stores/${value.storeId}/suppliers${value.mode === 'new' ? '' : '/' + value.supplierId}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
+        'Content-Type': 'application/json',
       },
       data: action.value,
     });

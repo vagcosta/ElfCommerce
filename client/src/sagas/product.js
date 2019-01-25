@@ -111,7 +111,7 @@ export function* fetchProductAttributes(action) {
         authorization: localStorage.getItem(config.accessTokenKey),
       },
     });
-    console.log(res.data)
+
     yield put(fetchProductAttributesSuccess(res.data));
   } catch (error) {
     if (error.response.status === 401) {

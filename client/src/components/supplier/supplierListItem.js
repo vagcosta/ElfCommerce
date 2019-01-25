@@ -68,7 +68,7 @@ SupplierListItem.propTypes = {
   address: PropTypes.string,
   email: PropTypes.string.isRequired,
   contact: PropTypes.string.isRequired,
-  status: PropTypes.bool.isRequired,
+  status: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };

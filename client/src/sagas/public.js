@@ -5,6 +5,8 @@ import {
   fetchCountriesFailed,
   fetchCurrenciesSuccess,
   fetchCurrenciesFailed,
+  uploadFileSuccess,
+  uploadFileFailed,
   clearToken,
 } from '../actions';
 import config from '../config';
@@ -41,6 +43,32 @@ export function* fetchCurrencies(action) {
       yield put(clearToken());
     } else {
       yield put(fetchCurrenciesFailed());
+    }
+  }
+}
+
+export function* uploadFile(action) {
+  try {
+    const { value } = action;
+    const formData = new FormData();
+    formData.append('image', value);
+
+    const res = yield axios({
+      method: 'post',
+      url: `${config.apiDomain}/upload`,
+      headers: {
+        authorization: localStorage.getItem(config.accessTokenKey),
+        'content-type': 'multipart/form-data',
+      },
+      data: formData,
+    });
+
+    yield put(uploadFileSuccess(res.data));
+  } catch (error) {
+    if (error.response.status === 401) {
+      yield put(clearToken());
+    } else {
+      yield put(uploadFileFailed());
     }
   }
 }

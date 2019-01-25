@@ -62,6 +62,7 @@ export function* upsertOrder(action) {
       url: `${config.apiDomain}/stores/${value.storeId}/orders${value.mode === 'new' ? '' : '/' + value.orderId}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
+        'Content-Type': 'application/json',
       },
       data: value,
     });

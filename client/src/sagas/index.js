@@ -31,7 +31,11 @@ import {
   fetchManufacturerDetails,
   upsertManufacturer,
 } from './manufacturer';
-import { fetchCountries, fetchCurrencies } from './public';
+import {
+  fetchCountries,
+  fetchCurrencies,
+  uploadFile,
+} from './public';
 import { fetchAccount } from './account';
 import {
   CLEAR_TOKEN,
@@ -61,8 +65,8 @@ import {
   FETCH_COUNTRIES,
   FETCH_CURRENCIES,
   FETCH_ACCOUNT,
+  UPLOAD_FILE,
 } from '../actions';
-import { takeLatest } from 'redux-saga';
 
 export default function* rootSaga() {
   yield all([
@@ -93,5 +97,6 @@ export default function* rootSaga() {
     takeEvery(FETCH_COUNTRIES, fetchCountries),
     takeEvery(FETCH_CURRENCIES, fetchCurrencies),
     takeEvery(FETCH_ACCOUNT, fetchAccount),
+    takeEvery(UPLOAD_FILE, uploadFile),
   ]);
 }

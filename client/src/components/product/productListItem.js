@@ -75,7 +75,7 @@ ProductListItem.propTypes = {
   quantity: PropTypes.number.isRequired,
   currency: PropTypes.string,
   currencySign: PropTypes.string.isRequired,
-  status: PropTypes.bool.isRequired,
+  status: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };

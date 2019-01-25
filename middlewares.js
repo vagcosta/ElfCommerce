@@ -16,6 +16,7 @@ const authMiddleware = async (req, res, next) => {
     const res = await auth.validateToken(
       req.headers.authorization
     );
+
     next();
   } catch (err) {
     res.status(err.statusCode).send(err);

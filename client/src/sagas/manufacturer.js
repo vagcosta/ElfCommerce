@@ -61,6 +61,7 @@ export function* upsertManufacturer(action) {
       url: `${config.apiDomain}/stores/${value.storeId}/manufacturers${value.mode === 'new' ? '' : '/' + value.manufacturerId}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
+        'Content-Type': 'application/json',
       },
       data: value,
     });

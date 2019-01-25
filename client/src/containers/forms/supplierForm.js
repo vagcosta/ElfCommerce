@@ -23,8 +23,10 @@ import {
   submitSupplier,
   fetchSupplierDetails,
   clearSupplierDetails,
+  uploadFile,
 } from '../../actions';
 import { ProfileLoader } from '../../components';
+import config from '../../config';
 
 const required = value => (value ? undefined : 'Required');
 
@@ -40,7 +42,7 @@ const renderField = ({
     </div>
   );
 
-const renderSelect = ({ input, type, data, meta: { touched, error } }) => (
+const renderSelect = ({ input, data, meta: { touched, error } }) => (
   <div>
     <select {...input} className="form-control">
       <option />
@@ -54,30 +56,11 @@ const renderSelect = ({ input, type, data, meta: { touched, error } }) => (
   </div>
 );
 
-const adaptFileEventToValue = delegate =>
-  e => delegate(e.target.files[0]);
-
-const renderFileInput = ({
-  input: {
-    value: omitValue,
-    onChange,
-    onBlur,
-    ...inputProps,
-  },
-  meta: omitMeta,
-  ...props,
-}) =>
-  <input
-    onChange={adaptFileEventToValue(onChange)}
-    onBlur={adaptFileEventToValue(onBlur)}
-    type="file"
-    {...inputProps}
-    {...props}
-  />
-
 class SupplierForm extends Component {
   componentWillMount() {
-    this.props.dispatch(
+    const { dispatch } = this.props;
+
+    dispatch(
       clearSupplierDetails()
     );
   }
@@ -120,16 +103,33 @@ class SupplierForm extends Component {
     dispatch(submitSupplier(data));
   };
 
+  handleUpload = event => {
+    const { dispatch } = this.props;
+
+    dispatch(uploadFile(event.target.files[0]));
+  }
+
   render() {
     const {
       handleSubmit,
       initialValues,
       countries,
+      uploadedFile,
       mode,
       error,
       done,
       loaded,
     } = this.props;
+
+    let logo = null;
+
+    if (initialValues.logo) {
+      logo = initialValues.logo;
+    }
+
+    if (uploadedFile) {
+      logo = `${config.mediaFileDomain}/${uploadedFile.path}`;
+    }
 
     return (
       mode === 'update' && !loaded ?
@@ -156,13 +156,14 @@ class SupplierForm extends Component {
             <Col md={3}>
               <p className="lead"><FormattedMessage id="sys.logo" /></p>
               <img
-                src={initialValues.logo || require('../../assets/no_image.svg')}
+                src={ logo || require('../../assets/no_image.svg')}
                 style={{ width: 128, height: 128 }}
               /><br /><br />
-              <Field
+              <input
+                type="file"
                 name="logo"
                 id="logo"
-                component={renderFileInput}
+                onChange={this.handleUpload}
               />
             </Col>
             <Col md={9}>
@@ -277,6 +278,7 @@ SupplierForm.propTypes = {
   loaded: PropTypes.bool.isRequired,
   storeId: PropTypes.string.isRequired,
   countries: PropTypes.array.isRequired,
+  uploadedFile: PropTypes.object,
 };
 
 SupplierForm = reduxForm({
@@ -288,6 +290,7 @@ export default withRouter(
     return {
       initialValues: state.supplierReducer.supplierDetails,
       countries: state.publicReducer.countries,
+      uploadedFile: state.publicReducer.uploadedFile,
       done: state.supplierReducer.done,
       loaded: state.supplierReducer.loaded,
       error: state.supplierReducer.error,
