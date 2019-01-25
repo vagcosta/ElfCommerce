@@ -200,16 +200,20 @@ CREATE TABLE `product` (
 DROP TABLE IF EXISTS `product_attribute`;
 
 CREATE TABLE `product_attribute` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(60) NOT NULL DEFAULT '',
+  `product_id` varchar(60) NOT NULL,
   `name` varchar(50) NOT NULL DEFAULT '',
   `quantity` int(9) NOT NULL,
   `var_price` decimal(10,2) NOT NULL,
-  `product_attribute_category_id` int(11) DEFAULT NULL,
+  `added_on` datetime NOT NULL,
+  `added_by` varchar(60) NOT NULL DEFAULT '',
+  `product_attribute_category_id` tinyint(2) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `product_attribute_category_id` (`product_attribute_category_id`)
+  PRIMARY KEY (`code`),
+  KEY `product_id` (`product_id`),
+  KEY `product_attribute_category_id` (`product_attribute_category_id`),
+  KEY `added_by` (`added_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 
 # Dump of table product_attribute_category
@@ -218,13 +222,21 @@ CREATE TABLE `product_attribute` (
 DROP TABLE IF EXISTS `product_attribute_category`;
 
 CREATE TABLE `product_attribute_category` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(11) NOT NULL DEFAULT '',
-  `product_id` int(11) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `product_id` (`product_id`)
+  `id` tinyint(2) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `product_attribute_category` WRITE;
+/*!40000 ALTER TABLE `product_attribute_category` DISABLE KEYS */;
+
+INSERT INTO `product_attribute_category` (`id`, `name`)
+VALUES
+	(1,'Color'),
+	(2,'Size');
+
+/*!40000 ALTER TABLE `product_attribute_category` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 

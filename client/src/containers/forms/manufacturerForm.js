@@ -42,7 +42,7 @@ const renderField = ({
     </div>
   );
 
-const renderSelect = ({ input, type, data, meta: { touched, error } }) => (
+const renderSelect = ({ input, data, meta: { touched, error } }) => (
   <div>
     <select {...input} className="form-control">
       <option />

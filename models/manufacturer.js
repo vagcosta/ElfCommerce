@@ -9,7 +9,6 @@ const {
 require('dotenv').load();
 
 const { host, user, password, database } = process.env;
-var db = new MySQL(host, user, password, database);
 
 function Manufacturer(
   code,
@@ -22,7 +21,8 @@ function Manufacturer(
   storeId,
   countryId,
   addedBy,
-  status = 1
+  status = 1,
+  dbName = null
 ) {
   this.code = code;
   this.name = name;
@@ -35,6 +35,7 @@ function Manufacturer(
   this.countryId = countryId;
   this.addedBy = addedBy;
   this.status = status;
+  this.db = new MySQL(host, user, password, dbName || database);
 }
 
 Manufacturer.prototype.get = function (code) {
@@ -83,7 +84,7 @@ Manufacturer.prototype.get = function (code) {
 
 Manufacturer.prototype.getTotalCountByStoreId = function (id) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select count(*) as total 
        from manufacturer where store_id='${id}'`,
       (error, results) => {
@@ -103,7 +104,7 @@ Manufacturer.prototype.getAllByStoreId = function (
   pageSize = 20
 ) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
        from manufacturer where store_id='${id}' order by name limit ${(page - 1) *
       pageSize}, ${pageSize}`,
@@ -181,7 +182,7 @@ Manufacturer.prototype.add = function (manufacturer) {
         addedBy,
       } = manufacturer;
 
-      db.query(
+      this.db.query(
         `insert into manufacturer(code, name, url, email, contact, address, logo, store_id, country_id, added_by) 
          values('${code}', '${name}', '${url}', '${email}', '${contact}', '${address}', '${logo}', '${storeId}', '${countryId}', '${addedBy}')`,
         (error, results) => {
@@ -227,7 +228,7 @@ Manufacturer.prototype.update = function (manufacturer) {
         addedBy,
       } = manufacturer;
 
-      db.query(
+      this.db.query(
         `update manufacturer set name='${name}', url='${url}', email='${email}', contact='${contact}', 
          address='${address}', logo='${logo}', country_id='${countryId}'
          where code='${code}' and added_by='${addedBy}'`,
@@ -260,7 +261,7 @@ Manufacturer.prototype.update = function (manufacturer) {
 
 Manufacturer.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `update manufacturer set status=0 where code='${code}'`,
       (error, results) => {
 

@@ -10,17 +10,22 @@ const {
 require('dotenv').load();
 
 const { host, user, password, database } = process.env;
-var db = new MySQL(host, user, password, database);
 
-function StoreSummary(orderSummary, productSummary, shippingSummary) {
+function StoreSummary(
+  orderSummary,
+  productSummary,
+  shippingSummary,
+  dbName = null
+) {
   this.orderSummary = orderSummary || null;
   this.productSummary = productSummary || null;
   this.shippingSummary = shippingSummary || null;
+  this.db = new MySQL(host, user, password, dbName || database);
 }
 
 StoreSummary.prototype.get = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select count(*) as total, status
        from \`order\` 
        where store_id='${code}'
@@ -29,7 +34,7 @@ StoreSummary.prototype.get = function (code) {
         if (error) {
           reject(new NoRecordFoundError('No store summary found.'));
         } else {
-          db.query(
+          this.db.query(
             `select count(*) as total, status
              from product 
              where store_id='${code}'
@@ -63,7 +68,8 @@ function Store(
   currencyId,
   createdBy,
   facebook,
-  twitter
+  twitter,
+  dbName = null
 ) {
   this.code = code;
   this.name = name;
@@ -75,11 +81,12 @@ function Store(
   this.createdBy = createdBy;
   this.facebook = facebook || '';
   this.twitter = twitter || '';
+  this.db = new MySQL(host, user, password, dbName || database);
 }
 
 Store.prototype.get = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select name, code, description, logo, country_id as countryId, language, currency_id as currencyId, facebook, twitter 
        from store where code='${code}' and status=1`,
       (error, results) => {
@@ -151,7 +158,7 @@ Store.prototype.add = function (store) {
         twitter,
       } = store;
 
-      db.query(
+      this.db.query(
         `insert into store(name, code, description, created_on, created_by, logo, country_id, language, currency_id, facebook, twitter) 
          values('${name}', '${code}', '${description}', '${moment
           .utc()
@@ -202,8 +209,9 @@ Store.prototype.update = function (store) {
         twitter,
       } = store;
 
-      db.query(
-        `update store set name='${name}', logo='${logo}', description='${description}', currency_id='${currencyId}', language='${language}', country_id=${countryId}, facebook='${facebook}', twitter='${twitter}'
+      this.db.query(
+        `update store set name='${name}', logo='${logo}', description='${description}', currency_id='${currencyId}', 
+         language='${language}', country_id=${countryId}, facebook='${facebook}', twitter='${twitter}'
          where code='${code}' and created_by='${createdBy}'`,
         (error, results) => {
 
@@ -235,7 +243,7 @@ Store.prototype.update = function (store) {
 
 Store.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `update store set status=0 where code=${code}`,
       (error, results) => {
 

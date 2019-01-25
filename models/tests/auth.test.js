@@ -10,7 +10,7 @@ const {
 const expect = chai.expect;
 
 describe('Test OAuth models', () => {
-  const auth = new OAuth2Request();
+  const auth = new OAuth2Request('davinci_test');
   let res = null;
 
   it('Should return an OAuth2Response object with a valid OAuth2Request request object', async () => {

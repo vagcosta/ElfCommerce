@@ -9,9 +9,7 @@ const {
 } = require('../exceptions');
 require('dotenv').load();
 
-
-const { host, user, password, database } = process.env;
-var db = new MySQL(host, user, password, database);
+const { tokenSecret, host, user, password, database } = process.env;
 
 function Account(
   code,
@@ -21,7 +19,8 @@ function Account(
   password,
   salt,
   joinedOn,
-  status = 1
+  status = 1,
+  dbName = null
 ) {
   // If a field is optional then provide default empty value
   this.code = code;
@@ -32,11 +31,12 @@ function Account(
   this.salt = salt;
   this.joinedOn = joinedOn || moment.utc().format('YYYY-MM-DD HH:mm:ss');
   this.status = status;
+  this.db = new MySQL(host, user, password, dbName || database);
 }
 
 Account.prototype.get = function (id) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select code, store_id as storeId, name, email, joined_on as joinedOn, status
        from user
        where code='${id}'`,
@@ -72,7 +72,7 @@ Account.prototype.get = function (id) {
 
 Account.prototype.getTotalCountByStoreId = function (id) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select count(*) as total 
        from account where store_id='${id}'`,
       (error, results) => {
@@ -88,7 +88,7 @@ Account.prototype.getTotalCountByStoreId = function (id) {
 
 Account.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select code, store_id as storeId, name, email, joined_on as joinedOn, status
        from user
        where store_id='${id}' order by added_on desc limit ${(page - 1) *
@@ -155,7 +155,7 @@ Account.prototype.add = function (account) {
         joinedOn,
       } = account;
 
-      db.query(
+      this.db.query(
         `insert into user(code, store_id, name, email, password, salt, joined_on) 
          values('${code}', '${storeId}', '${name}', '${email}','${password}', '${salt}', '${joinedOn}')`,
         (error, results) => {
@@ -193,7 +193,7 @@ Account.prototype.update = function (account) {
         email,
       } = account;
 
-      db.query(
+      this.db.query(
         `update account set name='${name}', email='${email}' 
          where code='${code}'`,
         (error, results) => {
@@ -223,7 +223,7 @@ Account.prototype.update = function (account) {
 
 Account.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `update account set status=0 where code='${code}'`,
       (error, results) => {
 

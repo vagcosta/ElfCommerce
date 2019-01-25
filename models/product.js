@@ -10,7 +10,6 @@ const {
 require('dotenv').load();
 
 const { host, user, password, database } = process.env;
-var db = new MySQL(host, user, password, database);
 
 function Product(
   code,
@@ -28,7 +27,8 @@ function Product(
   coverImage,
   manufacturerId,
   supplierId,
-  status = 1
+  status = 1,
+  dbName = null
 ) {
   // If a field is optional then provide default empty value
   this.code = code;
@@ -47,11 +47,12 @@ function Product(
   this.manufacturerId = manufacturerId || '';
   this.supplierId = supplierId || '';
   this.status = status;
+  this.db = new MySQL(host, user, password, dbName || database);
 }
 
 Product.prototype.get = function (id) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select code, name, category_id as categoryId, store_id as storeId, sku, description, quantity, allow_quantity as allowQuantity,
        added_on as addedOn, added_by as addedBy, unit_price as unitPrice, cost, cover_image as coverImage,
        manufacturer_id as manufacturerId, supplier_id as supplierId, status
@@ -112,7 +113,7 @@ Product.prototype.getTotalCountByStoreId = function (id, search = null) {
       sql += ` and status=1 and (code like '%${search}%' or name like '%${search}%' or sku like '%${search}%')`;
     }
 
-    db.query(sql, (error, results) => {
+    this.db.query(sql, (error, results) => {
       if (error) {
         reject(new NoRecordFoundError('No products found.'));
       } else {
@@ -135,7 +136,7 @@ Product.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20, searc
 
     sql += ` order by added_on desc limit ${(page - 1) * pageSize}, ${pageSize}`;
 
-    db.query(sql, (error, results) => {
+    this.db.query(sql, (error, results) => {
       if (error) {
         reject(new NoRecordFoundError('No products found.'));
       } else {
@@ -223,7 +224,7 @@ Product.prototype.add = function (product) {
         supplierId,
       } = product;
 
-      db.query(
+      this.db.query(
         `insert into product(code, name, category_id, store_id, sku, description, quantity, allow_quantity, added_on, added_by, unit_price, cost, cover_image, manufacturer_id, supplier_id) 
          values('${code}', '${name}', '${categoryId}', '${storeId}', '${sku}', '${description}', ${quantity}, ${allowQuantity}, '${addedOn}', '${addedBy}', ${unitPrice}, ${cost}, '${coverImage}', '${manufacturerId}', '${supplierId}')`,
         (error, results) => {
@@ -279,7 +280,7 @@ Product.prototype.update = function (product) {
         supplierId,
       } = product;
 
-      db.query(
+      this.db.query(
         `update product set name='${name}', category_id='${categoryId}', sku='${sku}', description='${description}', quantity=${quantity}, 
          allow_quantity=${allowQuantity}, unit_price=${unitPrice}, cost=${cost}, cover_image='${coverImage}', 
          manufacturer_id='${manufacturerId}', supplier_id='${supplierId}'
@@ -318,7 +319,7 @@ Product.prototype.update = function (product) {
 
 Product.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `update product set status=0 where code='${code}'`,
       (error, results) => {
 
@@ -342,7 +343,8 @@ function ProductAttribute(
   addedBy,
   productAttributeCategoryId,
   productAttributeCategoryName,
-  status = true
+  status = true,
+  dbName = null
 ) {
   // If a field is optional then provide default empty value
   this.code = code;
@@ -355,11 +357,12 @@ function ProductAttribute(
   this.productAttributeCategoryId = productAttributeCategoryId;
   this.productAttributeCategoryName = productAttributeCategoryName || '';
   this.status = status ? true : false;
+  this.db = new MySQL(host, user, password, dbName || database);
 }
 
 ProductAttribute.prototype.getAllByProductId = function (id) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select code, product_id as productId, pa.name as attributeName, quantity, var_price as varPrice, added_on as addedOn, added_by as addedBy, 
        product_attribute_category_id as productAttributeCategoryId, pac.name as productAttributeCategoryName, status 
        from product_attribute as pa left join product_attribute_category as pac on pa.product_attribute_category_id = pac.id
@@ -433,7 +436,7 @@ ProductAttribute.prototype.add = function (productAttribute) {
         productAttributeCategoryId,
       } = productAttribute;
 
-      db.query(
+      this.db.query(
         `insert into product_attribute(code, product_id, name, quantity, var_price, added_on, added_by, product_attribute_category_id) 
          values('${code}', '${productId}', '${attributeName}', ${quantity}, ${varPrice}, '${addedOn}', '${addedBy}', '${productAttributeCategoryId}')`,
         (error, results) => {
@@ -476,7 +479,7 @@ ProductAttribute.prototype.update = function (productAttribute) {
         productAttributeCategoryId,
       } = productAttribute;
 
-      db.query(
+      this.db.query(
         `update product_attribute set name='${attributeName}', product_id='${productId}', quantity=${quantity}, 
          varPrice=${varPrice}, product_attribute_category_id='${productAttributeCategoryId}'
          where code='${code}' and added_by='${addedBy}'`,
@@ -507,7 +510,7 @@ ProductAttribute.prototype.update = function (productAttribute) {
 
 ProductAttribute.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `update product_attribute set status=0 where code='${code}'`,
       (error, results) => {
         if (error || results.affectedRows == 0) {

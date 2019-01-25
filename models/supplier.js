@@ -9,7 +9,6 @@ const {
 require('dotenv').load();
 
 const { host, user, password, database } = process.env;
-var db = new MySQL(host, user, password, database);
 
 function Supplier(
   code,
@@ -22,7 +21,8 @@ function Supplier(
   storeId,
   countryId,
   addedBy,
-  status = 1
+  status = 1,
+  dbName = null
 ) {
   this.code = code;
   this.name = name;
@@ -35,11 +35,12 @@ function Supplier(
   this.countryId = countryId;
   this.addedBy = addedBy;
   this.status = status;
+  this.db = new MySQL(host, user, password, dbName || database);
 }
 
 Supplier.prototype.get = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
        from supplier where code='${code}'`,
       (error, results) => {
@@ -83,7 +84,7 @@ Supplier.prototype.get = function (code) {
 
 Supplier.prototype.getTotalCountByStoreId = function (id) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select count(*) as total 
        from supplier where store_id='${id}'`,
       (error, results) => {
@@ -176,7 +177,7 @@ Supplier.prototype.add = function (supplier) {
         addedBy,
       } = supplier;
 
-      db.query(
+      this.db.query(
         `insert into supplier(code, name, url, email, contact, address, logo, store_id, country_id, added_by) 
          values('${code}', '${name}', '${url}', '${email}', '${contact}', '${address}', '${logo || ''}', '${storeId}', '${countryId}', '${addedBy}')`,
         (error, results) => {
@@ -232,7 +233,7 @@ Supplier.prototype.update = function (supplier) {
 
       sql += ` where code='${code}' and added_by='${addedBy}'`;
 
-      db.query(sql, (error, results) => {
+      this.db.query(sql, (error, results) => {
         if (error || results.affectedRows == 0) {
           reject(new BadRequestError('Invalide supplier data.'));
         } else {
@@ -261,7 +262,7 @@ Supplier.prototype.update = function (supplier) {
 
 Supplier.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `update supplier set status = 0 where code = '${code}'`,
       (error, results) => {
         if (error || results.affectedRows == 0) {
