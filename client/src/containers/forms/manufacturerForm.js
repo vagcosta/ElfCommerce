@@ -23,8 +23,10 @@ import {
   submitManufacturer,
   fetchManufacturerDetails,
   clearManufacturerDetails,
+  uploadFile,
 } from '../../actions';
 import { ProfileLoader } from '../../components';
+import config from '../../config';
 
 const required = value => (value ? undefined : 'Required');
 
@@ -53,27 +55,6 @@ const renderSelect = ({ input, type, data, meta: { touched, error } }) => (
     {touched && (error && <div><span className="text-danger">{error}</span></div>)}
   </div>
 );
-
-const adaptFileEventToValue = delegate =>
-  e => delegate(e.target.files[0]);
-
-const renderFileInput = ({
-  input: {
-    value: omitValue,
-    onChange,
-    onBlur,
-    ...inputProps,
-  },
-  meta: omitMeta,
-  ...props,
-}) =>
-  <input
-    onChange={adaptFileEventToValue(onChange)}
-    onBlur={adaptFileEventToValue(onBlur)}
-    type="file"
-    {...inputProps}
-    {...props}
-  />
 
 class ManufacturerForm extends Component {
   componentWillMount() {
@@ -104,8 +85,9 @@ class ManufacturerForm extends Component {
   onSubmit = data => {
     const {
       dispatch,
-      mode,
       storeId,
+      mode,
+      uploadedFile,
       match: {
         params: { id },
       },
@@ -118,19 +100,40 @@ class ManufacturerForm extends Component {
       data.manufacturerId = id;
     }
 
+    if (uploadedFile) {
+      data.logo = uploadedFile.path;
+    }
+
     dispatch(submitManufacturer(data));
   };
+
+  handleUpload = event => {
+    const { dispatch } = this.props;
+
+    dispatch(uploadFile(event.target.files[0]));
+  }
 
   render() {
     const {
       handleSubmit,
       initialValues,
       countries,
+      uploadedFile,
       mode,
       error,
       loaded,
       done,
     } = this.props;
+
+    let logo = null;
+
+    if (initialValues.logo) {
+      logo = `${config.mediaFileDomain}/${initialValues.logo}`;
+    }
+
+    if (uploadedFile) {
+      logo = `${config.mediaFileDomain}/${uploadedFile.path}`;
+    }
 
     return (
       mode === 'update' && !loaded ?
@@ -158,13 +161,14 @@ class ManufacturerForm extends Component {
             <Col md={3}>
               <p className="lead"><FormattedMessage id="sys.logo" /></p>
               <img
-                src={initialValues.logo || require('../../assets/no_image.svg')}
-                style={{ width: 128, height: 128 }}
+                src={logo || require('../../assets/no_image.svg')}
+                className="logo-lg"
               /><br /><br />
-              <Field
+              <input
+                type="file"
                 name="logo"
                 id="logo"
-                component={renderFileInput}
+                onChange={this.handleUpload}
               />
             </Col>
             <Col md={9}>
@@ -279,6 +283,7 @@ ManufacturerForm.propTypes = {
   done: PropTypes.bool.isRequired,
   storeId: PropTypes.string.isRequired,
   countries: PropTypes.array.isRequired,
+  uploadedFile: PropTypes.object,
 };
 
 ManufacturerForm = reduxForm({
@@ -290,6 +295,7 @@ export default withRouter(
     return {
       initialValues: state.manufacturerReducer.manufacturerDetails,
       countries: state.publicReducer.countries,
+      uploadedFile: state.publicReducer.uploadedFile,
       done: state.manufacturerReducer.done,
       loaded: state.manufacturerReducer.loaded,
       error: state.supplierReducer.error,

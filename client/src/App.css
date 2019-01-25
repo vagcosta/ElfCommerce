@@ -391,3 +391,7 @@ table .btn-link{
   font-size: 20px;
   background-color: #eee;
 }
+.logo-lg{
+  width: 128px;
+  height: 128px;
+}

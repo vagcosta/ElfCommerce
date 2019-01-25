@@ -163,7 +163,7 @@ class SupplierForm extends Component {
               <p className="lead"><FormattedMessage id="sys.logo" /></p>
               <img
                 src={logo || require('../../assets/no_image.svg')}
-                style={{ width: 128, height: 128 }}
+                className="logo-lg"
               /><br /><br />
               <input
                 type="file"
