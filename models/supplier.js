@@ -100,7 +100,7 @@ Supplier.prototype.getTotalCountByStoreId = function (id) {
 
 Supplier.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
        from supplier where store_id='${id}'  order by name limit ${(page - 1) *
       pageSize}, ${pageSize}`,
@@ -181,7 +181,6 @@ Supplier.prototype.add = function (supplier) {
         `insert into supplier(code, name, url, email, contact, address, logo, store_id, country_id, added_by) 
          values('${code}', '${name}', '${url}', '${email}', '${contact}', '${address}', '${logo || ''}', '${storeId}', '${countryId}', '${addedBy}')`,
         (error, results) => {
-
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalide supplier data.'));
           } else {

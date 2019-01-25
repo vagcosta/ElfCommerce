@@ -1,7 +1,12 @@
-const assert = require('assert');
+'use strict';
+
+const chai = require('chai');
+chai.use(require('chai-as-promised'));
 const Order = require('../order');
 
-describe('Create a new order object', () => {
+const expect = chai.expect;
+
+describe('Test order model', () => {
   it('should return a new order object', () => {
     const order = new Order(
       'adsfhajksdhf2342',
@@ -15,7 +20,5 @@ describe('Create a new order object', () => {
       [],
       true
     );
-
-    assert.equal(order instanceof Order, true);
   });
 });
