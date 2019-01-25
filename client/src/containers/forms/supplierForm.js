@@ -89,15 +89,21 @@ class SupplierForm extends Component {
       dispatch,
       storeId,
       mode,
+      uploadedFile,
       match: {
         params: { id },
       },
     } = this.props;
 
     data.storeId = storeId;
+    data.mode = mode;
 
     if (mode === 'update') {
       data.supplierId = id;
+    }
+
+    if (uploadedFile) {
+      data.logo = uploadedFile.path;
     }
 
     dispatch(submitSupplier(data));
@@ -124,7 +130,7 @@ class SupplierForm extends Component {
     let logo = null;
 
     if (initialValues.logo) {
-      logo = initialValues.logo;
+      logo = `${config.mediaFileDomain}/${initialValues.logo}`;
     }
 
     if (uploadedFile) {
@@ -156,7 +162,7 @@ class SupplierForm extends Component {
             <Col md={3}>
               <p className="lead"><FormattedMessage id="sys.logo" /></p>
               <img
-                src={ logo || require('../../assets/no_image.svg')}
+                src={logo || require('../../assets/no_image.svg')}
                 style={{ width: 128, height: 128 }}
               /><br /><br />
               <input

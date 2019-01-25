@@ -26,7 +26,7 @@ const SupplierListItem = props => {
       <td style={{ fontSize: 14 }}>
         <div>
           <FaGlobe color="#555" />
-          &nbsp;&nbsp;{url}
+          &nbsp;&nbsp;<a href={url} target="_blank">{url}</a>
         </div>
         <div style={{ marginTop: 5 }}>
           <FaAt color="#e22b46" />

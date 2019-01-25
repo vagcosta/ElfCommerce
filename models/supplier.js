@@ -178,7 +178,7 @@ Supplier.prototype.add = function (supplier) {
 
       db.query(
         `insert into supplier(code, name, url, email, contact, address, logo, store_id, country_id, added_by) 
-         values('${code}', '${name}', '${url}', '${email}', '${contact}', '${address}', '${logo}', '${storeId}', '${countryId}', '${addedBy}')`,
+         values('${code}', '${name}', '${url}', '${email}', '${contact}', '${address}', '${logo || ''}', '${storeId}', '${countryId}', '${addedBy}')`,
         (error, results) => {
 
           if (error || results.affectedRows == 0) {
@@ -223,30 +223,35 @@ Supplier.prototype.update = function (supplier) {
         addedBy,
       } = supplier;
 
-      db.query(
-        `update supplier set name='${name}', url='${url}', email='${email}', contact='${contact}', 
-         address='${address}', logo='${logo}', country_id=${countryId} 
-         where code='${code}' and added_by='${addedBy}'`,
-        (error, results) => {
-          if (error || results.affectedRows == 0) {
-            reject(new BadRequestError('Invalide supplier data.'));
-          } else {
-            resolve(
-              new Supplier(
-                code,
-                name,
-                url,
-                email,
-                contact,
-                address,
-                logo,
-                storeId,
-                countryId,
-                addedBy
-              )
-            );
-          }
+      let sql = `update supplier set name='${name}', url='${url}', email='${email}', contact='${contact}',
+                 address='${address}', country_id=${countryId}`;
+
+      if (logo) {
+        sql += ` ,logo='${logo}'`;
+      }
+
+      sql += ` where code='${code}' and added_by='${addedBy}'`;
+
+      db.query(sql, (error, results) => {
+        if (error || results.affectedRows == 0) {
+          reject(new BadRequestError('Invalide supplier data.'));
+        } else {
+          resolve(
+            new Supplier(
+              code,
+              name,
+              url,
+              email,
+              contact,
+              address,
+              logo,
+              storeId,
+              countryId,
+              addedBy
+            )
+          );
         }
+      }
       );
     } else {
       reject(new BadRequestError('Invalide supplier data.'));
@@ -257,7 +262,7 @@ Supplier.prototype.update = function (supplier) {
 Supplier.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
     db.query(
-      `update supplier set status=0 where code='${code}'`,
+      `update supplier set status = 0 where code = '${code}'`,
       (error, results) => {
         if (error || results.affectedRows == 0) {
           reject(new BadRequestError('Deleting supplier failed.'));
