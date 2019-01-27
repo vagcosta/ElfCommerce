@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Badge } from 'reactstrap';
 import {
-  MdWeb,
   MdEmail,
   MdMap,
   MdCall,
@@ -27,12 +26,13 @@ const ManufacturerListItem = props => {
       <td>
         <img src={logo || require('../../assets/no_image.svg')} className="thumbnail" />
       </td>
-      <td>{name}</td>
+      <td>
+        {name}<br /><br />
+        <p>
+          &#187; <a href={url} target="_blank" className="text-info">{formatMessage({ id: 'sys.website' })}</a>
+        </p>
+      </td>
       <td style={{ fontSize: 14 }}>
-        <div>
-          <MdWeb />
-          &nbsp;&nbsp;<a href={url} target="_blank">{url}</a>
-        </div>
         <div style={{ marginTop: 5 }}>
           <MdEmail />
           &nbsp;&nbsp;{email}

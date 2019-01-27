@@ -153,5 +153,6 @@
   "sys.shipped": "Shipped",
   "sys.completed": "Completed",
   "sys.noStock": "No stock",
-  "sys.normal": "Normal"
+  "sys.normal": "Normal",
+  "sys.pasteImageUrl": "Paste an image URL here"
 }

@@ -179,12 +179,16 @@ class SupplierForm extends Component {
                     id="logo"
                     onChange={this.handleUpload}
                   /> :
-                  <Field
-                    component={renderField}
-                    name="logo"
-                    className="form-control"
-                    id="logo"
-                  />
+                  <div>
+                    <FormattedMessage id="sys.pasteImageUrl" /><br />
+
+                    <Field
+                      component={renderField}
+                      name="logo"
+                      className="form-control"
+                      id="logo"
+                    />
+                  </div>
               }
             </Col>
             <Col md={9}>
