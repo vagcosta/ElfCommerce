@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Badge } from 'reactstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { FaGlobe, FaAt, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
+import {
+  MdWeb,
+  MdEmail,
+  MdMap,
+  MdCall,
+} from 'react-icons/md';
 
 const SupplierListItem = props => {
   const {
@@ -25,19 +30,19 @@ const SupplierListItem = props => {
       <td>{name}</td>
       <td style={{ fontSize: 14 }}>
         <div>
-          <FaGlobe color="#555" />
+          <MdWeb />
           &nbsp;&nbsp;<a href={url} target="_blank">{url}</a>
         </div>
         <div style={{ marginTop: 5 }}>
-          <FaAt color="#e22b46" />
+          <MdEmail />
           &nbsp;&nbsp;{email}
         </div>
         <div style={{ marginTop: 5 }}>
-          <FaMapMarkerAlt color="#2e66c1" />
+          <MdMap />
           &nbsp;&nbsp;{address}
         </div>
         <div style={{ marginTop: 5 }}>
-          <FaPhone color="#26ad72" />
+          <MdCall />
           &nbsp;&nbsp;{contact}
         </div>
       </td>

@@ -5,7 +5,7 @@ import { Field, reduxForm } from 'redux-form';
 import { FormattedMessage } from 'react-intl';
 import { Col, Form, FormGroup, Label, Button, Input, Alert } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { FiSave } from 'react-icons/fi';
+import { MdSave } from 'react-icons/md';
 import {
   fetchParentCategories,
   fetchCategoryDetails,
@@ -106,7 +106,7 @@ class CategoryForm extends Component {
         <Loader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
-            <FiSave />
+            <MdSave />
             &nbsp;
             <FormattedMessage id="sys.save" />
           </Button>

@@ -17,7 +17,8 @@ import {
   Button,
   Alert,
 } from 'reactstrap';
-import { FiSave } from 'react-icons/fi';
+import { MdSave } from 'react-icons/md';
+import _ from 'lodash';
 import {
   fetchCountries,
   submitSupplier,
@@ -27,6 +28,11 @@ import {
 } from '../../actions';
 import { ProfileLoader } from '../../components';
 import config from '../../config';
+
+const {
+  mediaFileDomain,
+  saveMediaFileLocal,
+} = config;
 
 const required = value => (value ? undefined : 'Required');
 
@@ -130,11 +136,11 @@ class SupplierForm extends Component {
     let logo = null;
 
     if (initialValues.logo) {
-      logo = `${config.mediaFileDomain}/${initialValues.logo}`;
+      logo = `${_.includes(initialValues.logo, 'http') ? '' : mediaFileDomain}/${initialValues.logo}`;
     }
 
-    if (uploadedFile) {
-      logo = `${config.mediaFileDomain}/${uploadedFile.path}`;
+    if (uploadedFile && saveMediaFileLocal) {
+      logo = `${mediaFileDomain}/${uploadedFile.path}`;
     }
 
     return (
@@ -142,7 +148,7 @@ class SupplierForm extends Component {
         <ProfileLoader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
-            <FiSave />
+            <MdSave />
             &nbsp;
             <FormattedMessage id="sys.save" />
           </Button>
@@ -165,12 +171,21 @@ class SupplierForm extends Component {
                 src={logo || require('../../assets/no_image.svg')}
                 className="logo-lg"
               /><br /><br />
-              <input
-                type="file"
-                name="logo"
-                id="logo"
-                onChange={this.handleUpload}
-              />
+              {
+                saveMediaFileLocal ?
+                  <input
+                    type="file"
+                    name="logo"
+                    id="logo"
+                    onChange={this.handleUpload}
+                  /> :
+                  <Field
+                    component={renderField}
+                    name="logo"
+                    className="form-control"
+                    id="logo"
+                  />
+              }
             </Col>
             <Col md={9}>
               <Card>

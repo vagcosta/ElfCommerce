@@ -9,12 +9,11 @@ import {
   DropdownMenu,
   DropdownToggle,
   DropdownItem,
-  NavbarBrand,
   Container,
   Badge,
 } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
-import { FaRegBell } from 'react-icons/fa';
+import { MdNotificationsNone } from 'react-icons/md';
 import jwt from 'jsonwebtoken';
 import { fetchAccount } from '../actions';
 import config from '../config';
@@ -43,7 +42,7 @@ class Navigation extends Component {
             <Nav className="ml-auto">
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav>
-                  <FaRegBell size={18} />
+                  <MdNotificationsNone size={20} />
                   <Badge color="danger">1</Badge>
                 </DropdownToggle>
                 <DropdownMenu style={{ marginLeft: -100, width: 280 }}>

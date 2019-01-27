@@ -15,7 +15,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { FiSearch, FiPlusCircle } from 'react-icons/fi';
+import { MdSearch, MdAddCircleOutline } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -107,7 +107,7 @@ class OrderList extends Component {
                           <Input placeholder={formatMessage({ id: 'sys.search' })} />
                           <InputGroupAddon addonType="append">
                             <Button color="secondary">
-                              <FiSearch />
+                              <MdSearch />
                             </Button>
                           </InputGroupAddon>
                         </InputGroup>
@@ -135,7 +135,7 @@ class OrderList extends Component {
                           className="pull-right form-btn"
                           onClick={() => history.push('/new-order')}
                         >
-                          <FiPlusCircle />
+                          <MdAddCircleOutline />
                           &nbsp;
                           <FormattedMessage id="sys.addNew" />
                         </Button>

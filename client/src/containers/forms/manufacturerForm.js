@@ -17,7 +17,7 @@ import {
   Button,
   Alert,
 } from 'reactstrap';
-import { FiSave } from 'react-icons/fi';
+import { MdSave } from 'react-icons/md';
 import {
   fetchCountries,
   submitManufacturer,
@@ -28,6 +28,10 @@ import {
 import { ProfileLoader } from '../../components';
 import config from '../../config';
 
+const {
+  mediaFileDomain,
+  saveMediaFileLocal,
+} = config;
 const required = value => (value ? undefined : 'Required');
 
 const renderField = ({
@@ -140,7 +144,7 @@ class ManufacturerForm extends Component {
         <ProfileLoader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
-            <FiSave />
+            <MdSave />
             &nbsp;
             <FormattedMessage id="sys.save" />
           </Button>

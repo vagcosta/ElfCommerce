@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { FiSave } from 'react-icons/fi';
+import { MdSave } from 'react-icons/md';
 import {
   Col,
   Row,
@@ -39,7 +39,12 @@ import {
   ParallelLoader,
   ProductAttributeListItem,
 } from '../../components';
+import config from '../../config';
 
+const {
+  mediaFileDomain,
+  saveMediaFileLocal,
+} = config;
 const required = value => (value ? undefined : 'Required');
 
 const renderField = ({ input, type, style, meta: { touched, error } }) => (
@@ -198,7 +203,7 @@ class ProductForm extends Component {
             <TabPane tabId="1">
               <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
                 <Button size="sm" color="primary" className="pull-right form-btn">
-                  <FiSave />
+                  <MdSave />
                   &nbsp;
                   <FormattedMessage id="sys.save" />
                 </Button>

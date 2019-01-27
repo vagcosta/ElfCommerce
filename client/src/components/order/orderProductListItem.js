@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import numeral from 'numeral';
-import { IoIosCloseCircleOutline } from 'react-icons/io';
+import { MdDeleteForever } from 'react-icons/md';
 
 const OrderProductListItem = props => {
   const { code, name, currencySign, unitPrice, quantity, onDeleteClick } = props;
@@ -12,7 +12,7 @@ const OrderProductListItem = props => {
       <td>{currencySign + numeral(unitPrice).format('0,0.00')}</td>
       <td>{quantity}</td>
       <td>{currencySign + numeral(unitPrice * quantity).format('0,0.00')}</td>
-      <td><IoIosCloseCircleOutline color="red" size={18} style={{ cursor: 'pointer' }} onClick={() => onDeleteClick(code)} /></td>
+      <td><MdDeleteForever size={20} style={{ cursor: 'pointer' }} onClick={() => onDeleteClick(code)} /></td>
     </tr>
   );
 };

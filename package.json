@@ -27,6 +27,7 @@
     "prettier": "prettier --single-quote --trailing-comma=es5 --write \"./**/*.js\"",
     "build:client": "cd client && yarn build",
     "client": "cd client && yarn start",
+    "client:analyze": "cd client && yarn analyze",
     "server": "nodemon app.local.js",
     "test:server": "mocha \"./models/tests/**/*.js\"",
     "coverage:server": "nyc --reporter=text mocha \"./models/tests/**/*.js\"",

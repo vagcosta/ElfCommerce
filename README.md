@@ -70,6 +70,8 @@ const config = {
   apiDomain: 'YOUR_API_DOMAIN',
   accessTokenKey: 'THE_KEY_FOR_LOCAL_STORAGE_TO_STORE_ACCESS_TOKEN',
   googleApiKey: 'GOOGLE_API_KEY',
+  mediaFileDomain: 'http://localhost:8080', //If you allow images to be uploaded to your local server
+  saveMediaFileLocal: false, //Set this to true if you allow images to be uploaded to your local server
 };
 
 export default config;

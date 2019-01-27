@@ -17,7 +17,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import classnames from 'classnames';
-import { FiSave } from 'react-icons/fi';
+import { MdSave } from 'react-icons/md';
 import { fetchStoreSettings } from '../../actions';
 import {
   StoreSettingForm,
@@ -130,7 +130,7 @@ class Setting extends Component {
                 <Row>
                   <Col sm="12">
                     <Button size="sm" color="primary" className="pull-right">
-                      <FiSave />
+                      <MdSave />
                       &nbsp;
                       <FormattedMessage id="sys.save" />
                     </Button>
@@ -161,7 +161,7 @@ class Setting extends Component {
                 <Row>
                   <Col sm="12">
                     <Button size="sm" color="primary" className="pull-right">
-                      <FiSave />
+                      <MdSave />
                       &nbsp;
                       <FormattedMessage id="sys.save" />
                     </Button>

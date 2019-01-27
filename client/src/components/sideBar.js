@@ -5,21 +5,19 @@ import { Link, withRouter } from 'react-router-dom';
 import { Container, Collapse } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
 import {
-  FiMenu,
-  FiShoppingCart,
-  FiShoppingBag,
-  FiBarChart2,
-  FiGrid,
-  FiDollarSign,
-  FiHome,
-  FiSettings,
-} from 'react-icons/fi';
-import {
-  FaCaretLeft,
-  FaCaretDown,
-  FaWarehouse,
-  FaIndustry,
-} from 'react-icons/fa';
+  MdDashboard,
+  MdViewList,
+  MdChevronLeft,
+  MdExpandMore,
+  MdSettings,
+  MdShowChart,
+  MdShoppingCart,
+  MdPieChart,
+  MdShoppingBasket,
+  MdStore,
+  MdLocationCity,
+  MdAttachMoney,
+} from 'react-icons/md';
 import {
   productMenuOpen,
   productMenuClose,
@@ -68,13 +66,13 @@ class SideBarContent extends Component {
         <br />
         <div className={`sidebar-link${currentPath === 'dashboard' ? ' active' : ''}`}>
           <Link to="/dashboard">
-            <FiHome className="sidebar-icon" />
+            <MdDashboard className="sidebar-icon" />
             <FormattedMessage id="sys.dashboard" />
           </Link>
         </div>
         <div className={`sidebar-link${currentPath === 'orders' ? ' active' : ''}`}>
           <Link to="/orders">
-            <FiShoppingCart className="sidebar-icon" />
+            <MdShoppingCart className="sidebar-icon" />
             <FormattedMessage id="sys.orders" />
           </Link>
         </div>
@@ -84,37 +82,37 @@ class SideBarContent extends Component {
           style={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <div style={{ cursor: 'pointer' }}>
-            <FiMenu className="sidebar-icon" />
+            <MdViewList className="sidebar-icon" />
             <span style={{ color: '#ddd', fontSize: 14 }}>
               <FormattedMessage id="sys.inventory" />
             </span>
           </div>
           <div style={{ color: '#ddd', marginRight: 10, cursor: 'pointer' }}>
-            {productMenu ? <FaCaretDown /> : <FaCaretLeft />}
+            {productMenu ? <MdExpandMore /> : <MdChevronLeft />}
           </div>
         </div>
         <Collapse isOpen={productMenu} className="sidebar-open">
           <div className={`sidebar-link sub-menu${currentPath === 'categories' ? ' active' : ''}`}>
             <Link to="/categories">
-              <FiGrid className="sidebar-icon" />
+              <MdPieChart className="sidebar-icon" />
               <FormattedMessage id="sys.categories" />
             </Link>
           </div>
           <div className={`sidebar-link sub-menu${currentPath === 'products' ? ' active' : ''}`}>
             <Link to="/products">
-              <FiShoppingBag className="sidebar-icon" />
+              <MdShoppingBasket className="sidebar-icon" />
               <FormattedMessage id="sys.products" />
             </Link>
           </div>
           <div className={`sidebar-link sub-menu${currentPath === 'suppliers' ? ' active' : ''}`}>
             <Link to="/suppliers">
-              <FaWarehouse className="sidebar-icon" />
+              <MdStore className="sidebar-icon" />
               <FormattedMessage id="sys.suppliers" />
             </Link>
           </div>
           <div className={`sidebar-link sub-menu${currentPath === 'manufacturers' ? ' active' : ''}`}>
             <Link to="/manufacturers">
-              <FaIndustry className="sidebar-icon" />
+              <MdLocationCity className="sidebar-icon" />
               <FormattedMessage id="sys.manufacturers" />
             </Link>
           </div>
@@ -125,26 +123,26 @@ class SideBarContent extends Component {
           style={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <div style={{ cursor: 'pointer' }}>
-            <FiBarChart2 className="sidebar-icon" />
+            <MdShowChart className="sidebar-icon" />
             <span style={{ color: '#ddd', fontSize: 14 }}>
               <FormattedMessage id="sys.reports" />
             </span>
           </div>
           <div style={{ color: '#ddd', marginRight: 10, cursor: 'pointer' }}>
-            {reportMenu ? <FaCaretDown /> : <FaCaretLeft />}
+            {reportMenu ? <MdExpandMore /> : <MdChevronLeft />}
           </div>
         </div>
         <Collapse isOpen={reportMenu} className="sidebar-open">
           <div className={`sidebar-link sub-menu${currentPath === 'sales-reports' ? ' active' : ''}`}>
             <Link to="/sales-reports">
-              <FiDollarSign className="sidebar-icon" />
+              <MdAttachMoney className="sidebar-icon" />
               <FormattedMessage id="sys.salesReports" />
             </Link>
           </div>
         </Collapse>
         <div className={`sidebar-link${currentPath === 'settings' ? ' active' : ''}`}>
           <Link to="/settings">
-            <FiSettings className="sidebar-icon" />
+            <MdSettings className="sidebar-icon" />
             <FormattedMessage id="sys.settings" />
           </Link>
         </div>

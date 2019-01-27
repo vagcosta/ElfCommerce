@@ -1,6 +1,5 @@
 import React from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import { FormattedMessage } from 'react-intl';
+import { Container } from 'reactstrap';
 
 const Footer = () => (
   <Container id="footer">

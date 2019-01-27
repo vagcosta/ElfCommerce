@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Row, Col } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
-import { FaCcPaypal, FaCcStripe, FaBtc } from 'react-icons/fa';
 
 class Payment extends Component {
   render() {
@@ -27,21 +26,21 @@ class Payment extends Component {
               <tbody>
                 <tr>
                   <td>
-                    <FaCcPaypal size="3em" />
+                    PayPal
                   </td>
                   <td>your.paypal@example.com</td>
                   <td />
                 </tr>
                 <tr>
                   <td>
-                    <FaCcStripe size="3em" />
+                    Stripe
                   </td>
                   <td>your.paypal@example.com</td>
                   <td />
                 </tr>
                 <tr>
                   <td>
-                    <FaBtc size="3em" />
+                    BitCoin
                   </td>
                   <td>your.paypal@example.com</td>
                   <td />

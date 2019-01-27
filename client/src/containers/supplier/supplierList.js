@@ -13,7 +13,7 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { FiPlusCircle, FiSearch } from 'react-icons/fi';
+import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
 import { fetchSuppliers } from '../../actions';
@@ -101,7 +101,7 @@ class SupplierList extends Component {
                           <Input placeholder={formatMessage({ id: 'sys.search' })} />
                           <InputGroupAddon addonType="append">
                             <Button color="secondary">
-                              <FiSearch />
+                              <MdSearch />
                             </Button>
                           </InputGroupAddon>
                         </InputGroup>
@@ -112,7 +112,7 @@ class SupplierList extends Component {
                         className="pull-right form-btn"
                         onClick={() => history.push('/new-supplier')}
                       >
-                        <FiPlusCircle />
+                        <MdAddCircleOutline />
                         &nbsp;
                         <FormattedMessage id="sys.addNew" />
                       </Button>

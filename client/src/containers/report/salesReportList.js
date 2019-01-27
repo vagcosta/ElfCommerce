@@ -24,7 +24,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import classnames from 'classnames';
-import { FiSearch } from 'react-icons/fi';
+import { MdSearch } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import {
   fetchSalesReportProducts,
@@ -131,7 +131,7 @@ class SalesReportList extends Component {
                         />
                         <InputGroupAddon addonType="append">
                           <Button color="secondary">
-                            <FiSearch />
+                            <MdSearch />
                           </Button>
                         </InputGroupAddon>
                       </InputGroup>
@@ -205,7 +205,7 @@ class SalesReportList extends Component {
                         />
                       ))}
                     </tbody>
-                  </Table>                  
+                  </Table>
                 </TabPane>
                 <TabPane tabId="2">
                   <div
@@ -218,7 +218,7 @@ class SalesReportList extends Component {
                         />
                         <InputGroupAddon addonType="append">
                           <Button color="secondary">
-                            <FiSearch />
+                            <MdSearch />
                           </Button>
                         </InputGroupAddon>
                       </InputGroup>
@@ -284,12 +284,12 @@ class SalesReportList extends Component {
                         />
                       ))}
                     </tbody>
-                  </Table>                
+                  </Table>
                 </TabPane>
               </TabContent>
             </Col>
           </Row><br />
-          <ReactPaginate 
+          <ReactPaginate
             pageCount={20}
             pageRangeDisplayed={3}
             marginPagesDisplayed={2}
@@ -304,7 +304,7 @@ class SalesReportList extends Component {
             previousLinkClassName="page-link"
             nextLinkClassName="page-link"
             activeClassName="active"
-          />      
+          />
         </div>
       </div>
     );

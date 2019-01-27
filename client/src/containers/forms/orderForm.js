@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { FiSave } from 'react-icons/fi';
+import { MdSave } from 'react-icons/md';
 import {
   Col,
   Row,
@@ -26,7 +26,7 @@ import {
   ModalBody,
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { FiDownload, FiPlusCircle } from 'react-icons/fi';
+import { MdFileDownload, MdAddCircleOutline } from 'react-icons/md';
 import classnames from 'classnames';
 import numeral from 'numeral';
 import {
@@ -245,7 +245,7 @@ class OrderForm extends Component {
                       className="pull-right form-btn"
                       onClick={() => history.push('/new-product')}
                     >
-                      <FiDownload />
+                      <MdFileDownload />
                       &nbsp;
                       <FormattedMessage id="sys.downloadInvoice" />
                     </Button>
@@ -255,7 +255,7 @@ class OrderForm extends Component {
                       className="pull-right form-btn"
                       style={{ marginRight: 10 }}
                     >
-                      <FiSave />
+                      <MdSave />
                       &nbsp;
                       <FormattedMessage id="sys.save" />
                     </Button>
@@ -306,7 +306,7 @@ class OrderForm extends Component {
                       className="pull-right form-btn"
                       onClick={this.onAddProductClick}
                     >
-                      <FiPlusCircle />
+                      <MdAddCircleOutline />
                       &nbsp;
                       <FormattedMessage id="sys.addNew" />
                     </Button><br /><br /><br />

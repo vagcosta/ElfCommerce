@@ -13,7 +13,7 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { FiPlusCircle, FiSearch } from 'react-icons/fi';
+import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
 import { fetchProducts } from '../../actions';
@@ -103,7 +103,7 @@ class ProductList extends Component {
                           <Input placeholder={formatMessage({ id: 'sys.search' })} />
                           <InputGroupAddon addonType="append">
                             <Button color="secondary">
-                              <FiSearch />
+                              <MdSearch />
                             </Button>
                           </InputGroupAddon>
                         </InputGroup>
@@ -114,7 +114,7 @@ class ProductList extends Component {
                         className="pull-right form-btn"
                         onClick={() => history.push('/new-product')}
                       >
-                        <FiPlusCircle />
+                        <MdAddCircleOutline />
                         &nbsp;
                         <FormattedMessage id="sys.addNew" />
                       </Button>
