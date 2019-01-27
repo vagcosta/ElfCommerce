@@ -1,5 +1,5 @@
 const { OAuth2Request, OAuth2Response } = require('./auth');
-const { User, Contact } = require('./user');
+const { User } = require('./account');
 const { Store, StoreSummary } = require('./store');
 const { Product, ProductAttribute } = require('./product');
 const Order = require('./order');
@@ -12,7 +12,6 @@ module.exports = {
   OAuth2Request,
   OAuth2Response,
   User,
-  Contact,
   Store,
   StoreSummary,
   Product,

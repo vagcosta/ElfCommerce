@@ -2,6 +2,7 @@
 
 const chai = require('chai');
 chai.use(require('chai-as-promised'));
+require('dotenv').load();
 const {
   OAuth2Request,
   OAuth2Response,
@@ -10,7 +11,7 @@ const {
 const expect = chai.expect;
 
 describe('Test OAuth models', () => {
-  const auth = new OAuth2Request('davinci_test');
+  const auth = new OAuth2Request(process.env.testDb);
   let res = null;
 
   it('Should return an OAuth2Response object with a valid OAuth2Request request object', async () => {

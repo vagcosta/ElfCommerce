@@ -40,7 +40,7 @@ function Manufacturer(
 
 Manufacturer.prototype.get = function (code) {
   return new Promise((resolve, reject) => {
-    db.query(
+    this.db.query(
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
        from manufacturer where code='${code}'`,
       (error, results) => {
