@@ -18,6 +18,7 @@ import {
   Alert,
 } from 'reactstrap';
 import { MdSave } from 'react-icons/md';
+import _ from 'lodash';
 import {
   fetchCountries,
   submitManufacturer,
@@ -132,11 +133,11 @@ class ManufacturerForm extends Component {
     let logo = null;
 
     if (initialValues.logo) {
-      logo = `${config.mediaFileDomain}/${initialValues.logo}`;
+      logo = `${_.includes(initialValues.logo, 'http') ? '' : mediaFileDomain + '/'}${initialValues.logo}`;
     }
 
-    if (uploadedFile) {
-      logo = `${config.mediaFileDomain}/${uploadedFile.path}`;
+    if (uploadedFile && saveMediaFileLocal) {
+      logo = `${mediaFileDomain}/${uploadedFile.path}`;
     }
 
     return (
@@ -168,12 +169,25 @@ class ManufacturerForm extends Component {
                 src={logo || require('../../assets/no_image.svg')}
                 className="logo-lg"
               /><br /><br />
-              <input
-                type="file"
-                name="logo"
-                id="logo"
-                onChange={this.handleUpload}
-              />
+              {
+                saveMediaFileLocal ?
+                  <input
+                    type="file"
+                    name="logo"
+                    id="logo"
+                    onChange={this.handleUpload}
+                  /> :
+                  <div>
+                    <FormattedMessage id="sys.pasteImageUrl" /><br />
+
+                    <Field
+                      component={renderField}
+                      name="logo"
+                      className="form-control"
+                      id="logo"
+                    />
+                  </div>
+              }
             </Col>
             <Col md={9}>
               <Card>

@@ -136,7 +136,7 @@ class SupplierForm extends Component {
     let logo = null;
 
     if (initialValues.logo) {
-      logo = `${_.includes(initialValues.logo, 'http') ? '' : mediaFileDomain}/${initialValues.logo}`;
+      logo = `${_.includes(initialValues.logo, 'http') ? '' : mediaFileDomain + '/'}${initialValues.logo}`;
     }
 
     if (uploadedFile && saveMediaFileLocal) {
