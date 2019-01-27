@@ -9,6 +9,7 @@ const {
 require('dotenv').load();
 
 const { host, user, password, database } = process.env;
+const db = new MySQL(host, user, password, database);
 
 function Supplier(
   code,
@@ -21,8 +22,8 @@ function Supplier(
   storeId,
   countryId,
   addedBy,
-  status = 1,
-  dbName = null
+  status,
+  dbConn
 ) {
   this.code = code;
   this.name = name;
@@ -34,13 +35,15 @@ function Supplier(
   this.storeId = storeId;
   this.countryId = countryId;
   this.addedBy = addedBy;
-  this.status = status;
-  this.db = new MySQL(host, user, password, dbName || database);
+  this.status = status || 1;
+  if (dbConn !== undefined) {
+    this.db = dbConn;
+  }
 }
 
 Supplier.prototype.get = function (code) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
        from supplier where code='${code}'`,
       (error, results) => {
@@ -84,7 +87,7 @@ Supplier.prototype.get = function (code) {
 
 Supplier.prototype.getTotalCountByStoreId = function (id) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select count(*) as total 
        from supplier where store_id='${id}'`,
       (error, results) => {
@@ -100,7 +103,7 @@ Supplier.prototype.getTotalCountByStoreId = function (id) {
 
 Supplier.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
        from supplier where store_id='${id}'  order by name limit ${(page - 1) *
       pageSize}, ${pageSize}`,
@@ -177,7 +180,7 @@ Supplier.prototype.add = function (supplier) {
         addedBy,
       } = supplier;
 
-      this.db.query(
+      (this.db || db).query(
         `insert into supplier(code, name, url, email, contact, address, logo, store_id, country_id, added_by) 
          values('${code}', '${name}', '${url}', '${email}', '${contact}', '${address}', '${logo || ''}', '${storeId}', '${countryId}', '${addedBy}')`,
         (error, results) => {
@@ -232,7 +235,7 @@ Supplier.prototype.update = function (supplier) {
 
       sql += ` where code='${code}' and added_by='${addedBy}'`;
 
-      this.db.query(sql, (error, results) => {
+      (this.db || db).query(sql, (error, results) => {
         if (error || results.affectedRows == 0) {
           reject(new BadRequestError('Invalide supplier data.'));
         } else {
@@ -261,7 +264,7 @@ Supplier.prototype.update = function (supplier) {
 
 Supplier.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `update supplier set status = 0 where code = '${code}'`,
       (error, results) => {
         if (error || results.affectedRows == 0) {

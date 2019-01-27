@@ -3,15 +3,17 @@
 const chai = require('chai');
 chai.use(require('chai-as-promised'));
 require('dotenv').load();
+const { MySQL } = require('../../db');
 const {
   OAuth2Request,
   OAuth2Response,
 } = require('../auth');
 
 const expect = chai.expect;
+const { host, user, password, testDb } = process.env;
 
 describe('Test OAuth models', () => {
-  const auth = new OAuth2Request(process.env.testDb);
+  const auth = new OAuth2Request(new MySQL(host, user, password, testDb));
   let res = null;
 
   it('Should return an OAuth2Response object with a valid OAuth2Request request object', async () => {

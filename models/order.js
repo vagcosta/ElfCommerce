@@ -11,6 +11,7 @@ require('dotenv').load();
 
 
 const { host, user, password, database } = process.env;
+const db = new MySQL(host, user, password, database);
 
 function Order(
   code,
@@ -23,8 +24,8 @@ function Order(
   billingAddress,
   customerContact,
   products,
-  status = 1,
-  dbName = null
+  status,
+  dbConn
 ) {
   // If a field is optional then provide default empty value
   this.code = code;
@@ -37,13 +38,15 @@ function Order(
   this.billingAddress = billingAddress;
   this.customerContact = customerContact || '';
   this.products = products;
-  this.status = status;
-  this.db = new MySQL(host, user, password, dbName || database);
+  this.status = status || 1;
+  if (dbConn !== undefined) {
+    this.db = dbConn;
+  }
 }
 
 Order.prototype.get = function (id) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select code, store_id as storeId, added_by as addedBy, added_on as addedOn, paid_on as paidOn, 
        customer_name as customerName, shipping_address as shippingAddress, billing_address as billingAddress, 
        customer_contact as customerContact, status
@@ -54,7 +57,7 @@ Order.prototype.get = function (id) {
           reject(new NoRecordFoundError('No order found.'));
         } else {
           const order = results[0];
-          this.db.query(
+          (this.db || db).query(
             `select p.code, p.name, p.sku, op.purchasing_price as unitPrice, op.quantity
              from product as p
              right join order_product as op on p.code = op.product_id
@@ -92,7 +95,7 @@ Order.prototype.get = function (id) {
 
 Order.prototype.getTotalCountByStoreId = function (id) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select count(*) as total 
        from \`order\` where store_id='${id}'`,
       (error, results) => {
@@ -108,7 +111,7 @@ Order.prototype.getTotalCountByStoreId = function (id) {
 
 Order.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select code, store_id as storeId, added_by as addedBy, added_on as addedOn, paid_on as paidOn, 
        customer_name as customerName, shipping_address as shippingAddress, billing_address as billingAddress, 
        customer_contact as customerContact, status
@@ -188,7 +191,7 @@ Order.prototype.add = function (order) {
         products,
       } = order;
 
-      this.db.query(
+      (this.db || db).query(
         `insert into \`order\`(code, store_id, added_on, added_by, paid_on, customer_name, shipping_address, billing_address, customer_contact) 
          values('${code}', '${storeId}', '${addedOn}', '${addedBy}', ` + (paidOn ? `'${paidOn}'` : null) + `, '${customerName}', '${shippingAddress}', '${billingAddress}', '${customerContact}')`,
         (error, results) => {
@@ -205,7 +208,7 @@ Order.prototype.add = function (order) {
               sql = sql.slice(0, -1);
               sql += ';';
 
-              this.db.query(sql, (error, results) => {
+              (this.db || db).query(sql, (error, results) => {
                 if (error || results.affectedRows == 0) {
                   reject(new BadRequestError('Invalid order data.'));
                 } else {
@@ -267,7 +270,7 @@ Order.prototype.update = function (order) {
         products,
       } = order;
 
-      this.db.query(
+      (this.db || db).query(
         `update \`order\` set paid_on=` + (paidOn ? `'${paidOn}'` : null) + `, customer_name='${customerName}', 
          shipping_address='${shippingAddress}', billing_address='${billingAddress}', customer_contact='${customerContact}'
          where code='${code}' and added_by='${addedBy}'`,
@@ -275,7 +278,7 @@ Order.prototype.update = function (order) {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalid order data.'));
           } else {
-            this.db.query(
+            (this.db || db).query(
               `update order_product set status=0
                where order_id='${code}' and status=1`, (error, results) => {
                 if (error) {
@@ -291,7 +294,7 @@ Order.prototype.update = function (order) {
                     sql = sql.slice(0, -1);
                     sql += ';';
 
-                    this.db.query(sql, (error, results) => {
+                    (this.db || db).query(sql, (error, results) => {
                       if (error || results.affectedRows == 0) {
                         reject(new BadRequestError('Invalid order product data.'));
                       } else {
@@ -341,7 +344,7 @@ Order.prototype.update = function (order) {
 
 Order.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `update \`order\` set status=0 where code='${code}'`,
       (error, results) => {
 

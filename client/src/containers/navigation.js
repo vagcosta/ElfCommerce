@@ -65,7 +65,7 @@ class Navigation extends Component {
               </UncontrolledDropdown>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  {account ? account.user.name : ''}
+                  {account ? account.name : ''}
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem>

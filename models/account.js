@@ -9,37 +9,40 @@ const {
 } = require('../exceptions');
 require('dotenv').load();
 
-const { tokenSecret, host, user, password, database } = process.env;
+const { host, user, password, database } = process.env;
+const db = new MySQL(host, user, password, database);
 
 function Account(
   code,
   storeId,
   name,
   email,
-  password,
+  pwd,
   salt,
   joinedOn,
-  status = 1,
-  dbName = null
+  status,
+  dbConn
 ) {
   // If a field is optional then provide default empty value
   this.code = code;
   this.storeId = storeId;
   this.name = name;
   this.email = email;
-  this.password = password;
+  this.password = pwd;
   this.salt = salt;
   this.joinedOn = joinedOn || moment.utc().format('YYYY-MM-DD HH:mm:ss');
-  this.status = status;
-  this.db = new MySQL(host, user, password, dbName || database);
+  this.status = status || 1;
+  if (dbConn !== undefined) {
+    this.db = dbConn;
+  }
 }
 
-Account.prototype.get = function (id) {
+Account.prototype.get = function (code) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select code, store_id as storeId, name, email, joined_on as joinedOn, status
        from user
-       where code='${id}'`,
+       where code='${code}'`,
       (error, results) => {
         if (error || results.length == 0) {
           reject(new NoRecordFoundError('No account found.'));
@@ -72,7 +75,7 @@ Account.prototype.get = function (id) {
 
 Account.prototype.getTotalCountByStoreId = function (id) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select count(*) as total 
        from account where store_id='${id}'`,
       (error, results) => {
@@ -88,7 +91,7 @@ Account.prototype.getTotalCountByStoreId = function (id) {
 
 Account.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select code, store_id as storeId, name, email, joined_on as joinedOn, status
        from user
        where store_id='${id}' order by added_on desc limit ${(page - 1) *
@@ -155,7 +158,7 @@ Account.prototype.add = function (account) {
         joinedOn,
       } = account;
 
-      this.db.query(
+      (this.db || db).query(
         `insert into user(code, store_id, name, email, password, salt, joined_on) 
          values('${code}', '${storeId}', '${name}', '${email}','${password}', '${salt}', '${joinedOn}')`,
         (error, results) => {
@@ -193,7 +196,7 @@ Account.prototype.update = function (account) {
         email,
       } = account;
 
-      this.db.query(
+      (this.db || db).query(
         `update account set name='${name}', email='${email}' 
          where code='${code}'`,
         (error, results) => {
@@ -223,7 +226,7 @@ Account.prototype.update = function (account) {
 
 Account.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `update account set status=0 where code='${code}'`,
       (error, results) => {
 

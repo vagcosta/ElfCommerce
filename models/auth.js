@@ -8,9 +8,12 @@ const { UnauthorisedError } = require('../exceptions');
 require('dotenv').load();
 
 const { tokenSecret, host, user, password, database } = process.env;
+const db = new MySQL(host, user, password, database);
 
-function OAuth2Request(dbName = null) {
-  this.db = new MySQL(host, user, password, dbName || database);
+function OAuth2Request(dbConn) {
+  if (dbConn !== undefined) {
+    this.db = dbConn;
+  }
 }
 
 function OAuth2Response(id, accessToken, refreshToken) {
@@ -21,7 +24,7 @@ function OAuth2Response(id, accessToken, refreshToken) {
 
 OAuth2Request.prototype.authByPassword = function (username, pwd) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select code, password, salt, token, urt.status as tokenStatus, store_id as storeId
        from user
        left join user_refresh_token as urt on user.code = urt.user_id
@@ -53,7 +56,7 @@ OAuth2Request.prototype.authByPassword = function (username, pwd) {
               tokenSecret
             );
 
-            this.db.query(
+            (this.db || db).query(
               `insert into user_access_token(token, user_id, expired_on) values('${accessToken}', '${code}', '${moment
                 .utc()
                 .add(1, 'hour')
@@ -68,7 +71,7 @@ OAuth2Request.prototype.authByPassword = function (username, pwd) {
                     salt +
                     moment.utc().format('YYYY-MM-DD HH:mm:ss')}`
                   );
-                  this.db.query(
+                  (this.db || db).query(
                     `insert into user_refresh_token(token, user_id) values('${refreshToken}', '${code}')`,
                     error => {
 
@@ -99,7 +102,7 @@ OAuth2Request.prototype.authByPassword = function (username, pwd) {
 
 OAuth2Request.prototype.validateToken = function (token) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select * from user_access_token where token='${token}' and expired_on > '${moment
         .utc()
         .format('YYYY-MM-DD HH:mm:ss')}' order by id desc limit 1`,
@@ -116,14 +119,14 @@ OAuth2Request.prototype.validateToken = function (token) {
 
 OAuth2Request.prototype.refreshToken = function (token) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `select user_id as userId from user_refresh_token where token='${token}' and status=1 order by id desc limit 1`,
       (error, results) => {
         if (error) {
           reject(new UnauthorisedError('Unauthorised request.'));
         } else if (results.length > 0) {
           const userId = results[0].userId;
-          this.db.query(
+          (this.db || db).query(
             `select code, salt from user where code='${userId}' and status=1`,
             (error, results) => {
               if (error || results.length == 0) {
@@ -140,7 +143,7 @@ OAuth2Request.prototype.refreshToken = function (token) {
                   },
                   tokenSecret
                 );
-                this.db.query(
+                (this.db || db).query(
                   `insert into user_access_token(token, user_id, expired_on) values('${accessToken}', '${userId}', '${moment
                     .utc()
                     .add(1, 'hour')

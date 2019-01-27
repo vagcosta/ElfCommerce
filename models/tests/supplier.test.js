@@ -4,10 +4,11 @@ const chai = require('chai');
 const shortid = require('shortid');
 require('dotenv').load();
 chai.use(require('chai-as-promised'));
+const { MySQL } = require('../../db');
 const Supplier = require('../supplier');
 
 const expect = chai.expect;
-
+const { host, user, password, testDb } = process.env;
 
 describe('Test supplier model', () => {
   const supplier = new Supplier(
@@ -22,7 +23,7 @@ describe('Test supplier model', () => {
     1,
     '40s1cqdw6jmyyiixe',
     true,
-    process.env.testDb
+    new MySQL(host, user, password, testDb)
   );
 
   it('should return a new supplier object by calling add method', async () => {
@@ -43,7 +44,7 @@ describe('Test supplier model', () => {
       1,
       '40s1cqdw6jmyyiixe',
       true,
-      process.env.testDb
+      new MySQL(host, user, password, testDb)
     );
 
     await expect(supplier.add(supplier)).to.be.rejected;

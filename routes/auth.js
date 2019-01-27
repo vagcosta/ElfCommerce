@@ -11,7 +11,7 @@ const {
 } = require('../middlewares');
 const {
   OAuth2Request,
-  User,
+  Account,
 } = require('../models');
 
 router.post('/auth', async (req, res) => {
@@ -62,8 +62,8 @@ router.get(
   [authMiddleware, userCodeVerifier],
   async (req, res) => {
     try {
-      const user = new User();
-      const data = await user.get(req.params.accountId);
+      const acct = new Account();
+      const data = await acct.get(req.params.accountId);
 
       res.send(data);
     } catch (err) {

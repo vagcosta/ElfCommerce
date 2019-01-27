@@ -8,14 +8,17 @@ const {
 require('dotenv').load();
 
 const { host, user, password, database } = process.env;
+const db = new MySQL(host, user, password, database);
 
-function Public(dbName = null) {
-  this.db = new MySQL(host, user, password, dbName || database);
+function Public(dbConn) {
+  if (dbConn !== undefined) {
+    this.db = dbConn;
+  }
 }
 
 Public.prototype.getCountries = function () {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       'select id, name, flag, tel_code as telCode from country',
       (error, results) => {
 
@@ -31,7 +34,7 @@ Public.prototype.getCountries = function () {
 
 Public.prototype.getCurrencies = function () {
   return new Promise((resolve, reject) => {
-    this.db.query('select * from currency', (error, results) => {
+    (this.db || db).query('select * from currency', (error, results) => {
 
       if (error || results.length == 0) {
         reject(new NoRecordFoundError('No currencies found.'));
@@ -44,7 +47,7 @@ Public.prototype.getCurrencies = function () {
 
 Public.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    this.db.query(
+    (this.db || db).query(
       `update product set status=0 where code=${code}`,
       (error, results) => {
 
