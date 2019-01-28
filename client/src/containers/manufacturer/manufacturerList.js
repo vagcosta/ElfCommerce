@@ -120,19 +120,19 @@ class ManufacturerList extends Component {
                     <Table responsive size="sm">
                       <thead className="table-header">
                         <tr>
-                          <th>
+                          <th width="10%">
                             <FormattedMessage id="sys.logo" />
                           </th>
-                          <th>
+                          <th width="25%">
                             <FormattedMessage id="sys.name" />
                           </th>
-                          <th>
+                          <th width="40%">
                             <FormattedMessage id="sys.contactInfo" />
                           </th>
-                          <th>
+                          <th width="10%">
                             <FormattedMessage id="sys.status" />
                           </th>
-                          <th />
+                          <th width="15%" />
                         </tr>
                       </thead>
                       <tbody>

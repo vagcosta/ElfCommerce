@@ -28,9 +28,11 @@ const ManufacturerListItem = props => {
       </td>
       <td>
         {name}<br /><br />
-        <p>
-          &#187; <a href={url} target="_blank" className="text-info">{formatMessage({ id: 'sys.website' })}</a>
-        </p>
+        {
+          url ? <p>
+            &#187; <a href={url} target="_blank" className="text-info">{formatMessage({ id: 'sys.website' })}</a>
+          </p> : null
+        }
       </td>
       <td style={{ fontSize: 14 }}>
         <div style={{ marginTop: 5 }}>
