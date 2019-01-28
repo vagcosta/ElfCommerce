@@ -31,7 +31,7 @@ function Account(
   this.password = pwd;
   this.salt = salt;
   this.joinedOn = joinedOn || moment.utc().format('YYYY-MM-DD HH:mm:ss');
-  this.status = status || 1;
+  this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
   }

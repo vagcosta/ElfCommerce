@@ -17,7 +17,8 @@ const ManufacturerListItem = props => {
     address,
     contact,
     status,
-    onClick,
+    onViewClick,
+    onDeleteClick,
     id,
     intl: { formatMessage } } = props;
 
@@ -56,10 +57,10 @@ const ManufacturerListItem = props => {
         </Badge>
       </td>
       <td style={{ textAlign: 'right' }}>
-        <Button size="sm" className="action-btn" onClick={() => onClick(id)}>
+        <Button size="sm" className="action-btn" onClick={() => onViewClick(id)}>
           <FormattedMessage id="sys.view" />
         </Button>
-        <Button size="sm" className="action-btn" onClick={() => onClick(id)}>
+        <Button size="sm" className="action-btn" onClick={() => onDeleteClick(id)}>
           <FormattedMessage id="sys.delete" />
         </Button>
       </td>
@@ -75,8 +76,9 @@ ManufacturerListItem.propTypes = {
   address: PropTypes.string,
   email: PropTypes.string.isRequired,
   contact: PropTypes.string.isRequired,
-  status: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
+  status: PropTypes.number.isRequired,
+  onViewClick: PropTypes.func.isRequired,
+  onDeleteClick: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };
 

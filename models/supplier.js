@@ -35,7 +35,7 @@ function Supplier(
   this.storeId = storeId;
   this.countryId = countryId;
   this.addedBy = addedBy;
-  this.status = status || 1;
+  this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
   }

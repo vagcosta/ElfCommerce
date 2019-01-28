@@ -18,7 +18,6 @@ import {
   Alert,
 } from 'reactstrap';
 import { MdSave } from 'react-icons/md';
-import _ from 'lodash';
 import {
   fetchCountries,
   submitManufacturer,
@@ -133,7 +132,7 @@ class ManufacturerForm extends Component {
     let logo = null;
 
     if (initialValues.logo) {
-      logo = `${_.includes(initialValues.logo, 'http') ? '' : mediaFileDomain + '/'}${initialValues.logo}`;
+      logo = `${initialValues.logo.indexOf('http') !== -1 ? '' : mediaFileDomain + '/'}${initialValues.logo}`;
     }
 
     if (uploadedFile && saveMediaFileLocal) {
@@ -163,7 +162,7 @@ class ManufacturerForm extends Component {
           }
 
           <Row>
-            <Col md={3}>
+            <Col md={4}>
               <p className="lead"><FormattedMessage id="sys.logo" /></p>
               <img
                 src={logo || require('../../assets/no_image.svg')}
@@ -189,7 +188,7 @@ class ManufacturerForm extends Component {
                   </div>
               }
             </Col>
-            <Col md={9}>
+            <Col md={8}>
               <Card>
                 <CardHeader>
                   <FormattedMessage id="sys.basicInfo" />

@@ -16,7 +16,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-import { fetchManufacturers } from '../../actions';
+import { fetchManufacturers, updateManufacturerStatus } from '../../actions';
 import { ManufacturerListItem, Loader } from '../../components';
 import config from '../../config';
 
@@ -48,6 +48,12 @@ class ManufacturerList extends Component {
   onViewClick = id => {
     this.props.history.push(`/manufacturers/${id}`);
   };
+
+  onDeleteClick = id => {
+    const { dispatch } = this.props;
+
+    dispatch(updateManufacturerStatus({ storeId: this.state.storeId, manufacturerId: id }));
+  }
 
   onPageChange = page => {
     const { dispatch } = this.props;
@@ -147,7 +153,8 @@ class ManufacturerList extends Component {
                             email={manufacturer.email}
                             contact={manufacturer.contact}
                             status={manufacturer.status}
-                            onClick={this.onViewClick}
+                            onViewClick={this.onViewClick}
+                            onDeleteClick={this.onDeleteClick}
                           />
                         )) : <tr><td><FormattedMessage id="sys.noRecords" /></td></tr>}
                       </tbody>

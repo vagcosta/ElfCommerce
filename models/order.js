@@ -38,7 +38,7 @@ function Order(
   this.billingAddress = billingAddress;
   this.customerContact = customerContact || '';
   this.products = products;
-  this.status = status || 1;
+  this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
   }

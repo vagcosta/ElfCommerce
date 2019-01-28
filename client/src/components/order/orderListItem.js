@@ -69,7 +69,7 @@ OrderListItem.propTypes = {
   customer: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   payment: PropTypes.string.isRequired,
-  status: PropTypes.bool.isRequired,
+  status: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };

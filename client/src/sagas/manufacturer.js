@@ -8,6 +8,8 @@ import {
   clearToken,
   submitManufacturerSuccess,
   submitManufacturerFailed,
+  updateManufacturerStatusSuccess,
+  updateManufacturerStatusFailed,
 } from '../actions';
 import config from '../config';
 
@@ -72,6 +74,27 @@ export function* upsertManufacturer(action) {
       yield put(clearToken());
     } else {
       yield put(submitManufacturerFailed());
+    }
+  }
+}
+
+export function* updateManufacturerStatus(action) {
+  try {
+    const { storeId, manufacturerId } = action.value;
+    const res = yield axios({
+      method: 'delete',
+      url: `${config.apiDomain}/stores/${storeId}/manufacturers/${manufacturerId}`,
+      headers: {
+        authorization: localStorage.getItem(config.accessTokenKey),
+      },
+    });
+
+    yield put(updateManufacturerStatusSuccess({ manufacturerId, status: 0 }));
+  } catch (error) {
+    if (error.response.status === 401) {
+      yield put(clearToken());
+    } else {
+      yield put(updateManufacturerStatusFailed());
     }
   }
 }

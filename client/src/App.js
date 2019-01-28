@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
 import { Col } from 'reactstrap';
 import Login from './containers/login';
 import Dashboard from './containers/dashboard/dashboard';
@@ -21,7 +21,7 @@ import {
 } from './containers';
 import NavBar from './containers/navigation';
 import SideBarContent from './components/sideBar';
-import PrivateRoute from './privateRoute';
+import config from './config';
 
 const routes = [
   {
@@ -144,32 +144,34 @@ const App = () => (
   <Router>
     <div>
       <Route exact path="/" component={Login} />
-      <div className="dashboard-page">
-        <Col md={2} className="sidebar">
-          <div id="site-name">
-            ELFCommerce
-          </div>
-          {routes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              exact={route.exact}
-              component={route.sidebar}
-            />
-          ))}
-        </Col>
-        <Col md={{ size: 10, offset: 2 }} style={{ padding: 0 }}>
-          <NavBar />
-          {routes.map((route, index) => (
-            <PrivateRoute
-              key={index}
-              path={route.path}
-              exact={route.exact}
-              component={route.main}
-            />
-          ))}
-        </Col>
-      </div>
+      {localStorage.getItem(config.accessTokenKey) ?
+        <div className="dashboard-page">
+          <Col md={2} className="sidebar">
+            <div id="site-name">
+              ELFCommerce
+            </div>
+            {routes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                component={route.sidebar}
+              />
+            ))}
+          </Col>
+          <Col md={{ size: 10, offset: 2 }} style={{ padding: 0 }}>
+            <NavBar />
+            {routes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                component={route.main}
+              />
+            ))}
+          </Col>
+        </div> : <Redirect to='/' />
+      }
     </div>
   </Router>
 );

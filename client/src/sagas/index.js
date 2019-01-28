@@ -25,11 +25,13 @@ import {
   fetchSuppliers,
   fetchSupplierDetails,
   upsertSupplier,
+  updateSupplierStatus,
 } from './supplier';
 import {
   fetchManufacturers,
   fetchManufacturerDetails,
   upsertManufacturer,
+  updateManufacturerStatus,
 } from './manufacturer';
 import {
   fetchCountries,
@@ -54,9 +56,11 @@ import {
   FETCH_SUPPLIERS,
   FETCH_SUPPLIER_DETAILS,
   SUBMIT_SUPPLIER,
+  UPDATE_SUPPLIER_STATUS,
   FETCH_MANUFACTURERS,
   FETCH_MANUFACTURER_DETAILS,
   SUBMIT_MANUFACTURER,
+  UPDATE_MANUFACTURER_STATUS,
   FETCH_DASHBOARD_DATA,
   FETCH_SALES_REPORT_PRODUCTS,
   FETCH_SALES_REPORT_CATEGORIES,
@@ -90,9 +94,11 @@ export default function* rootSaga() {
     takeEvery(FETCH_SUPPLIERS, fetchSuppliers),
     takeEvery(FETCH_SUPPLIER_DETAILS, fetchSupplierDetails),
     takeEvery(SUBMIT_SUPPLIER, upsertSupplier),
+    takeEvery(UPDATE_SUPPLIER_STATUS, updateSupplierStatus),
     takeEvery(FETCH_MANUFACTURERS, fetchManufacturers),
     takeEvery(SUBMIT_MANUFACTURER, upsertManufacturer),
     takeEvery(FETCH_MANUFACTURER_DETAILS, fetchManufacturerDetails),
+    takeEvery(UPDATE_MANUFACTURER_STATUS, updateManufacturerStatus),
     takeEvery(FETCH_CATEGORY_DETAILS, fetchCategoryDetails),
     takeEvery(FETCH_COUNTRIES, fetchCountries),
     takeEvery(FETCH_CURRENCIES, fetchCurrencies),

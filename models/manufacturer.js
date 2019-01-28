@@ -35,7 +35,7 @@ function Manufacturer(
   this.storeId = storeId;
   this.countryId = countryId;
   this.addedBy = addedBy;
-  this.status = status || 1;
+  this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
   }
@@ -112,7 +112,6 @@ Manufacturer.prototype.getAllByStoreId = function (
        from manufacturer where store_id='${id}' order by name limit ${(page - 1) *
       pageSize}, ${pageSize}`,
       (error, results) => {
-
         if (error) {
           reject(new NoRecordFoundError('No manufacturers found.'));
         } else {

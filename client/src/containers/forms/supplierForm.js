@@ -18,7 +18,6 @@ import {
   Alert,
 } from 'reactstrap';
 import { MdSave } from 'react-icons/md';
-import _ from 'lodash';
 import {
   fetchCountries,
   submitSupplier,
@@ -136,7 +135,7 @@ class SupplierForm extends Component {
     let logo = null;
 
     if (initialValues.logo) {
-      logo = `${_.includes(initialValues.logo, 'http') ? '' : mediaFileDomain + '/'}${initialValues.logo}`;
+      logo = `${initialValues.logo.indexOf('http') !== -1 ? '' : mediaFileDomain + '/'}${initialValues.logo}`;
     }
 
     if (uploadedFile && saveMediaFileLocal) {
@@ -165,7 +164,7 @@ class SupplierForm extends Component {
                 </Alert> : null
           }
           <Row>
-            <Col md={3}>
+            <Col md={4}>
               <p className="lead"><FormattedMessage id="sys.logo" /></p>
               <img
                 src={logo || require('../../assets/no_image.svg')}
@@ -191,7 +190,7 @@ class SupplierForm extends Component {
                   </div>
               }
             </Col>
-            <Col md={9}>
+            <Col md={8}>
               <Card>
                 <CardHeader>
                   <FormattedMessage id="sys.basicInfo" />

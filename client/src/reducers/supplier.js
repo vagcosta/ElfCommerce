@@ -5,6 +5,8 @@ import {
   FETCH_SUPPLIER_DETAILS_FAILED,
   SUBMIT_SUPPLIER_SUCCESS,
   SUBMIT_SUPPLIER_FAILED,
+  UPDATE_SUPPLIER_STATUS_SUCCESS,
+  UPDATE_SUPPLIER_STATUS_FAILED,
   CLEAR_SUPPLIER_DETAILS,
 } from '../actions';
 
@@ -24,9 +26,25 @@ export default function supplierReducer(state = initialState, action) {
       return { ...state, supplierDetails: action.value, loaded: true };
     case SUBMIT_SUPPLIER_SUCCESS:
       return { ...state, supplierDetails: action.value, done: true };
+    case UPDATE_SUPPLIER_STATUS_SUCCESS:
+      const newList = (state.suppliers.data.map(item => {
+
+        if (item.code === action.value.supplierId) {
+
+          item.status = action.value.status;
+        }
+
+        return item;
+      }));
+
+      return {
+        ...state,
+        suppliers: { data: newList, count: state.suppliers.count },
+      };
     case SUBMIT_SUPPLIER_FAILED:
     case FETCH_SUPPLIERS_FAILED:
     case FETCH_SUPPLIER_DETAILS_FAILED:
+    case UPDATE_SUPPLIER_STATUS_FAILED:
       return { ...state, error: true };
     case CLEAR_SUPPLIER_DETAILS:
       return { ...state, ...initialState };

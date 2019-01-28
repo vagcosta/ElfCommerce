@@ -25,7 +25,7 @@ function Category(
   this.storeId = storeId;
   this.addedBy = addedBy;
   this.parentId = parentId || null;
-  this.status = status || 1;
+  this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
   }

@@ -13,6 +13,12 @@ export const FETCH_MANUFACTURER_DETAILS_SUCCESS =
 export const FETCH_MANUFACTURER_DETAILS_FAILED =
   'FETCH_MANUFACTURE_DETAILS_FAILED';
 
+export const UPDATE_MANUFACTURER_STATUS = 'UPDATE_MANUFACTURER_STATUS';
+export const UPDATE_MANUFACTURER_STATUS_SUCCESS =
+  'UPDATE_MANUFACTURER_STATUS_SUCCESS';
+export const UPDATE_MANUFACTURER_STATUS_FAILED =
+  'UPDATE_MANUFACTURER_STATUS_FAILED';
+
 export function fetchManufacturers(data) {
   return { type: FETCH_MANUFACTURERS, value: data };
 }
@@ -51,4 +57,16 @@ export function fetchManufacturerDetailsSuccess(data) {
 
 export function fetchManufacturerDetailsFailed() {
   return { type: FETCH_MANUFACTURER_DETAILS_FAILED };
+}
+
+export function updateManufacturerStatus(data) {
+  return { type: UPDATE_MANUFACTURER_STATUS, value: data };
+}
+
+export function updateManufacturerStatusSuccess(data) {
+  return { type: UPDATE_MANUFACTURER_STATUS_SUCCESS, value: data };
+}
+
+export function updateManufacturerStatusFailed() {
+  return { type: UPDATE_MANUFACTURER_STATUS_FAILED };
 }

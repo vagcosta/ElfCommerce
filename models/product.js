@@ -47,7 +47,7 @@ function Product(
   this.coverImage = coverImage || '';
   this.manufacturerId = manufacturerId || '';
   this.supplierId = supplierId || '';
-  this.status = status || 1;
+  this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
   }
