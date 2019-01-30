@@ -29,8 +29,8 @@
     "client": "cd client && yarn start",
     "client:analyze": "cd client && yarn analyze",
     "server": "nodemon app.local.js",
-    "test:server": "mocha \"./models/tests/**/*.js\"",
-    "coverage:server": "nyc --reporter=text mocha \"./models/tests/**/*.js\"",
+    "test:server": "mocha -t 60000 --exit \"./models/tests/**/*.js\"",
+    "coverage:server": "nyc --reporter=text mocha -t 60000 --exit \"./models/tests/**/*.js\"",
     "serverless": "claudia update --handler lambda.handler --deploy-proxy-api",
     "db:migrate": "node ./db/migrate.js"
   },
