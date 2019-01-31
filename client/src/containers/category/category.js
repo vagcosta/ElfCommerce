@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Button, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import {
+  Col,
+  Button,
+  Breadcrumb,
+  BreadcrumbItem,
+} from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';

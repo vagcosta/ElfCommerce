@@ -17,10 +17,16 @@ import {
   fetchCategoryDetails,
   upsertCategory,
 } from './category';
-import { fetchSalesReportProducts, fetchSalesReportCategories } from './report';
+import {
+  fetchSalesReportProducts,
+  fetchSalesReportCategories,
+} from './report';
 import { fetchDashboardData } from './dashboard';
 import { fetchStoreSettings } from './setting';
-import { submitLoginData, clearToken } from './auth';
+import {
+  submitLoginData,
+  clearToken,
+} from './auth';
 import {
   fetchSuppliers,
   fetchSupplierDetails,

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardTitle } from 'reactstrap';
+import {
+  Card,
+  CardTitle,
+} from 'reactstrap';
 
 const FeedItem = props => {
   const { backgroundColor, fontColor, title, content, datetime } = props;

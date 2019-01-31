@@ -1,6 +1,9 @@
 import { call, put } from 'redux-saga/effects';
 import axios from 'axios';
-import { fetchAccountSuccess, fetchAccountFailed } from '../actions';
+import {
+  fetchAccountSuccess,
+  fetchAccountFailed,
+} from '../actions';
 import config from '../config';
 
 export function* fetchAccount(action) {

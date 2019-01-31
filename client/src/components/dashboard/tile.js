@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardTitle } from 'reactstrap';
+import {
+  Card,
+  CardTitle,
+} from 'reactstrap';
 
 const Tile = props => {
   const { tileStyle, titleStyle, textStyle, title, description } = props;

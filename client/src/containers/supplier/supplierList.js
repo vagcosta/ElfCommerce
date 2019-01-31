@@ -13,11 +13,20 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
+import {
+  MdAddCircleOutline,
+  MdSearch,
+} from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-import { fetchSuppliers, updateSupplierStatus } from '../../actions';
-import { SupplierListItem, Loader } from '../../components';
+import {
+  fetchSuppliers,
+  updateSupplierStatus,
+} from '../../actions';
+import {
+  SupplierListItem,
+  Loader,
+} from '../../components';
 import config from '../../config';
 
 class SupplierList extends Component {

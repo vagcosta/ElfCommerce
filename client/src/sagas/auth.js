@@ -1,6 +1,9 @@
 import { call, put } from 'redux-saga/effects';
 import axios from 'axios';
-import { authSuccess, authFailed } from '../actions';
+import {
+  authSuccess,
+  authFailed,
+} from '../actions';
 import config from '../config';
 
 export function* submitLoginData(action) {
@@ -19,7 +22,7 @@ export function* submitLoginData(action) {
   }
 }
 
-export function* clearToken(){
+export function* clearToken() {
   localStorage.removeItem(config.accessTokenKey);
   yield put(authFailed());
 }
