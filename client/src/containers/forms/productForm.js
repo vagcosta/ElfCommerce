@@ -107,7 +107,7 @@ class ProductForm extends Component {
       },
     } = this.props;
 
-    const params = { storeId, pageSize: 200, pageNo: 1 };
+    const params = { storeId, pageSize: 200, pageNo: 1, activeOnly: true };
 
     dispatch(fetchCategories(params));
     dispatch(fetchSuppliers(params));
@@ -122,7 +122,6 @@ class ProductForm extends Component {
   }
 
   toggle = tab => {
-    const { dispatch } = this.props;
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab,

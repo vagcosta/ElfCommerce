@@ -18,8 +18,16 @@ router.get(
   async (req, res) => {
     try {
       const supplier = new Supplier();
-      const data = await supplier.getAllByStoreId(req.params.storeId, req.query.page || 1, req.query.size || 20);
-      const count = await supplier.getTotalCountByStoreId(req.params.storeId);
+      const data = await supplier.getAllByStoreId(
+        req.params.storeId,
+        req.query.page || 1,
+        req.query.size || 20,
+        req.query.activeOnly ? true : false
+      );
+      const count = await supplier.getTotalCountByStoreId(
+        req.params.storeId,
+        req.query.activeOnly ? true : false
+      );
 
       res.send({ data, count });
     } catch (err) {

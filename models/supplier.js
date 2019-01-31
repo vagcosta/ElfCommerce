@@ -47,7 +47,6 @@ Supplier.prototype.get = function (code) {
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
        from supplier where code='${code}'`,
       (error, results) => {
-
         if (error || results.length == 0) {
           reject(new NoRecordFoundError('No supplier found.'));
         } else {
@@ -85,11 +84,14 @@ Supplier.prototype.get = function (code) {
   });
 };
 
-Supplier.prototype.getTotalCountByStoreId = function (id) {
+Supplier.prototype.getTotalCountByStoreId = function (
+  id,
+  activeOnly = false
+) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select count(*) as total 
-       from supplier where store_id='${id}'`,
+       from supplier where store_id='${id}'${activeOnly ? ' and status=1' : ''}`,
       (error, results) => {
         if (error) {
           reject(new NoRecordFoundError('No suppliers found.'));
@@ -101,11 +103,16 @@ Supplier.prototype.getTotalCountByStoreId = function (id) {
   });
 };
 
-Supplier.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
+Supplier.prototype.getAllByStoreId = function (
+  id,
+  page = 1,
+  pageSize = 20,
+  activeOnly = false
+) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
-       from supplier where store_id='${id}'  order by name limit ${(page - 1) *
+       from supplier where store_id='${id}'${activeOnly ? ' and status=1' : ''} order by name limit ${(page - 1) *
       pageSize}, ${pageSize}`,
       (error, results) => {
         if (error) {
@@ -182,7 +189,8 @@ Supplier.prototype.add = function (supplier) {
 
       (this.db || db).query(
         `insert into supplier(code, name, url, email, contact, address, logo, store_id, country_id, added_by) 
-         values('${code}', '${name}', '${url}', '${email}', '${contact}', '${address}', '${logo || ''}', '${storeId}', '${countryId}', '${addedBy}')`,
+         values('${code}', '${name}', '${url}', '${email}', '${contact}', '${address}', '${logo || ''}', 
+         '${storeId}', '${countryId}', '${addedBy}')`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalide supplier data.'));

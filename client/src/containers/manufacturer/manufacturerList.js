@@ -52,7 +52,7 @@ class ManufacturerList extends Component {
   onStatusUpdateClick = (id, status) => {
     const { dispatch } = this.props;
 
-    dispatch(updateManufacturerStatus({ storeId: this.state.storeId, supplierId: id, status }));
+    dispatch(updateManufacturerStatus({ storeId: this.state.storeId, manufacturerId: id, status }));
   }
 
   onPageChange = page => {

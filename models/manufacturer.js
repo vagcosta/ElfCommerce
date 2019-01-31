@@ -85,11 +85,14 @@ Manufacturer.prototype.get = function (code) {
   });
 };
 
-Manufacturer.prototype.getTotalCountByStoreId = function (id) {
+Manufacturer.prototype.getTotalCountByStoreId = function (
+  id,
+  activeOnly = false
+) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select count(*) as total 
-       from manufacturer where store_id='${id}'`,
+       from manufacturer where store_id='${id}'${activeOnly ? ' and status=1' : ''}`,
       (error, results) => {
         if (error) {
           reject(new NoRecordFoundError('No manufacturers found.'));
@@ -104,12 +107,13 @@ Manufacturer.prototype.getTotalCountByStoreId = function (id) {
 Manufacturer.prototype.getAllByStoreId = function (
   id,
   page = 1,
-  pageSize = 20
+  pageSize = 20,
+  activeOnly = false
 ) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select code, name, url, email, contact, address, logo, store_id as storeId, country_id as countryId, added_by as addedBy, status
-       from manufacturer where store_id='${id}' order by name limit ${(page - 1) *
+       from manufacturer where store_id='${id}'${activeOnly ? ' and status=1' : ''} order by name limit ${(page - 1) *
       pageSize}, ${pageSize}`,
       (error, results) => {
         if (error) {
@@ -266,7 +270,6 @@ Manufacturer.prototype.delete = function (code) {
     (this.db || db).query(
       `update manufacturer set status=0 where code='${code}'`,
       (error, results) => {
-
         if (error || results.affectedRows == 0) {
           reject(new BadRequestError('Archiving manufacturer failed.'));
         } else {

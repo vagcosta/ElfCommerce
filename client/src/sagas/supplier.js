@@ -15,10 +15,10 @@ import config from '../config';
 
 export function* fetchSuppliers(action) {
   try {
-    const { storeId, pageNo, pageSize } = action.value;
+    const { storeId, pageNo, pageSize, activeOnly } = action.value;
     const res = yield axios({
       method: 'get',
-      url: `${config.apiDomain}/stores/${storeId}/suppliers?page=${pageNo}&size=${pageSize}`,
+      url: `${config.apiDomain}/stores/${storeId}/suppliers?page=${pageNo}&size=${pageSize}${activeOnly ? '&activeOnly=true' : ''}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
       },
