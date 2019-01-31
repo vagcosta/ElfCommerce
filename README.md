@@ -31,10 +31,11 @@ Step 2, add the ***.env*** file in root directory with environment settings:
 ```
 
 tokenSecret=REPLACE_THIS_WITH_ANY_LONG_RANDOM_STRING
-host=YOUR_MYSQL_SERVER_CONNECTION_STRING
-user=YOUR_MYSQL_USER
-password=YOUR_MYSQL_USER_PASSWORD
-database=YOUR_MYSQL_DATABASE_NAME
+host=MYSQL_SERVER_CONNECTION_STRING
+user=MYSQL_USER
+password=MYSQL_USER_PASSWORD
+database=MYSQL_DATABASE_NAME
+testDb=MYSQL_DATABASE_NAME_FOR_INTEGRATION_TEST
 
 ```
 Step 3, install all dependancies for ExpressJS
@@ -67,7 +68,7 @@ Step 5, create your own config.js in **client/src** directory with following set
 
 ```javascript
 const config = {
-  apiDomain: 'YOUR_API_DOMAIN',
+  apiDomain: 'API_DOMAIN',
   accessTokenKey: 'THE_KEY_FOR_LOCAL_STORAGE_TO_STORE_ACCESS_TOKEN',
   googleApiKey: 'GOOGLE_API_KEY',
   mediaFileDomain: 'http://localhost:8080', //If you allow images to be uploaded to your local server

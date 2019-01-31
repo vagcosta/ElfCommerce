@@ -30,9 +30,9 @@ const OrderListItem = props => {
               case 1:
                 return 'warning';
               case 2:
-                return 'success';
+                return 'info';
               case 3:
-                return 'dark';
+                return 'success';
             }
           })(status)
         }>

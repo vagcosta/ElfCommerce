@@ -117,6 +117,21 @@ router.put(
   }
 );
 
+router.patch(
+  '/stores/:storeId/manufacturers/:manufacturerId',
+  [authMiddleware, storeIdVerifier],
+  async (req, res) => {
+    try {
+      const manufacturer = new Manufacturer();
+      const data = await manufacturer.activate(req.params.manufacturerId);
+
+      res.send(data);
+    } catch (err) {
+      res.status(err.statusCode).send(err);
+    }
+  }
+);
+
 router.delete(
   '/stores/:storeId/manufacturers/:manufacturerId',
   [authMiddleware, storeIdVerifier],

@@ -80,16 +80,16 @@ export function* upsertSupplier(action) {
 
 export function* updateSupplierStatus(action) {
   try {
-    const { storeId, supplierId } = action.value;
+    const { storeId, supplierId, status } = action.value;
     const res = yield axios({
-      method: 'delete',
+      method: !status ? 'delete' : 'patch',
       url: `${config.apiDomain}/stores/${storeId}/suppliers/${supplierId}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
       },
     });
 
-    yield put(updateSupplierStatusSuccess({ supplierId, status: 0 }));
+    yield put(updateSupplierStatusSuccess({ supplierId, status }));
   } catch (error) {
     if (error.response.status === 401) {
       yield put(clearToken());

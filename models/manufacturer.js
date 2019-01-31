@@ -268,13 +268,30 @@ Manufacturer.prototype.delete = function (code) {
       (error, results) => {
 
         if (error || results.affectedRows == 0) {
-          reject(new BadRequestError('Deleting manufacturer failed.'));
+          reject(new BadRequestError('Archiving manufacturer failed.'));
         } else {
-          resolve('Manufacturer deleted.');
+          resolve('Manufacturer archived.');
         }
       }
     );
   });
 };
+
+Manufacturer.prototype.activate = function (code) {
+  return new Promise((resolve, reject) => {
+    (this.db || db).query(
+      `update manufacturer set status=1 where code='${code}'`,
+      (error, results) => {
+
+        if (error || results.affectedRows == 0) {
+          reject(new BadRequestError('Activating manufacturer failed.'));
+        } else {
+          resolve('Manufacturer activated.');
+        }
+      }
+    );
+  });
+};
+
 
 module.exports = Manufacturer;

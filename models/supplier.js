@@ -268,9 +268,24 @@ Supplier.prototype.delete = function (code) {
       `update supplier set status = 0 where code = '${code}'`,
       (error, results) => {
         if (error || results.affectedRows == 0) {
-          reject(new BadRequestError('Deleting supplier failed.'));
+          reject(new BadRequestError('Archiving supplier failed.'));
         } else {
-          resolve('Supplier deleted.');
+          resolve('Supplier archived.');
+        }
+      }
+    );
+  });
+};
+
+Supplier.prototype.activate = function (code) {
+  return new Promise((resolve, reject) => {
+    (this.db || db).query(
+      `update supplier set status = 1 where code = '${code}'`,
+      (error, results) => {
+        if (error || results.affectedRows == 0) {
+          reject(new BadRequestError('Activating supplier failed.'));
+        } else {
+          resolve('Supplier activated.');
         }
       }
     );

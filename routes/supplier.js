@@ -117,6 +117,21 @@ router.put(
   }
 );
 
+router.patch(
+  '/stores/:storeId/suppliers/:supplierId',
+  [authMiddleware, storeIdVerifier],
+  async (req, res) => {
+    try {
+      const supplier = new Supplier();
+      const data = await supplier.activate(req.params.supplierId);
+
+      res.send(data);
+    } catch (err) {
+      res.status(err.statusCode).send(err);
+    }
+  }
+);
+
 router.delete(
   '/stores/:storeId/suppliers/:supplierId',
   [authMiddleware, storeIdVerifier],

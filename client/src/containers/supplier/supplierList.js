@@ -50,10 +50,10 @@ class SupplierList extends Component {
     this.props.history.push(`/suppliers/${id}`);
   };
 
-  onDeleteClick = id => {
+  onStatusUpdateClick = (id, status) => {
     const { dispatch } = this.props;
 
-    dispatch(updateSupplierStatus({ storeId: this.state.storeId, supplierId: id }));
+    dispatch(updateSupplierStatus({ storeId: this.state.storeId, supplierId: id, status }));
   }
 
   onPageChange = page => {
@@ -155,7 +155,7 @@ class SupplierList extends Component {
                             contact={product.contact}
                             status={product.status}
                             onViewClick={this.onViewClick}
-                            onDeleteClick={this.onDeleteClick}
+                            onStatusUpdateClick={this.onStatusUpdateClick}
                           />
                         )) : <tr><td><FormattedMessage id="sys.noRecords" /></td></tr>}
                       </tbody>

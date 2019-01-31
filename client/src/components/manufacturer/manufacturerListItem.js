@@ -18,7 +18,7 @@ const ManufacturerListItem = props => {
     contact,
     status,
     onViewClick,
-    onDeleteClick,
+    onStatusUpdateClick,
     id,
     intl: { formatMessage } } = props;
 
@@ -50,18 +50,20 @@ const ManufacturerListItem = props => {
         </div>
       </td>
       <td>
-        <Badge color={status ? 'success' : 'danger'}>
+        <Badge color={status ? 'success' : 'secondary'}>
           {status
             ? formatMessage({ id: 'sys.active' })
-            : formatMessage({ id: 'sys.inactive' })}
+            : formatMessage({ id: 'sys.archived' })}
         </Badge>
       </td>
       <td style={{ textAlign: 'right' }}>
         <Button size="sm" className="action-btn" onClick={() => onViewClick(id)}>
           <FormattedMessage id="sys.view" />
         </Button>
-        <Button size="sm" className="action-btn" onClick={() => onDeleteClick(id)}>
-          <FormattedMessage id="sys.delete" />
+        <Button size="sm" className="action-btn" onClick={() => onStatusUpdateClick(id, status ? 0 : 1)}>
+          {status
+            ? formatMessage({ id: 'sys.archive' })
+            : formatMessage({ id: 'sys.unarchive' })}
         </Button>
       </td>
     </tr>
@@ -78,7 +80,7 @@ ManufacturerListItem.propTypes = {
   contact: PropTypes.string.isRequired,
   status: PropTypes.number.isRequired,
   onViewClick: PropTypes.func.isRequired,
-  onDeleteClick: PropTypes.func.isRequired,
+  onStatusUpdateClick: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };
 

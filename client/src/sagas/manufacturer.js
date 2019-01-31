@@ -80,16 +80,16 @@ export function* upsertManufacturer(action) {
 
 export function* updateManufacturerStatus(action) {
   try {
-    const { storeId, manufacturerId } = action.value;
+    const { storeId, manufacturerId, status } = action.value;
     const res = yield axios({
-      method: 'delete',
+      method: !status ? 'delete' : 'patch',
       url: `${config.apiDomain}/stores/${storeId}/manufacturers/${manufacturerId}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
       },
     });
 
-    yield put(updateManufacturerStatusSuccess({ manufacturerId, status: 0 }));
+    yield put(updateManufacturerStatusSuccess({ manufacturerId, status }));
   } catch (error) {
     if (error.response.status === 401) {
       yield put(clearToken());
