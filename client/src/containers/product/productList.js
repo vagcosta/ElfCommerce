@@ -13,10 +13,16 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
+import {
+  MdAddCircleOutline,
+  MdSearch,
+} from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-import { fetchProducts } from '../../actions';
+import {
+  fetchProducts,
+  updateProductStatus,
+} from '../../actions';
 import { ProductListItem, Loader } from '../../components';
 import config from '../../config';
 
@@ -49,6 +55,12 @@ class ProductList extends Component {
     const { history } = this.props;
     history.push(`/products/${id}`);
   };
+
+  onStatusUpdateClick = (id, status) => {
+    const { dispatch } = this.props;
+
+    dispatch(updateProductStatus({ storeId: this.state.storeId, productId: id, status }));
+  }
 
   onPageChange = page => {
     const { dispatch } = this.props;
@@ -123,25 +135,25 @@ class ProductList extends Component {
                     <Table responsive size="sm">
                       <thead className="table-header">
                         <tr>
-                          <th>
+                          <th width="10%">
                             <FormattedMessage id="sys.thumbnail" />
                           </th>
-                          <th>
+                          <th width="20%">
                             <FormattedMessage id="sys.name" />
                           </th>
-                          <th>
+                          <th width="25%">
                             <FormattedMessage id="sys.sku" />
                           </th>
-                          <th>
+                          <th width="10%">
                             <FormattedMessage id="sys.price" />
                           </th>
-                          <th>
+                          <th width="10%">
                             <FormattedMessage id="sys.qty" />
                           </th>
-                          <th>
+                          <th width="10%">
                             <FormattedMessage id="sys.status" />
                           </th>
-                          <th />
+                          <th width="15%" />
                         </tr>
                       </thead>
                       <tbody>
@@ -157,7 +169,8 @@ class ProductList extends Component {
                             price={product.unitPrice}
                             quantity={product.quantity}
                             status={product.status}
-                            onClick={this.onViewClick}
+                            onViewClick={this.onViewClick}
+                            onStatusUpdateClick={this.onStatusUpdateClick}
                           />
                         )) : <tr><td><FormattedMessage id="sys.noRecords" /></td></tr>}
                       </tbody>

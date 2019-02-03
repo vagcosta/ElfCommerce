@@ -9,6 +9,8 @@ import {
   fetchProductDetailsFailed,
   searchProductsSuccess,
   searchProductsFailed,
+  updateProductStatusSuccess,
+  updateProductStatusFailed,
   fetchProductAttributesSuccess,
   fetchProductAttributesFailed,
   clearToken,
@@ -97,6 +99,27 @@ export function* upsertProduct(action) {
       yield put(clearToken());
     } else {
       yield put(submitProductFailed());
+    }
+  }
+}
+
+export function* updateProductStatus(action) {
+  try {
+    const { storeId, productId, status } = action.value;
+    const res = yield axios({
+      method: !status ? 'delete' : 'patch',
+      url: `${config.apiDomain}/stores/${storeId}/products/${productId}`,
+      headers: {
+        authorization: localStorage.getItem(config.accessTokenKey),
+      },
+    });
+
+    yield put(updateProductStatusSuccess({ productId, status }));
+  } catch (error) {
+    if (error.response.status === 401) {
+      yield put(clearToken());
+    } else {
+      yield put(updateProductStatusFailed());
     }
   }
 }

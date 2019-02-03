@@ -14,7 +14,8 @@ const ProductListItem = props => {
     quantity,
     status,
     id,
-    onClick,
+    onViewClick,
+    onStatusUpdateClick,
     intl: { formatMessage },
   } = props;
 
@@ -26,40 +27,29 @@ const ProductListItem = props => {
       <td>{name}</td>
       <td>{sku}</td>
       <td>{currencySign + numeral(price).format('0,0.00')}</td>
-      <td>{quantity}</td>
       <td>
-        <Badge color={
-          (status => {
-            switch (status) {
-              case 0:
-                return 'light';
-              case 1:
-                return 'success';
-              case 2:
-                return 'warning';
-            }
-          })(status)
-        }>
-          {
-            (status => {
-              switch (status) {
-                case 0:
-                  return formatMessage({ id: 'sys.inactive' });
-                case 1:
-                  return formatMessage({ id: 'sys.normal' });
-                case 2:
-                  return formatMessage({ id: 'sys.noStock' });
-              }
-            })(status)
-          }
+        {
+          !quantity ?
+            <Badge color={'danger'}>
+              <FormattedMessage id="sys.noStock" />
+            </Badge> : quantity
+        }
+      </td>
+      <td>
+        <Badge color={status ? 'success' : 'secondary'}>
+          {status
+            ? formatMessage({ id: 'sys.active' })
+            : formatMessage({ id: 'sys.archived' })}
         </Badge>
       </td>
       <td style={{ textAlign: 'right' }}>
-        <Button size="sm" className="action-btn" onClick={() => onClick(id)}>
+        <Button size="sm" className="action-btn" onClick={() => onViewClick(id)}>
           <FormattedMessage id="sys.view" />
         </Button>
-        <Button size="sm" className="action-btn" onClick={() => onClick(id)}>
-          <FormattedMessage id="sys.delete" />
+        <Button size="sm" className="action-btn" onClick={() => onStatusUpdateClick(id, status ? 0 : 1)}>
+          {status
+            ? formatMessage({ id: 'sys.archive' })
+            : formatMessage({ id: 'sys.unarchive' })}
         </Button>
       </td>
     </tr>
@@ -76,7 +66,8 @@ ProductListItem.propTypes = {
   currency: PropTypes.string,
   currencySign: PropTypes.string.isRequired,
   status: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onViewClick: PropTypes.func.isRequired,
+  onStatusUpdateClick: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };
 

@@ -128,9 +128,9 @@ Product.prototype.getTotalCountByStoreId = function (id, search = null) {
 
 Product.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20, search = null) {
   return new Promise((resolve, reject) => {
-    let sql = `select code, name, category_id as categoryId, store_id as storeId, sku, description, quantity, allow_quantity as allowQuantity,
-               added_on as addedOn, added_by as addedBy, unit_price as unitPrice, cost, cover_image as coverImage,
-               manufacturer_id as manufacturerId, supplier_id as supplierId, status
+    let sql = `select code, name, category_id as categoryId, store_id as storeId, sku, description, quantity, 
+               allow_quantity as allowQuantity, added_on as addedOn, added_by as addedBy, unit_price as unitPrice, 
+               cost, cover_image as coverImage, manufacturer_id as manufacturerId, supplier_id as supplierId, status
                from product where store_id='${id}'`;
 
     if (search) {
@@ -329,9 +329,25 @@ Product.prototype.delete = function (code) {
       (error, results) => {
 
         if (error || results.affectedRows == 0) {
-          reject(new BadRequestError('Deleting product failed.'));
+          reject(new BadRequestError('Archiving product failed.'));
         } else {
-          resolve('Product deleted.');
+          resolve('Product archived.');
+        }
+      }
+    );
+  });
+};
+
+Product.prototype.activate = function (code) {
+  return new Promise((resolve, reject) => {
+    (this.db || db).query(
+      `update product set status=1 where code='${code}'`,
+      (error, results) => {
+
+        if (error || results.affectedRows == 0) {
+          reject(new BadRequestError('Activating product failed.'));
+        } else {
+          resolve('Product activated.');
         }
       }
     );

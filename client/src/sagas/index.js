@@ -10,6 +10,7 @@ import {
   fetchProductAttributes,
   upsertProduct,
   searchProducts,
+  updateProductStatus,
 } from './product';
 import {
   fetchCategories,
@@ -58,6 +59,7 @@ import {
   FETCH_PRODUCT_ATTRIBUTES,
   SEARCH_PRODUCTS,
   SUBMIT_PRODUCT,
+  UPDATE_PRODUCT_STATUS,
   SUBMIT_CATEGORY,
   FETCH_SUPPLIERS,
   FETCH_SUPPLIER_DETAILS,
@@ -91,6 +93,7 @@ export default function* rootSaga() {
     takeEvery(FETCH_PRODUCT_ATTRIBUTES, fetchProductAttributes),
     takeEvery(SEARCH_PRODUCTS, searchProducts),
     takeEvery(SUBMIT_PRODUCT, upsertProduct),
+    takeEvery(UPDATE_PRODUCT_STATUS, updateProductStatus),
     takeEvery(SUBMIT_CATEGORY, upsertCategory),
     takeEvery(FETCH_DASHBOARD_DATA, fetchDashboardData),
     takeEvery(FETCH_SALES_REPORT_PRODUCTS, fetchSalesReportProducts),

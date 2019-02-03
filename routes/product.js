@@ -74,6 +74,21 @@ router.put(
   }
 );
 
+router.patch(
+  '/stores/:storeId/products/:productId',
+  [authMiddleware, storeIdVerifier],
+  async (req, res) => {
+    try {
+      const product = new Product();
+      const data = await product.activate(req.params.productId);
+
+      res.send(data);
+    } catch (err) {
+      res.status(err.statusCode).send(err);
+    }
+  }
+);
+
 router.delete(
   '/stores/:storeId/products/:productId',
   [authMiddleware, storeIdVerifier],

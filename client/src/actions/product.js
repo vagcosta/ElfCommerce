@@ -8,8 +8,10 @@ export const FETCH_PRODUCT_DETAILS_SUCCESS = 'FETCH_PRODUCT_DETAILS_SUCCESS';
 export const FETCH_PRODUCT_DETAILS_FAILED = 'FETCH_PRODUCT_DETAILS_FAILED';
 
 export const FETCH_PRODUCT_ATTRIBUTES = 'FETCH_PRODUCT_ATTRIBUTES';
-export const FETCH_PRODUCT_ATTRIBUTES_SUCCESS = 'FETCH_PRODUCT_ATTRIBUTES_SUCCESS';
-export const FETCH_PRODUCT_ATTRIBUTES_FAILED = 'FETCH_PRODUCT_ATTRIBUTES_FAILED';
+export const FETCH_PRODUCT_ATTRIBUTES_SUCCESS =
+  'FETCH_PRODUCT_ATTRIBUTES_SUCCESS';
+export const FETCH_PRODUCT_ATTRIBUTES_FAILED =
+  'FETCH_PRODUCT_ATTRIBUTES_FAILED';
 
 export const SUBMIT_PRODUCT = 'SUBMIT_PRODUCT';
 export const SUBMIT_PRODUCT_SUCCESS = 'SUBMIT_PRODUCT_SUCCESS';
@@ -19,6 +21,10 @@ export const SEARCH_PRODUCTS = 'SEARCH_PRODUCTS';
 export const SEARCH_PRODUCTS_SUCCESS = 'SEARCH_PRODUCTS_SUCCESS';
 export const SEARCH_PRODUCTS_FAILED = 'SEARCH_PRODUCTS_FAILED';
 export const CLEAR_SEARCH_PRODUCTS = 'CLEAR_SEARCH_PRODUCTS';
+
+export const UPDATE_PRODUCT_STATUS = 'UPDATE_PRODUCT_STATUS';
+export const UPDATE_PRODUCT_STATUS_SUCCESS = 'UPDATE_PRODUCT_STATUS_SUCCESS';
+export const UPDATE_PRODUCT_STATUS_FAILED = 'UPDATE_PRODUCT_STATUS_FAILED';
 
 export function fetchProducts(data) {
   return { type: FETCH_PRODUCTS, value: data };
@@ -86,4 +92,16 @@ export function searchProductsFailed() {
 
 export function clearSearchProducts() {
   return { type: CLEAR_SEARCH_PRODUCTS };
+}
+
+export function updateProductStatus(data) {
+  return { type: UPDATE_PRODUCT_STATUS, value: data };
+}
+
+export function updateProductStatusSuccess(data) {
+  return { type: UPDATE_PRODUCT_STATUS_SUCCESS, value: data };
+}
+
+export function updateProductStatusFailed() {
+  return { type: UPDATE_PRODUCT_STATUS_FAILED };
 }
