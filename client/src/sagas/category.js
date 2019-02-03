@@ -9,6 +9,8 @@ import {
   submitCategoryFailed,
   fetchCategoryDetailsSuccess,
   fetchCategoryDetailsFailed,
+  updateCategoryStatusSuccess,
+  updateCategoryStatusFailed,
   clearToken,
 } from '../actions';
 import config from '../config';
@@ -96,6 +98,27 @@ export function* upsertCategory(action) {
       yield put(clearToken());
     } else {
       yield put(submitCategoryFailed());
+    }
+  }
+}
+
+export function* updateCategoryStatus(action) {
+  try {
+    const { storeId, categoryId, status } = action.value;
+    const res = yield axios({
+      method: !status ? 'delete' : 'patch',
+      url: `${config.apiDomain}/stores/${storeId}/categories/${categoryId}`,
+      headers: {
+        authorization: localStorage.getItem(config.accessTokenKey),
+      },
+    });
+
+    yield put(updateCategoryStatusSuccess({ categoryId, status }));
+  } catch (error) {
+    if (error.response.status === 401) {
+      yield put(clearToken());
+    } else {
+      yield put(updateCategoryStatusFailed());
     }
   }
 }

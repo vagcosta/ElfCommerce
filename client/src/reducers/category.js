@@ -7,6 +7,8 @@ import {
   SUBMIT_CATEGORY_FAILED,
   FETCH_CATEGORY_DETAILS_SUCCESS,
   FETCH_CATEGORY_DETAILS_FAILED,
+  UPDATE_CATEGORY_STATUS_SUCCESS,
+  UPDATE_CATEGORY_STATUS_FAILED,
   CLEAR_CATEGORY_DETAILS,
 } from '../actions';
 
@@ -28,10 +30,26 @@ export default function categoryReducer(state = initialState, action) {
       return { ...state, categories: action.value };
     case FETCH_CATEGORY_DETAILS_SUCCESS:
       return { ...state, categoryDetails: action.value, loaded: true };
+    case UPDATE_CATEGORY_STATUS_SUCCESS:
+      const newList = (state.categories.data.map(item => {
+
+        if (item.code === action.value.categoryId) {
+
+          item.status = action.value.status;
+        }
+
+        return item;
+      }));
+
+      return {
+        ...state,
+        categories: { data: newList, count: state.categories.count },
+      };
     case SUBMIT_CATEGORY_FAILED:
     case FETCH_CATEGORIES_FAILED:
     case FETCH_CATEGORY_DETAILS_FAILED:
     case FETCH_PARENT_CATEGORIES_FAILED:
+    case UPDATE_CATEGORY_STATUS_FAILED:
       return { ...state, error: true };
     case CLEAR_CATEGORY_DETAILS:
       return { ...state, ...initialState };

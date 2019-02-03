@@ -13,11 +13,17 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
+import {
+  MdAddCircleOutline,
+  MdSearch,
+} from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
 import { CategoryListItem, Loader } from '../../components';
-import { fetchCategories } from '../../actions';
+import {
+  fetchCategories,
+  updateCategoryStatus,
+} from '../../actions';
 import config from '../../config';
 
 class CategoryList extends Component {
@@ -50,6 +56,12 @@ class CategoryList extends Component {
   onViewClick = id => {
     this.props.history.push(`/categories/${id}`);
   };
+
+  onStatusUpdateClick = (id, status) => {
+    const { dispatch } = this.props;
+
+    dispatch(updateCategoryStatus({ storeId: this.state.storeId, categoryId: id, status }));
+  }
 
   onPageChange = page => {
     const { dispatch } = this.props;
@@ -139,7 +151,8 @@ class CategoryList extends Component {
                           name={cat.name}
                           status={cat.status}
                           childCats={categories.filter(ccat => ccat.parentId === cat.code)}
-                          onClick={this.onViewClick}
+                          onViewClick={this.onViewClick}
+                          onStatusUpdateClick={this.onStatusUpdateClick}
                         />
                       )) : <tr><td><FormattedMessage id="sys.noRecords" /></td></tr>}
                     </Table>

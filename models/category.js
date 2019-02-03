@@ -152,9 +152,21 @@ Category.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(`update category set status=0 where code='${code}'`, error => {
       if (error) {
-        reject(new BadRequestError('Deleting category failed.'));
+        reject(new BadRequestError('Archiving category failed.'));
       } else {
-        resolve('Category deleted.');
+        resolve('Category archived.');
+      }
+    });
+  });
+};
+
+Category.prototype.activate = function (code) {
+  return new Promise((resolve, reject) => {
+    (this.db || db).query(`update category set status=1 where code='${code}'`, error => {
+      if (error) {
+        reject(new BadRequestError('Activating category failed.'));
+      } else {
+        resolve('Category activated.');
       }
     });
   });

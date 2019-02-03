@@ -20,6 +20,12 @@ export const FETCH_PARENT_CATEGORIES_SUCCESS =
 export const FETCH_PARENT_CATEGORIES_FAILED =
   'FETCH_PARENT_CATEGORIES_FAILED';
 
+export const UPDATE_CATEGORY_STATUS = 'UPDATE_CATEGORY_STATUS';
+export const UPDATE_CATEGORY_STATUS_SUCCESS =
+  'UPDATE_CATEGORY_STATUS_SUCCESS';
+export const UPDATE_CATEGORY_STATUS_FAILED =
+  'UPDATE_CATEGORY_STATUS_FAILED';
+
 export function fetchCategories(data) {
   return { type: FETCH_CATEGORIES, value: data };
 }
@@ -70,4 +76,16 @@ export function fetchCategoryDetailsSuccess(data) {
 
 export function fetchCategoryDetailsFailed() {
   return { type: FETCH_CATEGORY_DETAILS_FAILED };
+}
+
+export function updateCategoryStatus(data) {
+  return { type: UPDATE_CATEGORY_STATUS, value: data };
+}
+
+export function updateCategoryStatusSuccess(data) {
+  return { type: UPDATE_CATEGORY_STATUS_SUCCESS, value: data };
+}
+
+export function updateCategoryStatusFailed() {
+  return { type: UPDATE_CATEGORY_STATUS_FAILED };
 }

@@ -97,6 +97,21 @@ router.get(
   }
 );
 
+router.patch(
+  '/stores/:storeId/categories/:categoryId',
+  [authMiddleware, storeIdVerifier],
+  async (req, res) => {
+    try {
+      const category = new Category();
+      const data = await category.activate(req.params.categoryId);
+
+      res.send(data);
+    } catch (err) {
+      res.status(err.statusCode).send(err);
+    }
+  }
+);
+
 router.delete(
   '/stores/:storeId/categories/:categoryId',
   [authMiddleware, storeIdVerifier],

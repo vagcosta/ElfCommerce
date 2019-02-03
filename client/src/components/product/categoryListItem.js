@@ -8,7 +8,8 @@ const CategoryListItem = props => {
     name,
     status,
     id,
-    onClick,
+    onViewClick,
+    onStatusUpdateClick,
     childCats,
     intl: { formatMessage },
   } = props;
@@ -18,18 +19,20 @@ const CategoryListItem = props => {
       <tr>
         <td>{name}</td>
         <td>
-          <Badge color={status ? 'success' : 'danger'}>
+          <Badge color={status ? 'success' : 'secondary'}>
             {status
               ? formatMessage({ id: 'sys.active' })
-              : formatMessage({ id: 'sys.inactive' })}
+              : formatMessage({ id: 'sys.archived' })}
           </Badge>
         </td>
         <td style={{ textAlign: 'right' }}>
-          <Button size="sm" className="action-btn" onClick={() => onClick(id)}>
+          <Button size="sm" className="action-btn" onClick={() => onViewClick(id)}>
             <FormattedMessage id="sys.view" />
           </Button>
-          <Button size="sm" className="action-btn" onClick={() => onClick(id)}>
-            <FormattedMessage id="sys.delete" />
+          <Button size="sm" className="action-btn" onClick={() => onStatusUpdateClick(id, status ? 0 : 1)}>
+            {status
+              ? formatMessage({ id: 'sys.archive' })
+              : formatMessage({ id: 'sys.unarchive' })}
           </Button>
         </td>
       </tr>
@@ -37,18 +40,20 @@ const CategoryListItem = props => {
         <tr key={cat.code}>
           <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{cat.name}</td>
           <td>
-            <Badge color={cat.status ? 'success' : 'danger'}>
+            <Badge color={cat.status ? 'success' : 'secondary'}>
               {cat.status
                 ? formatMessage({ id: 'sys.active' })
-                : formatMessage({ id: 'sys.inactive' })}
+                : formatMessage({ id: 'sys.archived' })}
             </Badge>
           </td>
           <td style={{ textAlign: 'right' }}>
-            <Button size="sm" className="action-btn" onClick={() => onClick(cat.code)}>
+            <Button size="sm" className="action-btn" onClick={() => onViewClick(cat.code)}>
               <FormattedMessage id="sys.view" />
             </Button>
-            <Button size="sm" className="action-btn" onClick={() => onClick(cat.code)}>
-              <FormattedMessage id="sys.delete" />
+            <Button size="sm" className="action-btn" onClick={() => onStatusUpdateClick(cat.code, cat.status ? 0 : 1)}>
+              {cat.status
+                ? formatMessage({ id: 'sys.archive' })
+                : formatMessage({ id: 'sys.unarchive' })}
             </Button>
           </td>
         </tr>
@@ -63,7 +68,8 @@ CategoryListItem.propTypes = {
   name: PropTypes.string.isRequired,
   childCats: PropTypes.array,
   status: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onViewClick: PropTypes.func.isRequired,
+  onStatusUpdateClick: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
 };
 
