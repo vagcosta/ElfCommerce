@@ -146,7 +146,7 @@ class CategoryForm extends Component {
                 component={renderSelect}
                 id="parent-id"
                 name="parentId"
-                data={categories.filter(cat => !cat.parentId)}
+                data={categories.filter(cat => cat.level === 1)}
               >
               </Field>
             </Col>

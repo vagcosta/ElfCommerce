@@ -16,6 +16,7 @@ function Category(
   name,
   storeId,
   addedBy,
+  level,
   parentId,
   status,
   dbConn
@@ -24,7 +25,8 @@ function Category(
   this.name = name;
   this.storeId = storeId;
   this.addedBy = addedBy;
-  this.parentId = parentId || null;
+  this.level = level;
+  this.parentId = parentId;
   this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
@@ -34,25 +36,25 @@ function Category(
 Category.prototype.get = function (code) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
-      `select code, name, store_id as storeId, parent_id as parentId, status from category where code='${code}'`,
+      `select code, name, store_id as storeId, level, parent_id as parentId, status from category where code='${code}'`,
       (error, results) => {
 
         if (error) {
           reject(new NoRecordFoundError('No category found.'));
         } else {
-          const { code, name, storeId, parentId, status } = results[0];
-          resolve(new Category(code, name, storeId, '', parentId, status));
+          const { code, name, storeId, level, parentId, status } = results[0];
+          resolve(new Category(code, name, storeId, '', level, parentId, status));
         }
       }
     );
   });
 };
 
-Category.prototype.getTotalCountByStoreId = function (id) {
+Category.prototype.getTotalCountByStoreId = function (id, activeOnly = false) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select count(*) as total 
-       from category where store_id='${id}'`,
+       from category where store_id='${id}'${activeOnly ? ' and status=1' : ''}`,
       (error, results) => {
         if (error) {
           reject(new NoRecordFoundError('No categorys found.'));
@@ -64,11 +66,15 @@ Category.prototype.getTotalCountByStoreId = function (id) {
   });
 };
 
-Category.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
+Category.prototype.getAllByStoreId = function (
+  id,
+  page = 1,
+  pageSize = 20,
+  activeOnly = false) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
-      `select code, name, store_id as storeId, parent_id as parentId, status 
-       from category where store_id='${id}' order by name limit ${(page -
+      `select code, name, store_id as storeId, level, parent_id as parentId, status 
+       from category where store_id='${id}'${activeOnly ? ' and status=1' : ''} order by parent_id, level limit ${(page -
         1) *
       pageSize}, ${pageSize}`,
       (error, results) => {
@@ -77,8 +83,8 @@ Category.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
           reject(new NoRecordFoundError('No categories found.'));
         } else {
           const categories = results.map(cat => {
-            const { code, name, storeId, parentId, status } = cat;
-            return new Category(code, name, storeId, '', parentId, status);
+            const { code, name, storeId, level, parentId, status } = cat;
+            return new Category(code, name, storeId, '', level, parentId, status);
           });
           resolve(categories);
         }
@@ -111,12 +117,12 @@ Category.prototype.add = function (category) {
 
       (this.db || db).query(
         `insert into category(code, name, store_id, added_by, parent_id) 
-         values('${code}', '${name}', '${storeId}', '${addedBy}', ` + (parentId ? `'${parentId}'` : null) + ')',
+         values('${code}', '${name}', '${storeId}', '${addedBy}', ${parentId ? 2 : 1}, '${parentId ? parentId : code}')`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalid category data.'));
           } else {
-            resolve(new Category(code, name, storeId, addedBy, parentId));
+            resolve(new Category(code, name, storeId, addedBy, parentId ? 2 : 1, parentId));
           }
         }
       );
@@ -132,13 +138,14 @@ Category.prototype.update = function (category) {
       const { code, name, storeId, addedBy, parentId } = category;
 
       (this.db || db).query(
-        `update category set name='${name}', parent_id=` + (parentId ? `'${parentId}'` : null) +
-        ` where code='${code}' and added_by='${addedBy}'`,
+        `update category set name = '${name}', level = ${parentId ? 2 : 1}, 
+         parent_id = '${parentId ? parentId : code}' 
+         where code = '${code}' and added_by = '${addedBy}'`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalid category data.'));
           } else {
-            resolve(new Category(code, name, storeId, parentId));
+            resolve(new Category(code, name, storeId, parentId ? 2 : 1, parentId));
           }
         }
       );
@@ -150,7 +157,7 @@ Category.prototype.update = function (category) {
 
 Category.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
-    (this.db || db).query(`update category set status=0 where code='${code}'`, error => {
+    (this.db || db).query(`update category set status = 0 where code = '${code}'`, error => {
       if (error) {
         reject(new BadRequestError('Archiving category failed.'));
       } else {
@@ -162,7 +169,7 @@ Category.prototype.delete = function (code) {
 
 Category.prototype.activate = function (code) {
   return new Promise((resolve, reject) => {
-    (this.db || db).query(`update category set status=1 where code='${code}'`, error => {
+    (this.db || db).query(`update category set status = 1 where code = '${code}'`, error => {
       if (error) {
         reject(new BadRequestError('Activating category failed.'));
       } else {

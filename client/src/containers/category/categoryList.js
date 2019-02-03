@@ -85,7 +85,6 @@ class CategoryList extends Component {
       loaded,
       intl: { formatMessage },
     } = this.props;
-    const parentCats = categories.filter(cat => !cat.parentId);
 
     return (
       <div>
@@ -144,13 +143,13 @@ class CategoryList extends Component {
                         </tr>
                       </thead>
 
-                      {parentCats.length > 0 ? parentCats.map(cat => (
+                      {categories.length > 0 ? categories.map(cat => (
                         <CategoryListItem
                           key={cat.code}
                           id={cat.code}
                           name={cat.name}
+                          level={cat.level}
                           status={cat.status}
-                          childCats={categories.filter(ccat => ccat.parentId === cat.code)}
                           onViewClick={this.onViewClick}
                           onStatusUpdateClick={this.onStatusUpdateClick}
                         />

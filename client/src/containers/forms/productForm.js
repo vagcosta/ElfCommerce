@@ -82,6 +82,20 @@ const renderSelect = ({ input, type, data, meta: { touched, error } }) => (
   </div>
 );
 
+const renderCategoryList = ({ input, type, data, meta: { touched, error } }) => (
+  <div>
+    <select {...input} className="form-control">
+      <option />
+      {data.map(item => (
+        <option key={item.code} value={item.code}>
+          {item.level === 1 ? item.name : '---' + item.name}
+        </option>
+      ))}
+    </select>
+    {touched && (error && <div><span className="text-danger">{error}</span></div>)}
+  </div>
+);
+
 class ProductForm extends Component {
   constructor(props) {
     super(props);
@@ -276,7 +290,7 @@ class ProductForm extends Component {
                           </Label>
                           <Col sm={9}>
                             <Field
-                              component={renderSelect}
+                              component={renderCategoryList}
                               id="category-id"
                               name="categoryId"
                               data={categories}

@@ -18,8 +18,16 @@ router.get(
   async (req, res) => {
     try {
       const category = new Category();
-      const data = await category.getAllByStoreId(req.params.storeId, req.query.page || 1, req.query.size || 20);
-      const count = await category.getTotalCountByStoreId(req.params.storeId);
+      const data = await category.getAllByStoreId(
+        req.params.storeId,
+        req.query.page || 1,
+        req.query.size || 20,
+        req.query.activeOnly ? true : false
+      );
+      const count = await category.getTotalCountByStoreId(
+        req.params.storeId,
+        req.query.activeOnly ? true : false
+      );
 
       res.send({ data, count });
     } catch (err) {
