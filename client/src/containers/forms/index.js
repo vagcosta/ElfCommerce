@@ -10,6 +10,7 @@ import SupplierForm from './supplierForm';
 import ManufacturerForm from './manufacturerForm';
 import OrderForm from './orderForm';
 import ProductSearchForm from './productSearchForm';
+import ProductAttributeForm from './productAttributeForm';
 
 export {
   StoreSettingForm,
@@ -24,4 +25,5 @@ export {
   ManufacturerForm,
   OrderForm,
   ProductSearchForm,
+  ProductAttributeForm,
 };

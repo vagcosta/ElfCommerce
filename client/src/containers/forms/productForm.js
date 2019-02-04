@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { MdSave } from 'react-icons/md';
+import {
+  MdSave,
+  MdAddCircleOutline,
+} from 'react-icons/md';
 import {
   Col,
   Row,
@@ -23,6 +26,9 @@ import {
   NavLink,
   TabPane,
   Table,
+  Modal,
+  ModalHeader,
+  ModalBody,
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
@@ -35,6 +41,7 @@ import {
   fetchProductAttributes,
   submitProduct,
 } from '../../actions';
+import { ProductAttributeForm } from '../forms';
 import {
   ParallelLoader,
   ProductAttributeListItem,
@@ -102,6 +109,7 @@ class ProductForm extends Component {
 
     this.state = {
       activeTab: '1',
+      modal: false,
     };
   }
 
@@ -143,6 +151,22 @@ class ProductForm extends Component {
     }
   };
 
+  modalToggle = () => {
+    this.setState({
+      modal: !this.state.modal,
+    });
+  }
+
+  onAddProductAttributeClick = (data) => {
+    const {
+      dispatch,
+    } = this.props;
+
+    this.setState({
+      modal: !this.state.modal,
+    });
+  }
+
   onSubmit = data => {
     const {
       dispatch,
@@ -177,6 +201,7 @@ class ProductForm extends Component {
       error,
       manufacturers,
       mode,
+      storeId,
     } = this.props;
 
     return (
@@ -476,11 +501,28 @@ class ProductForm extends Component {
                             );
                           }) : <tr><td><FormattedMessage id="sys.noRecords" /></td></tr>
                         }
+
                       </tbody>
                     </Table>
+                    <Button
+                      color="link"
+                      className="pull-right form-btn"
+                      onClick={this.onAddProductAttributeClick}
+                    >
+                      <MdAddCircleOutline />
+                      &nbsp;
+                      <FormattedMessage id="sys.addNew" />
+                    </Button>
                   </Col>
                 </Row>
               </Form>
+              <Modal isOpen={this.state.modal} toggle={this.modalToggle} zIndex="10000">
+                <ModalHeader toggle={this.modalToggle}><FormattedMessage id="sys.addProduct" /></ModalHeader>
+                <ModalBody>
+                  <ProductAttributeForm
+                    storeId={storeId} />
+                </ModalBody>
+              </Modal>
             </TabPane>
           </TabContent>
         </div>
