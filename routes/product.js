@@ -218,4 +218,64 @@ router.post(
   }
 );
 
+router.put(
+  '/stores/:storeId/products/:productId/attributes/:attributeId',
+  [authMiddleware, storeIdVerifier],
+  async (req, res) => {
+    try {
+      const {
+        name,
+        quantity,
+        varPrice,
+        productAttributeCategoryId,
+      } = req.body;
+      const aroductAttribute = new ProductAttribute(
+        req.params.attributeId,
+        name,
+        req.params.productId,
+        quantity,
+        varPrice,
+        null,
+        res.locals.auth.accountId,
+        productAttributeCategoryId
+      );
+      const data = await aroductAttribute.update(aroductAttribute);
+
+      res.send(data);
+    } catch (err) {
+      res.status(err.statusCode).send(err);
+    }
+  }
+);
+
+router.delete(
+  '/stores/:storeId/products/:productId/attributes/:attributeId',
+  [authMiddleware, storeIdVerifier],
+  async (req, res) => {
+    try {
+      const attr = new ProductAttribute();
+      const data = await attr.delete(req.params.attributeId);
+
+      res.send(data);
+    } catch (err) {
+      res.status(err.statusCode).send(err);
+    }
+  }
+);
+
+router.patch(
+  '/stores/:storeId/products/:productId/attributes/:attributeId',
+  [authMiddleware, storeIdVerifier],
+  async (req, res) => {
+    try {
+      const attr = new ProductAttribute();
+      const data = await attr.activate(req.params.attributeId);
+
+      res.send(data);
+    } catch (err) {
+      res.status(err.statusCode).send(err);
+    }
+  }
+);
+
 module.exports = router;

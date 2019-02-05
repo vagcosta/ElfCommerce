@@ -535,9 +535,24 @@ ProductAttribute.prototype.delete = function (code) {
       `update product_attribute set status=0 where code='${code}'`,
       (error, results) => {
         if (error || results.affectedRows == 0) {
-          reject(new BadRequestError('Deleting product attribute failed.'));
+          reject(new BadRequestError('Archiving product attribute failed.'));
         } else {
-          resolve('Product attribute deleted.');
+          resolve('Product attribute archived.');
+        }
+      }
+    );
+  });
+};
+
+ProductAttribute.prototype.delete = function (code) {
+  return new Promise((resolve, reject) => {
+    (this.db || db).query(
+      `update product_attribute set status=1 where code='${code}'`,
+      (error, results) => {
+        if (error || results.affectedRows == 0) {
+          reject(new BadRequestError('Activating product attribute failed.'));
+        } else {
+          resolve('Product attribute activated.');
         }
       }
     );
