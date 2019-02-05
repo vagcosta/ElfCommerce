@@ -11,7 +11,7 @@ export function* fetchStoreSettings(action) {
   try {
     const res = yield axios({
       method: 'get',
-      url: `${config.apiDomain}/stores/asdfasdfasdfasd`,
+      url: `${config.apiDomain}/stores/${action.value}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
       },

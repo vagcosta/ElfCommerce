@@ -16,9 +16,9 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import jwt from 'jsonwebtoken';
 import classnames from 'classnames';
 import { MdSave } from 'react-icons/md';
-import { fetchStoreSettings } from '../../actions';
 import {
   StoreSettingForm,
   AccountSettingForm,
@@ -26,18 +26,15 @@ import {
   CredentialForm,
 } from '../forms';
 import { CredentialListItem } from '../../components';
+import config from '../../config';
 
 class Setting extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       activeTab: '1',
     };
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchStoreSettings());
   }
 
   toggle = tab => {
@@ -53,8 +50,9 @@ class Setting extends Component {
   };
 
   render() {
-    const { formatMessage } = this.props.intl;
-    const { settings, history } = this.props;
+    const { settings, history, intl: { formatMessage } } = this.props;
+    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+
     return (
       <div>
         <div className="page-navbar">
@@ -137,22 +135,7 @@ class Setting extends Component {
                     <br />
                     <br />
                     <StoreSettingForm
-                      onSubmit={this.handleSettingSubmit}
-                      currencies={[
-                        { id: 3, name: 'SGD' },
-                        { id: 2, name: 'USD' },
-                        { id: 1, name: 'MYR' },
-                      ]}
-                      countries={[
-                        { id: 3, name: 'Singapore' },
-                        { id: 2, name: 'United States' },
-                        { id: 1, name: 'Malaysia' },
-                      ]}
-                      languages={[
-                        { id: 'en', name: 'English' },
-                        { id: 'zh-cn', name: '简体中文' },
-                        { id: 'my', name: 'Malay' },
-                      ]}
+                      storeId={storeId}
                     />
                   </Col>
                 </Row>

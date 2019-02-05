@@ -66,4 +66,14 @@ describe('Test manufacturer model', () => {
     expect(res).to.be.an('array');
     expect(res[0]).to.be.an.instanceof(Manufacturer);
   });
+
+  it('should return a confirmation message by calling delete method', async () => {
+    const res = await manufacturer.delete(manufacturer.code);
+    expect(res).to.be.equal('Manufacturer archived.');
+  });
+
+  it('should return a confirmation message by calling activate method', async () => {
+    const res = await manufacturer.activate(manufacturer.code);
+    expect(res).to.be.equal('Manufacturer activated.');
+  });
 });

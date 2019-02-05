@@ -66,4 +66,14 @@ describe('Test supplier model', () => {
     expect(res).to.be.an('array');
     expect(res[0]).to.be.an.instanceof(Supplier);
   });
+
+  it('should return a confirmation message by calling delete method', async () => {
+    const res = await supplier.delete(supplier.code);
+    expect(res).to.be.equal('Supplier archived.');
+  });
+
+  it('should return a confirmation message by calling activate method', async () => {
+    const res = await supplier.activate(supplier.code);
+    expect(res).to.be.equal('Supplier activated.');
+  });
 });

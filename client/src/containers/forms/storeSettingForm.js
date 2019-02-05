@@ -34,11 +34,11 @@ const renderField = ({
   type,
   meta: { touched, error },
 }) => (
-  <div>
-    <Input {...input} placeholder={placeholder} type={type} />
-    {touched && (error && <span className="text-danger">{error}</span>)}
-  </div>
-);
+    <div>
+      <Input {...input} placeholder={placeholder} type={type} />
+      {touched && (error && <span className="text-danger">{error}</span>)}
+    </div>
+  );
 
 class StoreSettingForm extends Component {
   componentDidMount() {
@@ -97,7 +97,7 @@ class StoreSettingForm extends Component {
                       className="form-control"
                     >
                       <option value="">--</option>
-                      {currencies.map(currency => (
+                      {[].map(currency => (
                         <option key={currency.id} value={currency.id}>
                           {currency.name}
                         </option>
@@ -117,7 +117,7 @@ class StoreSettingForm extends Component {
                       className="form-control"
                     >
                       <option value="">--</option>
-                      {countries.map(country => (
+                      {[].map(country => (
                         <option key={country.id} value={country.id}>
                           {country.name}
                         </option>
@@ -137,7 +137,7 @@ class StoreSettingForm extends Component {
                       className="form-control"
                     >
                       <option value="">--</option>
-                      {languages.map(lang => (
+                      {[].map(lang => (
                         <option key={lang.id} value={lang.id}>
                           {lang.name}
                         </option>

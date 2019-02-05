@@ -9,7 +9,7 @@ const OrderListItem = props => {
     number,
     customer,
     date,
-    payment,
+    paidOn,
     status,
     onClick,
   } = props;
@@ -20,7 +20,27 @@ const OrderListItem = props => {
       <td>{number}</td>
       <td>{customer}</td>
       <td>{date}</td>
-      <td>{payment}</td>
+      <td><Badge color={
+        (status => {
+          switch (status) {
+            case 0:
+              return 'warning';
+            case 1:
+              return 'success';
+          }
+        })(paidOn ? 1 : 0)
+      }>
+        {
+          (status => {
+            switch (status) {
+              case 0:
+                return formatMessage({ id: 'sys.pending' });
+              case 1:
+                return formatMessage({ id: 'sys.paid' });
+            }
+          })(paidOn ? 1 : 0)
+        }
+      </Badge></td>
       <td>
         <Badge color={
           (status => {
@@ -68,7 +88,7 @@ OrderListItem.propTypes = {
   number: PropTypes.string.isRequired,
   customer: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
-  payment: PropTypes.string.isRequired,
+  paidOn: PropTypes.string,
   status: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,

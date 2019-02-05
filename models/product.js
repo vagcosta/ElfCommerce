@@ -381,6 +381,49 @@ function ProductAttribute(
   this.db = dbConn || new MySQL(host, user, password, database);
 }
 
+ProductAttribute.prototype.get = function (id) {
+  return new Promise((resolve, reject) => {
+    (this.db || db).query(
+      `select code, product_id as productId, pa.name as attributeName, quantity, var_price as varPrice, added_on as addedOn, added_by as addedBy, 
+       product_attribute_category_id as productAttributeCategoryId, pac.name as productAttributeCategoryName, status 
+       from product_attribute as pa left join product_attribute_category as pac on pa.product_attribute_category_id = pac.id
+       where code='${id}'`,
+      (error, results) => {
+        if (error || results.length == 0) {
+          reject(new NoRecordFoundError('No product attribute found.'));
+        } else {
+          const {
+            code,
+            attributeName,
+            productId,
+            quantity,
+            varPrice,
+            addedOn,
+            addedBy,
+            productAttributeCategoryId,
+            productAttributeCategoryName,
+            status,
+          } = results[0];
+          resolve(
+            new ProductAttribute(
+              code,
+              attributeName,
+              productId,
+              quantity,
+              varPrice,
+              addedOn,
+              addedBy,
+              productAttributeCategoryId,
+              productAttributeCategoryName,
+              status
+            )
+          );
+        }
+      }
+    );
+  });
+};
+
 ProductAttribute.prototype.getAllByProductId = function (id) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
@@ -459,7 +502,7 @@ ProductAttribute.prototype.add = function (productAttribute) {
 
       (this.db || db).query(
         `insert into product_attribute(code, product_id, name, quantity, var_price, added_on, added_by, product_attribute_category_id) 
-         values('${code}', '${productId}', '${attributeName}', ${quantity}, ${varPrice}, '${addedOn}', '${addedBy}', '${productAttributeCategoryId}')`,
+         values('${code}', '${productId}', '${attributeName}', ${quantity}, ${varPrice}, '${addedOn}', '${addedBy}', ${productAttributeCategoryId})`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalid product attribute data.'));
@@ -489,7 +532,7 @@ ProductAttribute.prototype.add = function (productAttribute) {
 
 ProductAttribute.prototype.update = function (productAttribute) {
   return new Promise((resolve, reject) => {
-    if (productAttribute instanceof Product) {
+    if (productAttribute instanceof ProductAttribute) {
       const {
         code,
         attributeName,
@@ -502,7 +545,7 @@ ProductAttribute.prototype.update = function (productAttribute) {
 
       (this.db || db).query(
         `update product_attribute set name='${attributeName}', product_id='${productId}', quantity=${quantity}, 
-         varPrice=${varPrice}, product_attribute_category_id='${productAttributeCategoryId}'
+         var_price=${varPrice}, product_attribute_category_id=${productAttributeCategoryId}
          where code='${code}' and added_by='${addedBy}'`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
@@ -544,7 +587,7 @@ ProductAttribute.prototype.delete = function (code) {
   });
 };
 
-ProductAttribute.prototype.delete = function (code) {
+ProductAttribute.prototype.activate = function (code) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `update product_attribute set status=1 where code='${code}'`,

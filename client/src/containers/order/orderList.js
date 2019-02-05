@@ -36,7 +36,6 @@ class OrderList extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     dispatch(
       fetchOrders(
@@ -155,7 +154,7 @@ class OrderList extends Component {
                             <FormattedMessage id="sys.orderDate" />
                           </th>
                           <th>
-                            <FormattedMessage id="sys.payBy" />
+                            <FormattedMessage id="sys.payment" />
                           </th>
                           <th>
                             <FormattedMessage id="sys.status" />
@@ -170,7 +169,7 @@ class OrderList extends Component {
                             number={order.code}
                             customer={order.customerName}
                             date={order.addedOn}
-                            payment={order.payment}
+                            paidOn={order.paidOn}
                             status={order.status}
                             onClick={this.onViewClick}
                           />

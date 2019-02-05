@@ -22,7 +22,7 @@ describe('Create a new product object', () => {
     999,
     true,
     moment.utc().format('YYYY-MM-DD HH:mm:ss'),
-    '123',
+    '40s1cqdw6jmyyiixe',
     100.00,
     80.00,
     'https://vignette.wikia.nocookie.net/universeconquest/images/e/e6/Sample.jpg/revision/latest/scale-to-width-down/640?cb=20171003194302',
