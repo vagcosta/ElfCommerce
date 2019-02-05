@@ -246,7 +246,7 @@ Product.prototype.add = function (product) {
                 description,
                 quantity,
                 allowQuantity,
-                moment(addedOn).format('YYYY-MM-DD HH:mm:ss'),
+                addedOn,
                 addedBy,
                 unitPrice,
                 cost,
