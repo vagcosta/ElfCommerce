@@ -84,7 +84,9 @@ function Store(
   this.createdBy = createdBy;
   this.facebook = facebook || '';
   this.twitter = twitter || '';
-  this.db = dbConn || new MySQL(host, user, password, database);
+  if (dbConn !== undefined) {
+    this.db = dbConn;
+  }
 }
 
 Store.prototype.get = function (code) {
@@ -93,7 +95,6 @@ Store.prototype.get = function (code) {
       `select name, code, description, logo, country_id as countryId, language, currency_id as currencyId, facebook, twitter 
        from store where code='${code}' and status=1`,
       (error, results) => {
-
         if (error || results.length == 0) {
           reject(new NoRecordFoundError('No store found.'));
         } else {

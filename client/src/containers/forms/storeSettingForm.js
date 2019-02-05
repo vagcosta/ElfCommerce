@@ -20,13 +20,7 @@ import {
   fetchCurrencies,
 } from '../../actions';
 
-const validate = values => {
-  const errors = {};
-  if (!values.siteName) {
-    errors.siteName = 'Required';
-  }
-  return errors;
-};
+const required = value => (value ? undefined : 'Required');
 
 const renderField = ({
   input,
@@ -42,12 +36,16 @@ const renderField = ({
 
 class StoreSettingForm extends Component {
   componentDidMount() {
-    const { dispatch } = this.props;
+    const {
+      dispatch,
+      storeId,
+    } = this.props;
 
     dispatch(fetchCountries());
     dispatch(fetchCurrencies());
-    dispatch(fetchStoreSettings());
+    dispatch(fetchStoreSettings(storeId));
   }
+
   render() {
     const { handleSubmit, currencies, countries, languages } = this.props;
     return (
@@ -62,6 +60,7 @@ class StoreSettingForm extends Component {
                 <FormGroup row>
                   <Label for="name" sm={3}>
                     <FormattedMessage id="sys.storeName" />
+                    <span className="text-danger mandatory-field">*</span>
                   </Label>
                   <Col sm={9}>
                     <Field
@@ -69,6 +68,7 @@ class StoreSettingForm extends Component {
                       name="name"
                       className="form-control"
                       id="name"
+                      validate={[required]}
                     />
                   </Col>
                 </FormGroup>
@@ -97,7 +97,7 @@ class StoreSettingForm extends Component {
                       className="form-control"
                     >
                       <option value="">--</option>
-                      {[].map(currency => (
+                      {currencies.map(currency => (
                         <option key={currency.id} value={currency.id}>
                           {currency.name}
                         </option>
@@ -117,7 +117,7 @@ class StoreSettingForm extends Component {
                       className="form-control"
                     >
                       <option value="">--</option>
-                      {[].map(country => (
+                      {countries.map(country => (
                         <option key={country.id} value={country.id}>
                           {country.name}
                         </option>
@@ -191,6 +191,7 @@ class StoreSettingForm extends Component {
 
 StoreSettingForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
+  storeId: PropTypes.string.isRequired,
   countries: PropTypes.array.isRequired,
   currencies: PropTypes.array.isRequired,
   languages: PropTypes.array.isRequired,
@@ -199,7 +200,6 @@ StoreSettingForm.propTypes = {
 
 StoreSettingForm = reduxForm({
   form: 'storeSettingForm',
-  validate,
 })(StoreSettingForm);
 
 export default connect(state => {

@@ -30,16 +30,6 @@ const renderField = ({
   );
 
 class AccountSettingForm extends Component {
-  componentDidMount() {
-    const {
-      dispatch,
-      storeId,
-    } = this.props;
-
-    dispatch(fetchStoreSettings(storeId));
-
-  }
-
   render() {
     const {
       handleSubmit,
@@ -110,7 +100,6 @@ class AccountSettingForm extends Component {
 AccountSettingForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
-  storeId: PropTypes.string.isRequired,
 };
 
 export default reduxForm({
