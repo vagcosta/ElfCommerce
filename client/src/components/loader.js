@@ -54,7 +54,7 @@ const ParallelLoader = props => (
     <rect x="10.63" y="18" rx="0" ry="0" width="260" height="209.72" />
     <rect x="320" y="128" rx="0" ry="0" width="190" height="80" />
   </ContentLoader>
-)
+);
 
 export {
   Loader,

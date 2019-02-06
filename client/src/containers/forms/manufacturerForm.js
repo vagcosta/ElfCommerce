@@ -61,7 +61,9 @@ const renderSelect = ({ input, data, meta: { touched, error } }) => (
 );
 
 class ManufacturerForm extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
     this.props.dispatch(
       clearManufacturerDetails()
     );
@@ -120,19 +122,18 @@ class ManufacturerForm extends Component {
   render() {
     const {
       handleSubmit,
-      initialValues,
+      manufacturerDetails,
       countries,
       uploadedFile,
       mode,
       error,
-      loaded,
       done,
     } = this.props;
 
     let logo = null;
 
-    if (initialValues.logo) {
-      logo = `${initialValues.logo.indexOf('http') !== -1 ? '' : mediaFileDomain + '/'}${initialValues.logo}`;
+    if (manufacturerDetails.logo) {
+      logo = `${manufacturerDetails.logo.indexOf('http') !== -1 ? '' : mediaFileDomain + '/'}${manufacturerDetails.logo}`;
     }
 
     if (uploadedFile && saveMediaFileLocal) {
@@ -140,7 +141,7 @@ class ManufacturerForm extends Component {
     }
 
     return (
-      mode === 'update' && !loaded ?
+      mode === 'update' && !('code' in manufacturerDetails) ?
         <ProfileLoader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
@@ -291,12 +292,11 @@ class ManufacturerForm extends Component {
 
 ManufacturerForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  initialValues: PropTypes.object.isRequired,
+  manufacturerDetails: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
   mode: PropTypes.string.isRequired,
   error: PropTypes.bool,
-  loaded: PropTypes.bool.isRequired,
   done: PropTypes.bool.isRequired,
   storeId: PropTypes.string.isRequired,
   countries: PropTypes.array.isRequired,
@@ -311,10 +311,10 @@ export default withRouter(
   connect(state => {
     return {
       initialValues: state.manufacturerReducer.manufacturerDetails,
+      manufacturerDetails: state.manufacturerReducer.manufacturerDetails,
       countries: state.publicReducer.countries,
       uploadedFile: state.publicReducer.uploadedFile,
       done: state.manufacturerReducer.done,
-      loaded: state.manufacturerReducer.loaded,
       error: state.supplierReducer.error,
       enableReinitialize: true,
     };

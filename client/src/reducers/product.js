@@ -30,7 +30,7 @@ export default function productReducer(state = initialState, action) {
     case SEARCH_PRODUCTS_SUCCESS:
       return { ...state, products: action.value, loaded: true };
     case FETCH_PRODUCT_DETAILS_SUCCESS:
-      return { ...state, productDetails: action.value, loaded: true };
+      return { ...state, productDetails: action.value };
     case FETCH_PRODUCT_ATTRIBUTES_SUCCESS:
       return { ...state, productAttributes: action.value, loaded: true };
     case SUBMIT_PRODUCT_SUCCESS:

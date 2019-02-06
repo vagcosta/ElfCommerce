@@ -6,9 +6,9 @@ const initialState = {
 
 export default function settingReducer(state = initialState, action) {
   switch (action.type) {
-  case FETCH_STORE_SETTINGS_SUCCESS:
-    return { ...state, storeSettings: action.value };
-  default:
-    return state;
+    case FETCH_STORE_SETTINGS_SUCCESS:
+      return { ...state, storeSettings: action.value };
+    default:
+      return state;
   }
 }

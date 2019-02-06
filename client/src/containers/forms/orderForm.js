@@ -26,7 +26,10 @@ import {
   ModalBody,
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { MdFileDownload, MdAddCircleOutline } from 'react-icons/md';
+import {
+  MdFileDownload,
+  MdAddCircleOutline,
+} from 'react-icons/md';
 import classnames from 'classnames';
 import numeral from 'numeral';
 import {
@@ -141,14 +144,14 @@ class OrderForm extends Component {
       dispatch,
       mode,
       storeId,
-      initialValues,
+      orderDetails,
       match: {
         params: { id },
       },
     } = this.props;
 
     data.storeId = storeId;
-    data.products = initialValues.products;
+    data.products = orderDetails.products;
     data.mode = mode;
 
     if (mode === 'update') {
@@ -171,19 +174,18 @@ class OrderForm extends Component {
       history,
       handleSubmit,
       done,
-      loaded,
       error,
       mode,
       storeId,
-      initialValues,
+      orderDetails,
     } = this.props;
 
-    const products = initialValues.products;
+    const products = orderDetails.products;
     const subTotal = products.length > 0 ? products.reduce((acc, product) => acc + product.unitPrice * product.quantity, 0) : 0.00;
     const shipping = 21.5; // TODO: replace this
 
     return (
-      mode === 'update' && !loaded ?
+      mode === 'update' && !('code' in orderDetails) ?
         <ProfileLoader /> :
         <div>
           {
@@ -233,7 +235,7 @@ class OrderForm extends Component {
                     {
                       mode === 'update' ?
                         <span className="tab-content-title">
-                          <FormattedMessage id="sys.orderNumber" />: <b>{initialValues.code}</b>
+                          <FormattedMessage id="sys.orderNumber" />: <b>{orderDetails.code}</b>
                         </span>
                         : null
                     }
@@ -480,13 +482,12 @@ OrderForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   storeId: PropTypes.string.isRequired,
   done: PropTypes.bool.isRequired,
-  loaded: PropTypes.bool.isRequired,
   error: PropTypes.bool,
   intl: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
   mode: PropTypes.string,
-  initialValues: PropTypes.object,
+  orderDetails: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
 };
 
@@ -498,8 +499,8 @@ export default withRouter(
   connect(state => {
     return {
       initialValues: state.orderReducer.orderDetails,
+      orderDetails: state.orderReducer.orderDetails,
       done: state.orderReducer.done,
-      loaded: state.orderReducer.loaded,
       error: state.orderReducer.error,
       counter: state.orderReducer.counter,
       enableReinitialize: true,

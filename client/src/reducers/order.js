@@ -28,7 +28,7 @@ export default function orderReducer(state = initialState, action) {
     case FETCH_ORDERS_SUCCESS:
       return { ...state, orders: action.value, loaded: true };
     case FETCH_ORDER_DETAILS_SUCCESS:
-      return { ...state, orderDetails: action.value, loaded: true };
+      return { ...state, orderDetails: action.value };
     case ADD_ORDER_PRODUCT: {
       const newProductList = [...state.orderDetails.products];
 

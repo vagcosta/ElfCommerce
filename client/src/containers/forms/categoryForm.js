@@ -7,7 +7,7 @@ import { Col, Form, FormGroup, Label, Button, Input, Alert } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { MdSave } from 'react-icons/md';
 import {
-  fetchParentCategories,
+  fetchCategories,
   fetchCategoryDetails,
   submitCategory,
   clearCategoryDetails,
@@ -28,9 +28,9 @@ const renderField = ({
     </div>
   );
 
-const renderSelect = ({ input, type, data, meta: { touched, error } }) => (
+const renderSelect = ({ input, disabled, data, meta: { touched, error } }) => (
   <div>
-    <select {...input} className="form-control">
+    <select {...input} className="form-control" disabled={disabled}>
       <option />
       {data.map(cat => (
         <option key={cat.code} value={cat.code}>
@@ -59,7 +59,7 @@ class CategoryForm extends Component {
       },
     } = this.props;
 
-    dispatch(fetchParentCategories({ storeId, pageSize: 200, pageNo: 1 }));
+    dispatch(fetchCategories({ storeId, pageSize: 200, pageNo: 1 }));
 
     if (mode === 'update') {
       dispatch(
@@ -95,14 +95,14 @@ class CategoryForm extends Component {
     const {
       handleSubmit,
       categories,
+      categoryDetails,
       mode,
       done,
-      loaded,
       error,
     } = this.props;
 
     return (
-      mode === 'update' && !loaded ?
+      mode === 'update' && !('code' in categoryDetails) ?
         <Loader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
@@ -147,11 +147,12 @@ class CategoryForm extends Component {
                 id="parent-id"
                 name="parentId"
                 data={categories.filter(cat => cat.level === 1)}
+                disabled={categoryDetails.level === 1 ? true : false}
               >
               </Field>
             </Col>
           </FormGroup>
-        </Form>
+        </Form >
     );
   }
 }
@@ -163,7 +164,7 @@ CategoryForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   done: PropTypes.bool.isRequired,
-  loaded: PropTypes.bool.isRequired,
+  categoryDetails: PropTypes.object.isRequired,
   error: PropTypes.bool,
   match: PropTypes.object,
   mode: PropTypes.string.isRequired,
@@ -177,8 +178,8 @@ export default withRouter(
   connect(state => {
     return {
       initialValues: state.categoryReducer.categoryDetails,
+      categoryDetails: state.categoryReducer.categoryDetails,
       done: state.categoryReducer.done,
-      loaded: state.categoryReducer.loaded,
       error: state.categoryReducer.error,
       categories: state.categoryReducer.categories.data,
       enableReinitialize: true,

@@ -193,11 +193,11 @@ class ProductForm extends Component {
   render() {
     const {
       handleSubmit,
+      productDetails,
       productAttributes,
       categories,
       suppliers,
       done,
-      loaded,
       error,
       manufacturers,
       mode,
@@ -205,7 +205,7 @@ class ProductForm extends Component {
     } = this.props;
 
     return (
-      mode === 'update' && !loaded ?
+      mode === 'update' && !('code' in productDetails) ?
         <ParallelLoader /> :
         <div>
           <Nav tabs>
@@ -537,7 +537,7 @@ ProductForm.propTypes = {
   manufacturers: PropTypes.array.isRequired,
   productAttributes: PropTypes.array,
   done: PropTypes.bool.isRequired,
-  loaded: PropTypes.bool.isRequired,
+  productDetails: PropTypes.object.isRequired,
   error: PropTypes.bool,
   intl: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -555,11 +555,11 @@ export default withRouter(
   connect(state => {
     return {
       initialValues: state.productReducer.productDetails,
+      productDetails: state.productReducer.productDetails,
       productAttributes: state.productReducer.productAttributes,
       categories: state.categoryReducer.categories.data,
       suppliers: state.supplierReducer.suppliers.data,
       manufacturers: state.manufacturerReducer.manufacturers.data,
-      loaded: state.productReducer.loaded,
       done: state.productReducer.done,
       error: state.productReducer.error,
       enableReinitialize: true,

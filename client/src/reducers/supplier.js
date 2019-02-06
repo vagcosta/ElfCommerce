@@ -23,7 +23,7 @@ export default function supplierReducer(state = initialState, action) {
     case FETCH_SUPPLIERS_SUCCESS:
       return { ...state, suppliers: action.value, loaded: true };
     case FETCH_SUPPLIER_DETAILS_SUCCESS:
-      return { ...state, supplierDetails: action.value, loaded: true };
+      return { ...state, supplierDetails: action.value };
     case SUBMIT_SUPPLIER_SUCCESS:
       return { ...state, supplierDetails: action.value, done: true };
     case UPDATE_SUPPLIER_STATUS_SUCCESS:

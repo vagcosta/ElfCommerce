@@ -23,7 +23,7 @@ export default function manufacturerReducer(state = initialState, action) {
     case FETCH_MANUFACTURERS_SUCCESS:
       return { ...state, manufacturers: action.value, loaded: true };
     case FETCH_MANUFACTURER_DETAILS_SUCCESS:
-      return { ...state, manufacturerDetails: action.value, loaded: true };
+      return { ...state, manufacturerDetails: action.value };
     case SUBMIT_MANUFACTURER_SUCCESS:
       return { ...state, manufacturerDetails: action.value, done: true };
     case UPDATE_MANUFACTURER_STATUS_SUCCESS:

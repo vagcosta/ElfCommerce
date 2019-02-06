@@ -26,10 +26,8 @@ export default function categoryReducer(state = initialState, action) {
       return { ...state, categoryDetails: action.value, done: true };
     case FETCH_CATEGORIES_SUCCESS:
       return { ...state, categories: action.value, loaded: true };
-    case FETCH_PARENT_CATEGORIES_SUCCESS:
-      return { ...state, categories: action.value };
     case FETCH_CATEGORY_DETAILS_SUCCESS:
-      return { ...state, categoryDetails: action.value, loaded: true };
+      return { ...state, categoryDetails: action.value };
     case UPDATE_CATEGORY_STATUS_SUCCESS:
       const newList = (state.categories.data.map(item => {
 
@@ -48,7 +46,6 @@ export default function categoryReducer(state = initialState, action) {
     case SUBMIT_CATEGORY_FAILED:
     case FETCH_CATEGORIES_FAILED:
     case FETCH_CATEGORY_DETAILS_FAILED:
-    case FETCH_PARENT_CATEGORIES_FAILED:
     case UPDATE_CATEGORY_STATUS_FAILED:
       return { ...state, error: true };
     case CLEAR_CATEGORY_DETAILS:

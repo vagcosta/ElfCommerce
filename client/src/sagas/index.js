@@ -1,4 +1,4 @@
-import { call, all, takeEvery } from 'redux-saga/effects';
+import { call, all, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
   fetchOrders,
   fetchOrderDetails,
@@ -14,7 +14,6 @@ import {
 } from './product';
 import {
   fetchCategories,
-  fetchParentCategories,
   fetchCategoryDetails,
   upsertCategory,
   updateCategoryStatus,
@@ -53,7 +52,6 @@ import {
   FETCH_ORDER_DETAILS,
   SUBMIT_ORDER,
   FETCH_CATEGORIES,
-  FETCH_PARENT_CATEGORIES,
   FETCH_CATEGORY_DETAILS,
   FETCH_PRODUCTS,
   FETCH_PRODUCT_DETAILS,
@@ -91,7 +89,6 @@ export default function* rootSaga() {
     takeEvery(FETCH_CATEGORIES, fetchCategories),
     takeEvery(SUBMIT_CATEGORY, upsertCategory),
     takeEvery(UPDATE_CATEGORY_STATUS, updateCategoryStatus),
-    takeEvery(FETCH_PARENT_CATEGORIES, fetchParentCategories),
     takeEvery(FETCH_CATEGORY_DETAILS, fetchCategoryDetails),
     takeEvery(FETCH_PRODUCTS, fetchProducts),
     takeEvery(FETCH_PRODUCT_DETAILS, fetchProductDetails),

@@ -62,12 +62,16 @@ const renderSelect = ({ input, data, meta: { touched, error } }) => (
 );
 
 class SupplierForm extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
     const { dispatch } = this.props;
 
     dispatch(
       clearSupplierDetails()
     );
+
+    dispatch(fetchCountries());
   }
 
   componentDidMount() {
@@ -79,8 +83,6 @@ class SupplierForm extends Component {
         params: { id },
       },
     } = this.props;
-
-    dispatch(fetchCountries());
 
     if (mode === 'update') {
       dispatch(
@@ -123,19 +125,18 @@ class SupplierForm extends Component {
   render() {
     const {
       handleSubmit,
-      initialValues,
+      supplierDetails,
       countries,
       uploadedFile,
       mode,
       error,
       done,
-      loaded,
     } = this.props;
 
     let logo = null;
 
-    if (initialValues.logo) {
-      logo = `${initialValues.logo.indexOf('http') !== -1 ? '' : mediaFileDomain + '/'}${initialValues.logo}`;
+    if (supplierDetails.logo) {
+      logo = `${supplierDetails.logo.indexOf('http') !== -1 ? '' : mediaFileDomain + '/'}${supplierDetails.logo}`;
     }
 
     if (uploadedFile && saveMediaFileLocal) {
@@ -143,7 +144,7 @@ class SupplierForm extends Component {
     }
 
     return (
-      mode === 'update' && !loaded ?
+      mode === 'update' && !('code' in supplierDetails) ?
         <ProfileLoader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
@@ -293,13 +294,12 @@ class SupplierForm extends Component {
 
 SupplierForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  initialValues: PropTypes.object.isRequired,
+  supplierDetails: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
   mode: PropTypes.string.isRequired,
   error: PropTypes.bool,
   done: PropTypes.bool.isRequired,
-  loaded: PropTypes.bool.isRequired,
   storeId: PropTypes.string.isRequired,
   countries: PropTypes.array.isRequired,
   uploadedFile: PropTypes.object,
@@ -313,10 +313,10 @@ export default withRouter(
   connect(state => {
     return {
       initialValues: state.supplierReducer.supplierDetails,
+      supplierDetails: state.supplierReducer.supplierDetails,
       countries: state.publicReducer.countries,
       uploadedFile: state.publicReducer.uploadedFile,
       done: state.supplierReducer.done,
-      loaded: state.supplierReducer.loaded,
       error: state.supplierReducer.error,
       enableReinitialize: true,
     };
