@@ -18,6 +18,8 @@ import {
   Supplier,
   ManufacturerList,
   Manufacturer,
+  AccountList,
+  Account,
 } from './containers';
 import NavBar from './containers/navigation';
 import SideBarContent from './components/sideBar';
@@ -138,6 +140,24 @@ const routes = [
     sidebar: () => <SideBarContent />,
     main: () => <Setting />,
   },
+  {
+    path: '/accounts',
+    exact: true,
+    sidebar: () => <SideBarContent />,
+    main: () => <AccountList />,
+  },
+  {
+    path: '/new-account',
+    exact: true,
+    sidebar: () => <SideBarContent />,
+    main: () => <Account />,
+  },
+  {
+    path: '/accounts/:id',
+    exact: true,
+    sidebar: () => <SideBarContent />,
+    main: () => <Account />,
+  },
 ];
 
 const App = () => (
@@ -148,7 +168,7 @@ const App = () => (
         <div className="dashboard-page">
           <Col md={2} className="sidebar">
             <div id="site-name">
-              ELFCommerce
+              <a href="/dashboard" style={{ color: '#efefef' }}>ELFCommerce</a>
             </div>
             {routes.map((route, index) => (
               <Route

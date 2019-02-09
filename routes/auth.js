@@ -1,9 +1,6 @@
 'use strict';
 
 const router = require('express').Router();
-const uniqid = require('uniqid');
-const randomstring = require('randomstring');
-const md5 = require('md5');
 require('dotenv').load();
 const {
   authMiddleware,
@@ -11,7 +8,6 @@ const {
 } = require('../middlewares');
 const {
   OAuth2Request,
-  Account,
 } = require('../models');
 
 router.post('/auth', async (req, res) => {
@@ -38,38 +34,5 @@ router.post('/auth', async (req, res) => {
     res.status(err.statusCode).send(err);
   }
 });
-
-router.post('/accounts', async (req, res) => {
-  try {
-    const salt = randomstring.generate(32);
-    const user = new User(
-      uniqid(),
-      req.body.name,
-      req.body.email,
-      md5(`${req.body.password + salt}`),
-      salt
-    );
-    const data = await user.add(user);
-
-    res.send(data);
-  } catch (err) {
-    res.status(err.statusCode).send(err);
-  }
-});
-
-router.get(
-  '/accounts/:accountId',
-  [authMiddleware, userCodeVerifier],
-  async (req, res) => {
-    try {
-      const acct = new Account();
-      const data = await acct.get(req.params.accountId);
-
-      res.send(data);
-    } catch (err) {
-      res.status(err.statusCode).send(err);
-    }
-  }
-);
 
 module.exports = router;

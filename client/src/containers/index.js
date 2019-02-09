@@ -11,6 +11,8 @@ import Manufacturer from './manufacturer/manufacturer';
 import Payment from './payment/payment';
 import Setting from './setting/setting';
 import SalesReportList from './report/salesReportList';
+import AccountList from './account/accountList';
+import Account from './account/account';
 
 export {
   OrderList,
@@ -26,4 +28,6 @@ export {
   Supplier,
   ManufacturerList,
   Manufacturer,
+  AccountList,
+  Account,
 };

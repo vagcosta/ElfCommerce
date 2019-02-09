@@ -154,5 +154,8 @@
   "sys.completed": "Completed",
   "sys.noStock": "No stock",
   "sys.normal": "Normal",
-  "sys.pasteImageUrl": "Paste an image URL here"
+  "sys.pasteImageUrl": "Paste an image URL here",
+  "sys.accounts": "Accounts",
+  "sys.account": "Account",
+  "sys.role": "Role"
 }

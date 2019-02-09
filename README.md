@@ -1,6 +1,6 @@
-# ElfCommerce
+# <img src="https://image.flaticon.com/icons/svg/235/235111.svg" width="64" /> ElfCommerce
 
-<img src="https://image.flaticon.com/icons/svg/235/235111.svg" width="64" />
+
 
 <p>
   <img src="https://img.shields.io/badge/React-16.4.+-lightblue.svg">
