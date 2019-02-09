@@ -20,6 +20,7 @@ function Account(
   pwd,
   salt,
   joinedOn,
+  role,
   status,
   dbConn
 ) {
@@ -31,6 +32,7 @@ function Account(
   this.password = pwd;
   this.salt = salt;
   this.joinedOn = joinedOn || moment.utc().format('YYYY-MM-DD HH:mm:ss');
+  this.role = role;
   this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
@@ -40,7 +42,7 @@ function Account(
 Account.prototype.get = function (code) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
-      `select code, store_id as storeId, name, email, joined_on as joinedOn, status
+      `select code, store_id as storeId, name, email, joined_on as joinedOn, role, status
        from user
        where code='${code}'`,
       (error, results) => {
@@ -53,6 +55,7 @@ Account.prototype.get = function (code) {
             name,
             email,
             joinedOn,
+            role,
             status,
           } = results[0];
           resolve(
@@ -64,6 +67,7 @@ Account.prototype.get = function (code) {
               null,
               null,
               moment(joinedOn).format('YYYY-MM-DD HH:mm:ss'),
+              role,
               status
             )
           );
@@ -77,7 +81,7 @@ Account.prototype.getTotalCountByStoreId = function (id) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select count(*) as total 
-       from account where store_id='${id}'`,
+       from user where store_id='${id}'`,
       (error, results) => {
         if (error) {
           reject(new NoRecordFoundError('No accounts found.'));
@@ -92,13 +96,13 @@ Account.prototype.getTotalCountByStoreId = function (id) {
 Account.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
-      `select code, store_id as storeId, name, email, joined_on as joinedOn, status
+      `select code, store_id as storeId, name, email, joined_on as joinedOn, role, status
        from user
-       where store_id='${id}' order by added_on desc limit ${(page - 1) *
+       where store_id='${id}' order by joined_on desc limit ${(page - 1) *
       pageSize}, ${pageSize}`,
       (error, results) => {
         if (error) {
-          reject(new NoRecordFoundError('No orders found.'));
+          reject(new NoRecordFoundError('No accounts found.'));
         } else {
           const accounts = results.map(account => {
             const {
@@ -107,6 +111,7 @@ Account.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
               name,
               email,
               joinedOn,
+              role,
               status,
             } = account;
             return new Account(
@@ -117,6 +122,7 @@ Account.prototype.getAllByStoreId = function (id, page = 1, pageSize = 20) {
               null,
               null,
               moment(joinedOn).format('YYYY-MM-DD HH:mm:ss'),
+              role,
               status
             );
           });
@@ -156,11 +162,12 @@ Account.prototype.add = function (account) {
         password,
         salt,
         joinedOn,
+        role,
       } = account;
 
       (this.db || db).query(
-        `insert into user(code, store_id, name, email, password, salt, joined_on) 
-         values('${code}', '${storeId}', '${name}', '${email}','${password}', '${salt}', '${joinedOn}')`,
+        `insert into user(code, store_id, name, email, password, salt, joined_on, role) 
+         values('${code}', '${storeId}', '${name}', '${email}','${password}', '${salt}', '${joinedOn}', ${role})`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalid account data.'));
@@ -174,6 +181,7 @@ Account.prototype.add = function (account) {
                 password,
                 salt,
                 moment(joinedOn).format('YYYY-MM-DD HH:mm:ss'),
+                role,
                 true
               )
             );
@@ -181,7 +189,7 @@ Account.prototype.add = function (account) {
         }
       );
     } else {
-      reject(new BadRequestError('Invalid order data.'));
+      reject(new BadRequestError('Invalid account data.'));
     }
   });
 };
@@ -194,10 +202,11 @@ Account.prototype.update = function (account) {
         storeId,
         name,
         email,
+        role,
       } = account;
 
       (this.db || db).query(
-        `update account set name='${name}', email='${email}' 
+        `update user set name='${name}', email='${email}', role=${role}
          where code='${code}'`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
@@ -212,6 +221,7 @@ Account.prototype.update = function (account) {
                 null,
                 null,
                 null,
+                role,
                 null
               )
             );
@@ -227,13 +237,29 @@ Account.prototype.update = function (account) {
 Account.prototype.delete = function (code) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
-      `update account set status=0 where code='${code}'`,
+      `update user set status=0 where code='${code}'`,
       (error, results) => {
 
         if (error || results.affectedRows == 0) {
-          reject(new BadRequestError('Deleting account failed.'));
+          reject(new BadRequestError('Deactivating account failed.'));
         } else {
-          resolve('Account deleted.');
+          resolve('Account access deactivated.');
+        }
+      }
+    );
+  });
+};
+
+Account.prototype.activate = function (code) {
+  return new Promise((resolve, reject) => {
+    (this.db || db).query(
+      `update user set status=1 where code='${code}'`,
+      (error, results) => {
+
+        if (error || results.affectedRows == 0) {
+          reject(new BadRequestError('Activating account failed.'));
+        } else {
+          resolve('Account activated.');
         }
       }
     );

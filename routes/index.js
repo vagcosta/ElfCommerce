@@ -1,4 +1,5 @@
 const auth = require('./auth');
+const account = require('./account');
 const common = require('./common');
 const product = require('./product');
 const store = require('./store');
@@ -10,6 +11,7 @@ const manufacturer = require('./manufacturer');
 module.exports = {
   auth,
   store,
+  account,
   common,
   product,
   order,

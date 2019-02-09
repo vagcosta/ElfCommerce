@@ -45,7 +45,10 @@ import {
   fetchCurrencies,
   uploadFile,
 } from './public';
-import { fetchAccount } from './account';
+import {
+  fetchAccounts,
+  fetchAccountDetails,
+} from './account';
 import {
   CLEAR_TOKEN,
   FETCH_ORDERS,
@@ -76,8 +79,9 @@ import {
   SUBMIT_LOGIN_DATA,
   FETCH_COUNTRIES,
   FETCH_CURRENCIES,
-  FETCH_ACCOUNT,
+  FETCH_ACCOUNT_DETAILS,
   UPLOAD_FILE,
+  FETCH_ACCOUNTS,
 } from '../actions';
 
 export default function* rootSaga() {
@@ -111,7 +115,8 @@ export default function* rootSaga() {
     takeEvery(UPDATE_MANUFACTURER_STATUS, updateManufacturerStatus),
     takeEvery(FETCH_COUNTRIES, fetchCountries),
     takeEvery(FETCH_CURRENCIES, fetchCurrencies),
-    takeEvery(FETCH_ACCOUNT, fetchAccount),
+    takeEvery(FETCH_ACCOUNTS, fetchAccounts),
+    takeEvery(FETCH_ACCOUNT_DETAILS, fetchAccountDetails),
     takeEvery(UPLOAD_FILE, uploadFile),
   ]);
 }

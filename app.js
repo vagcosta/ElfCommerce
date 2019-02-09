@@ -9,6 +9,7 @@ require('dotenv').load();
 const {
   auth,
   store,
+  account,
   common,
   product,
   order,
@@ -24,6 +25,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/', [
   auth,
   store,
+  account,
   common,
   product,
   order,

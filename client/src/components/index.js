@@ -14,6 +14,7 @@ import ShipTodayItem from './dashboard/shipTodayItem';
 import Tile from './dashboard/tile';
 import FeedItem from './dashboard/feedItem';
 import CredentialListItem from './setting/credentialListItem';
+import AccountListItem from './account/accountListItem';
 import { Loader, ProfileLoader, ParallelLoader } from './loader';
 
 export {
@@ -33,6 +34,7 @@ export {
   ShipTodayItem,
   CredentialListItem,
   ManufacturerListItem,
+  AccountListItem,
   Loader,
   ProfileLoader,
   ParallelLoader,

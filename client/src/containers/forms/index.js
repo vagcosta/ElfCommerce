@@ -11,6 +11,7 @@ import ManufacturerForm from './manufacturerForm';
 import OrderForm from './orderForm';
 import ProductSearchForm from './productSearchForm';
 import ProductAttributeForm from './productAttributeForm';
+import AccountForm from './accountForm';
 
 export {
   StoreSettingForm,
@@ -26,4 +27,5 @@ export {
   OrderForm,
   ProductSearchForm,
   ProductAttributeForm,
+  AccountForm,
 };

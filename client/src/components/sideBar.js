@@ -117,6 +117,12 @@ class SideBarContent extends Component {
             </Link>
           </div>
         </Collapse>
+        <div className={`sidebar-link${currentPath === 'accounts' ? ' active' : ''}`}>
+          <Link to="/accounts">
+            <MdSettings className="sidebar-icon" />
+            <FormattedMessage id="sys.accounts" />
+          </Link>
+        </div>
         <div
           className="sidebar-link"
           onClick={this.onReportMenuClick}
