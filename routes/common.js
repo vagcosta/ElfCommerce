@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const moment = require('moment');
 const mkdirp = require('mkdirp');
+const { sendEmail } = require('freetier');
 require('dotenv').load();
 const {
   authMiddleware,
@@ -13,6 +14,15 @@ const {
   Public,
 } = require('../models');
 const { BadRequestError } = require('../exceptions');
+
+const {
+  senderEmail,
+  sendgridApiKey,
+  sendgridDailyLimit,
+  elasticemailApiKey,
+  elasticemailDailyLimit,
+  passwordCallbackUrl,
+} = process.env;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -76,6 +86,29 @@ router.post(
         res.status(err.statusCode).send(err);
       }
     });
+  });
+
+router.post('/password/email',
+  async (req, res) => {
+    try {
+      const utility = new Public();
+      const data = await utility.generateEmailLink(req.body.email);
+      const result = await sendEmail({
+        to: req.body.email,
+        from: senderEmail,
+        subject: 'Reset your password',
+        message: '<a href="' + passwordCallbackUrl + '/password/reset?token=' + data + '">Click here to reset your password</a>',
+        recipient: '',
+        sender: '',
+      }, {
+          elasticEmail: { apiKey: elasticemailApiKey, dailyLimit: elasticemailDailyLimit },
+          sendGrid: { apiKey: sendgridApiKey, dailyLimit: sendgridDailyLimit },
+        });
+
+      res.send(result);
+    } catch (err) {
+      res.status(err.statusCode).send(err);
+    }
   });
 
 module.exports = router;

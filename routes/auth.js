@@ -10,12 +10,6 @@ const {
 const {
   OAuth2Request,
 } = require('../models');
-const {
-  elasticemailApiKey,
-  elasticemailDailyLimit,
-  sendgridApiKey,
-  sendgridDailyLimit,
-} = process.env;
 
 router.post('/auth', async (req, res) => {
   try {
