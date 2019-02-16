@@ -29,7 +29,7 @@ const AccountListItem = props => {
         {email}
       </td>
       <td>
-        {role}
+        {role === 1 ? formatMessage({ id: 'sys.admin' }) : formatMessage({ id: 'sys.user' })}
       </td>
       <td>
         <Badge color={status ? 'success' : 'secondary'}>

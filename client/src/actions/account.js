@@ -1,3 +1,9 @@
+export const SUBMIT_ACCOUNT = 'SUBMIT_ACCOUNT';
+export const SUBMIT_ACCOUNT_SUCCESS = 'SUBMIT_ACCOUNT_SUCCESS';
+export const SUBMIT_ACCOUNT_FAILED = 'SUBMIT_ACCOUNT_FAILED';
+
+export const CLEAR_ACCOUNT_DETAILS = 'CLEAR_ACCOUNT_DETAILS';
+
 export const FETCH_ACCOUNTS = 'FETCH_ACCOUNTS';
 export const FETCH_ACCOUNTS_SUCCESS = 'FETCH_ACCOUNTS_SUCCESS';
 export const FETCH_ACCOUNTS_FAILED = 'FETCH_ACCOUNTS_FAILED';
@@ -33,6 +39,22 @@ export function fetchAccountDetailsSuccess(data) {
 
 export function fetchAccountDetailsFailed() {
   return { type: FETCH_ACCOUNT_DETAILS_FAILED };
+}
+
+export function clearAccountDetails() {
+  return { type: CLEAR_ACCOUNT_DETAILS };
+}
+
+export function submitAccount(data) {
+  return { type: SUBMIT_ACCOUNT, value: data };
+}
+
+export function submitAccountSuccess(data) {
+  return { type: SUBMIT_ACCOUNT_SUCCESS, value: data };
+}
+
+export function submitAccountFailed() {
+  return { type: SUBMIT_ACCOUNT_FAILED };
 }
 
 export function updateAccountStatus(data) {

@@ -36,7 +36,7 @@ class Account extends Component {
           <div className="table-container">
             <Col md={12} className="table-content">
               <AccountForm
-                mode={path === '/new-manufacturer' ? 'new' : 'update'}
+                mode={path === '/new-account' ? 'new' : 'update'}
                 storeId={storeId}
               />
             </Col>
