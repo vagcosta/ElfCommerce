@@ -3,6 +3,7 @@ import {
   FETCH_ACCOUNTS_FAILED,
   FETCH_ACCOUNT_DETAILS_SUCCESS,
   FETCH_ACCOUNT_DETAILS_FAILED,
+  CLEAR_ACCOUNT_DETAILS,
 } from '../actions';
 
 const initialState = {
@@ -19,6 +20,8 @@ export default function accountReducer(state = initialState, action) {
       return { ...state, accounts: action.value, loaded: true };
     case FETCH_ACCOUNT_DETAILS_SUCCESS:
       return { ...state, accountDetails: action.value };
+    case CLEAR_ACCOUNT_DETAILS:
+      return { ...state, ...initialState };
     case FETCH_ACCOUNTS_FAILED:
     case FETCH_ACCOUNT_DETAILS_FAILED:
     default:

@@ -168,7 +168,7 @@ const App = () => (
         <div className="dashboard-page">
           <Col md={2} className="sidebar">
             <div id="site-name">
-              <a href="/dashboard" style={{ color: '#efefef' }}>ELFCommerce</a>
+              <a href="/dashboard" style={{ color: '#efefef' }}>ElfCommerce</a>
             </div>
             {routes.map((route, index) => (
               <Route

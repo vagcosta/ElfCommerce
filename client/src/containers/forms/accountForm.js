@@ -19,12 +19,11 @@ import {
 } from 'reactstrap';
 import { MdSave } from 'react-icons/md';
 import {
-  fetchCountries,
   submitAccount,
   fetchAccountDetails,
   clearAccountDetails,
 } from '../../actions';
-import { ProfileLoader } from '../../components';
+import { Loader } from '../../components';
 
 const required = value => (value ? undefined : 'Required');
 
@@ -73,8 +72,6 @@ class AccountForm extends Component {
       },
     } = this.props;
 
-    dispatch(fetchCountries());
-
     if (mode === 'update') {
       dispatch(
         fetchAccountDetails({ storeId, accountId: id })
@@ -113,7 +110,7 @@ class AccountForm extends Component {
 
     return (
       mode === 'update' && !('code' in accountDetails) ?
-        <ProfileLoader /> :
+        <Loader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
             <MdSave />

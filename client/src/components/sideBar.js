@@ -70,7 +70,7 @@ class SideBarContent extends Component {
             <FormattedMessage id="sys.dashboard" />
           </Link>
         </div>
-        <div className={`sidebar-link${currentPath === 'orders' ? ' active' : ''}`}>
+        <div className={`sidebar-link${currentPath.indexOf('order') !== -1 ? ' active' : ''}`}>
           <Link to="/orders">
             <MdShoppingCart className="sidebar-icon" />
             <FormattedMessage id="sys.orders" />
@@ -92,32 +92,32 @@ class SideBarContent extends Component {
           </div>
         </div>
         <Collapse isOpen={productMenu} className="sidebar-open">
-          <div className={`sidebar-link sub-menu${currentPath === 'categories' ? ' active' : ''}`}>
+          <div className={`sidebar-link sub-menu${currentPath.indexOf('categor') !== -1 ? ' active' : ''}`}>
             <Link to="/categories">
               <MdPieChart className="sidebar-icon" />
               <FormattedMessage id="sys.categories" />
             </Link>
           </div>
-          <div className={`sidebar-link sub-menu${currentPath === 'products' ? ' active' : ''}`}>
+          <div className={`sidebar-link sub-menu${currentPath.indexOf('product') !== -1 ? ' active' : ''}`}>
             <Link to="/products">
               <MdShoppingBasket className="sidebar-icon" />
               <FormattedMessage id="sys.products" />
             </Link>
           </div>
-          <div className={`sidebar-link sub-menu${currentPath === 'suppliers' ? ' active' : ''}`}>
+          <div className={`sidebar-link sub-menu${currentPath.indexOf('supplier') !== -1 ? ' active' : ''}`}>
             <Link to="/suppliers">
               <MdStore className="sidebar-icon" />
               <FormattedMessage id="sys.suppliers" />
             </Link>
           </div>
-          <div className={`sidebar-link sub-menu${currentPath === 'manufacturers' ? ' active' : ''}`}>
+          <div className={`sidebar-link sub-menu${currentPath.indexOf('manufacturer') !== -1 ? ' active' : ''}`}>
             <Link to="/manufacturers">
               <MdLocationCity className="sidebar-icon" />
               <FormattedMessage id="sys.manufacturers" />
             </Link>
           </div>
         </Collapse>
-        <div className={`sidebar-link${currentPath === 'accounts' ? ' active' : ''}`}>
+        <div className={`sidebar-link${currentPath.indexOf('account') !== -1 ? ' active' : ''}`}>
           <Link to="/accounts">
             <MdSettings className="sidebar-icon" />
             <FormattedMessage id="sys.accounts" />
