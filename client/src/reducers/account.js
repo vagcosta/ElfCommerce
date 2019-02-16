@@ -9,6 +9,8 @@ const initialState = {
   accounts: { data: [], count: 0 },
   accountDetails: {},
   loaded: false,
+  done: false,
+  error: false,
 };
 
 export default function accountReducer(state = initialState, action) {

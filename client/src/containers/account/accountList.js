@@ -115,7 +115,7 @@ class AccountList extends Component {
                         size="sm"
                         color="primary"
                         className="pull-right form-btn"
-                        onClick={() => history.push('/new-manufacturer')}
+                        onClick={() => history.push('/new-account')}
                       >
                         <MdAddCircleOutline />
                         &nbsp;

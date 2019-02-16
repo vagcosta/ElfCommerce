@@ -13,6 +13,13 @@
 
 An open source ecommerce dashboard written in ReactJS + ExpressJS. Manage your online business in one place.
 
+## Suitable for
+
+- Retail businesses
+- F&B businesses
+- Importers & Exporters
+- Dropshippers
+
 ## Demo account
 
 Username: test@test.com

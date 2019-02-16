@@ -157,5 +157,8 @@
   "sys.pasteImageUrl": "Paste an image URL here",
   "sys.accounts": "Accounts",
   "sys.account": "Account",
-  "sys.role": "Role"
+  "sys.role": "Role",
+  "sys.admin": "Admin",
+  "sys.user": "User",
+  "sys.joinedOn": "Joined on"
 }
