@@ -106,6 +106,7 @@
   "sys.status": "Status",
   "sys.parent": "Parent",
   "sys.active": "Active",
+  "sys.activate": "Activate",
   "sys.inactive": "Inactive",
   "sys.sku": "SKU",
   "sys.handledBy": "Handled by",
@@ -160,5 +161,7 @@
   "sys.role": "Role",
   "sys.admin": "Admin",
   "sys.user": "User",
-  "sys.joinedOn": "Joined on"
+  "sys.joinedOn": "Joined on",
+  "sys.revoke": "Revoke",
+  "sys.revoked": "Revoked"
 }

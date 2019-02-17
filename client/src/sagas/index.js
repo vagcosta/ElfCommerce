@@ -48,6 +48,8 @@ import {
 import {
   fetchAccounts,
   fetchAccountDetails,
+  upsertAccount,
+  updateAccountStatus,
 } from './account';
 import {
   CLEAR_TOKEN,
@@ -80,6 +82,8 @@ import {
   FETCH_COUNTRIES,
   FETCH_CURRENCIES,
   FETCH_ACCOUNT_DETAILS,
+  SUBMIT_ACCOUNT,
+  UPDATE_ACCOUNT_STATUS,
   UPLOAD_FILE,
   FETCH_ACCOUNTS,
 } from '../actions';
@@ -117,6 +121,8 @@ export default function* rootSaga() {
     takeEvery(FETCH_CURRENCIES, fetchCurrencies),
     takeEvery(FETCH_ACCOUNTS, fetchAccounts),
     takeEvery(FETCH_ACCOUNT_DETAILS, fetchAccountDetails),
+    takeEvery(SUBMIT_ACCOUNT, upsertAccount),
+    takeEvery(UPDATE_ACCOUNT_STATUS, updateAccountStatus),
     takeEvery(UPLOAD_FILE, uploadFile),
   ]);
 }

@@ -17,6 +17,7 @@ import {
   MdStore,
   MdLocationCity,
   MdAttachMoney,
+  MdPeople,
 } from 'react-icons/md';
 import {
   productMenuOpen,
@@ -117,12 +118,6 @@ class SideBarContent extends Component {
             </Link>
           </div>
         </Collapse>
-        <div className={`sidebar-link${currentPath.indexOf('account') !== -1 ? ' active' : ''}`}>
-          <Link to="/accounts">
-            <MdSettings className="sidebar-icon" />
-            <FormattedMessage id="sys.accounts" />
-          </Link>
-        </div>
         <div
           className="sidebar-link"
           onClick={this.onReportMenuClick}
@@ -146,6 +141,12 @@ class SideBarContent extends Component {
             </Link>
           </div>
         </Collapse>
+        <div className={`sidebar-link${currentPath.indexOf('account') !== -1 ? ' active' : ''}`}>
+          <Link to="/accounts">
+            <MdPeople className="sidebar-icon" />
+            <FormattedMessage id="sys.accounts" />
+          </Link>
+        </div>
         <div className={`sidebar-link${currentPath === 'settings' ? ' active' : ''}`}>
           <Link to="/settings">
             <MdSettings className="sidebar-icon" />
