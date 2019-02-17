@@ -1,6 +1,8 @@
 'use strict';
 
 const router = require('express').Router();
+const { sendEmail } = require('freetier');
+const moment = require('moment');
 const shortid = require('shortid');
 const uniqid = require('uniqid');
 const randomstring = require('randomstring');
@@ -13,7 +15,14 @@ const {
 const {
   Account,
 } = require('../models');
-const { UnauthorisedError } = require('../exceptions');
+const {
+  senderEmail,
+  sendgridApiKey,
+  sendgridDailyLimit,
+  elasticemailApiKey,
+  elasticemailDailyLimit,
+} = process.env;
+
 
 router.get(
   '/stores/:storeId/accounts',
@@ -41,16 +50,32 @@ router.post('/stores/:storeId/accounts',
   [authMiddleware, storeIdVerifier],
   async (req, res) => {
     try {
+      //TODO: make sure the current user who creating a new account has admin right
       const salt = randomstring.generate(32);
-      const user = new Account(
+      const pwd = req.body.password || randomstring.generate(8);
+      const account = new Account(
         uniqid(),
+        req.params.storeId,
         req.body.name,
         req.body.email,
-        md5(`${req.body.password + salt}`),
-        salt
+        md5(`${pwd + salt}`),
+        salt,
+        moment.utc().format('YYYY-MM-DD HH:mm:ss'),
+        req.body.role,
+        1
       );
-      const data = await user.add(user);
-
+      const data = await account.add(account);
+      const result = await sendEmail({
+        to: req.body.email,
+        from: senderEmail,
+        subject: 'Your new account has been created.',
+        message: `Hi ${req.body.name}: <br /><br />Your account has been created and your temp password is: <b>${pwd}</b>.<br /><br />Please change your password after login.`,
+        recipient: req.body.name,
+        sender: 'Admin',
+      }, {
+          elasticEmail: { apiKey: elasticemailApiKey, dailyLimit: elasticemailDailyLimit },
+          sendGrid: { apiKey: sendgridApiKey, dailyLimit: sendgridDailyLimit },
+        });
       res.send(data);
     } catch (err) {
       res.status(err.statusCode).send(err);

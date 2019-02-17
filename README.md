@@ -34,7 +34,7 @@ Password: 123
 
 [Dashboard demo](https://ccwukong.github.io/) (Continue developing)
 
-<img src="http://g.recordit.co/rWcQatgehj.gif" />
+<img src="https://media.giphy.com/media/6utXdpDYcFfa3szDcI/giphy.gif" />
 
 
 ## Installation
