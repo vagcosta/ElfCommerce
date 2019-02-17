@@ -35,7 +35,7 @@ const AccountListItem = props => {
         <Badge color={status ? 'success' : 'secondary'}>
           {status
             ? formatMessage({ id: 'sys.active' })
-            : formatMessage({ id: 'sys.archived' })}
+            : formatMessage({ id: 'sys.revoked' })}
         </Badge>
       </td>
       <td style={{ textAlign: 'right' }}>
@@ -44,8 +44,8 @@ const AccountListItem = props => {
         </Button>
         <Button size="sm" className="action-btn" onClick={() => onStatusUpdateClick(id, status ? 0 : 1)}>
           {status
-            ? formatMessage({ id: 'sys.archive' })
-            : formatMessage({ id: 'sys.unarchive' })}
+            ? formatMessage({ id: 'sys.revoke' })
+            : formatMessage({ id: 'sys.activate' })}
         </Button>
       </td>
     </tr>
