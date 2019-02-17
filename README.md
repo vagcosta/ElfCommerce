@@ -1,7 +1,6 @@
 # <img src="https://image.flaticon.com/icons/svg/235/235111.svg" width="64" /> ElfCommerce
 
 
-
 <p>
   <img src="https://img.shields.io/badge/React-16.4.+-lightblue.svg">
   <img src="https://img.shields.io/badge/Redux-4.0.+-purple.svg">
@@ -11,10 +10,17 @@
   <img src="https://img.shields.io/badge/MySQL-5.7.+-blue.svg">
 </p>
 
-An open source ecommerce dashboard written in ReactJS + ExpressJS. Manage your online business in one place.
+ElfCommerce is an open source ecommerce dashboard written in ReactJS + ExpressJS and curretly under active development. The goal of this project is to provide a data-driven backoffice solution for SMEs. It will allow yout to manage your inventory, orders, supply chain, shipments, payments and everything else in one place with intuitive UI. 
 
-## Suitable for
+Please join me to work on this special project together. I'm looking for volunteers:
+ - Coders: React, Node
+ - UX designers
+ - Supply Chain domain experts
 
+
+## ElfCommerce is suitable for
+
+- Online store businesses
 - Retail businesses
 - F&B businesses
 - Importers & Exporters
@@ -27,6 +33,8 @@ Username: test@test.com
 Password: 123
 
 [Dashboard demo](https://ccwukong.github.io/) (Continue developing)
+
+<img src="http://g.recordit.co/rWcQatgehj.gif" />
 
 
 ## Installation
