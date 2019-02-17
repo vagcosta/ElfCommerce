@@ -1,12 +1,7 @@
 'use strict';
 
 const router = require('express').Router();
-const { sendEmail } = require('freetier');
 require('dotenv').load();
-const {
-  authMiddleware,
-  userCodeVerifier,
-} = require('../middlewares');
 const {
   OAuth2Request,
 } = require('../models');
