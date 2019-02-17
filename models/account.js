@@ -243,7 +243,7 @@ Account.prototype.delete = function (code) {
         if (error || results.affectedRows == 0) {
           reject(new BadRequestError('Deactivating account failed.'));
         } else {
-          resolve('Account access deactivated.');
+          resolve('Account deactivated.');
         }
       }
     );
