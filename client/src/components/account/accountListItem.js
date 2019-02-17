@@ -1,11 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Badge } from 'reactstrap';
-import {
-  MdEmail,
-  MdMap,
-  MdCall,
-} from 'react-icons/md';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 const AccountListItem = props => {
@@ -23,7 +18,8 @@ const AccountListItem = props => {
   return (
     <tr>
       <td>
-        {name}
+        {name}<br />
+        <small><FormattedMessage id="sys.joinedOn" />: {joinedOn}</small>
       </td>
       <td>
         {email}
@@ -35,7 +31,7 @@ const AccountListItem = props => {
         <Badge color={status ? 'success' : 'secondary'}>
           {status
             ? formatMessage({ id: 'sys.active' })
-            : formatMessage({ id: 'sys.archived' })}
+            : formatMessage({ id: 'sys.revoked' })}
         </Badge>
       </td>
       <td style={{ textAlign: 'right' }}>
@@ -44,8 +40,8 @@ const AccountListItem = props => {
         </Button>
         <Button size="sm" className="action-btn" onClick={() => onStatusUpdateClick(id, status ? 0 : 1)}>
           {status
-            ? formatMessage({ id: 'sys.archive' })
-            : formatMessage({ id: 'sys.unarchive' })}
+            ? formatMessage({ id: 'sys.revoke' })
+            : formatMessage({ id: 'sys.activate' })}
         </Button>
       </td>
     </tr>
@@ -57,6 +53,7 @@ AccountListItem.propTypes = {
   name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   role: PropTypes.number.isRequired,
+  joinedOn: PropTypes.string.isRequired,
   status: PropTypes.number.isRequired,
   onViewClick: PropTypes.func.isRequired,
   onStatusUpdateClick: PropTypes.func.isRequired,
