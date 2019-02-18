@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Badge } from 'reactstrap';
-import {
-  MdFlag,
-} from 'react-icons/md';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 const AccountListItem = props => {
