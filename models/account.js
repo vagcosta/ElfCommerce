@@ -206,7 +206,7 @@ Account.prototype.update = function (account) {
       } = account;
 
       (this.db || db).query(
-        `update user set name='${name}', email='${email}', role=${role}
+        `update user set name='${name}', role=${role}
          where code='${code}'`,
         (error, results) => {
           if (error || results.affectedRows == 0) {

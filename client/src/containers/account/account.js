@@ -15,7 +15,7 @@ class Account extends Component {
     return (
       <div>
         <div className="page-navbar">
-          <div className="page-name"><FormattedMessage id="sys.manufacturer" /></div>
+          <div className="page-name"><FormattedMessage id="sys.account" /></div>
           <Breadcrumb>
             <BreadcrumbItem>
               <Button color="link" onClick={() => history.push('/dashboard')}>
