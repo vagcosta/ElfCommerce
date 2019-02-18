@@ -103,26 +103,16 @@ router.put(
   [authMiddleware, storeIdVerifier],
   async (req, res) => {
     try {
-      const {
-        name,
-        url,
-        email,
-        contact,
-        address,
-        logo,
-        countryId,
-      } = req.body;
       const account = new Account(
         req.params.accountId,
-        name,
-        url,
-        email,
-        contact,
-        address,
-        logo,
         req.params.storeId,
-        countryId,
-        res.locals.auth.accountId
+        req.body.name,
+        req.body.email,
+        '',
+        '',
+        '',
+        req.body.role,
+        1
       );
       const data = await account.update(account);
 

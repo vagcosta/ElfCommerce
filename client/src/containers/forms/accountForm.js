@@ -31,10 +31,11 @@ const renderField = ({
   input,
   placeholder,
   type,
+  readonly,
   meta: { touched, error },
 }) => (
     <div>
-      <Input {...input} placeholder={placeholder} type={type} />
+      <Input {...input} placeholder={placeholder} type={type} readOnly={readonly} />
       {touched && (error && <span className="text-danger">{error}</span>)}
     </div>
   );
@@ -161,6 +162,7 @@ class AccountForm extends Component {
                   <FormGroup row>
                     <Label for="email" sm={2}>
                       <FormattedMessage id="sys.email" />
+                      <span className="text-danger mandatory-field">*</span>
                     </Label>
                     <Col sm={10}>
                       <Field
@@ -168,9 +170,30 @@ class AccountForm extends Component {
                         name="email"
                         className="form-control"
                         id="email"
+                        validate={[required]}
+                        readonly={mode === 'update' ? true : false}
                       />
                     </Col>
                   </FormGroup>
+                  {
+                    mode === 'new' ?
+                      <FormGroup row>
+                        <Label for="password" sm={2}>
+                          <FormattedMessage id="sys.pwd" />
+                          <span className="text-danger mandatory-field">*</span>
+                        </Label>
+                        <Col sm={10}>
+                          <Field
+                            component={renderField}
+                            name="password"
+                            type="password"
+                            className="form-control"
+                            id="password"
+                            validate={[required]}
+                          />
+                        </Col>
+                      </FormGroup> : null
+                  }
                   <FormGroup row>
                     <Label for="role" sm={2}>
                       <FormattedMessage id="sys.role" />
