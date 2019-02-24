@@ -18,7 +18,6 @@ import {
 } from 'reactstrap';
 import {
   submitAccount,
-  submitAccountFailed,
   clearAccountDetails,
 } from '../../actions';
 
@@ -56,11 +55,7 @@ class PasswordForm extends Component {
     data.mode = 'update';
     data.accountId = accountId;
 
-    if (data.password !== data.cfmPassword) {
-      dispatch(submitAccountFailed());
-    } else {
-      dispatch(submitAccount(data));
-    }
+    dispatch(submitAccount(data));
   };
 
   render() {
@@ -69,7 +64,7 @@ class PasswordForm extends Component {
       error,
       done,
     } = this.props;
-    console.log(error);
+
     return (
       <Form onSubmit={handleSubmit(data => this.onSubmit(data))} id="reset-pwd-form">
         <Card>
@@ -93,25 +88,9 @@ class PasswordForm extends Component {
                 />
               </Col>
             </FormGroup>
-            <FormGroup row>
-              <Label for="new-pwd" sm={4}>
-                <FormattedMessage id="sys.cfmPwd" />
-                <span className="text-danger mandatory-field">*</span>
-              </Label>
-              <Col sm={8}>
-                <Field
-                  component={renderField}
-                  type="password"
-                  name="cfmPassword"
-                  className="form-control"
-                  id="cfm-password"
-                  validate={[required]}
-                />
-              </Col>
-            </FormGroup>
             <Button color="primary" style={{ marginTop: 10 }}>
               <FormattedMessage id="sys.save" />
-            </Button>
+            </Button><br /><br />
             {
               error ?
                 <Alert color="danger">
@@ -144,7 +123,6 @@ PasswordForm = reduxForm({
 
 export default withRouter(
   connect(state => {
-    console.log(state.accountReducer.error)
     return {
       initialValues: state.accountReducer.accountDetails,
       done: state.accountReducer.done,

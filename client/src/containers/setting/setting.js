@@ -15,7 +15,7 @@ import {
   Table,
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import jwt from 'jsonwebtoken';
 import classnames from 'classnames';
 import { MdSave } from 'react-icons/md';
@@ -53,9 +53,6 @@ class Setting extends Component {
     const {
       settings,
       history,
-      intl: {
-        formatMessage,
-      },
     } = this.props;
     const { data: { storeId, accountId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
@@ -217,10 +214,6 @@ class Setting extends Component {
 Setting.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  intl: PropTypes.object.isRequired,
 };
 
-export default connect(
-  null,
-  null
-)(injectIntl(withRouter(Setting)));
+export default withRouter(Setting);

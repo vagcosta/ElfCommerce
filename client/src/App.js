@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import { Col } from 'reactstrap';
 import Login from './containers/login';
 import Dashboard from './containers/dashboard/dashboard';
@@ -162,7 +162,7 @@ const routes = [
 
 const App = () => (
   <Router>
-    <div>
+    <Switch>
       <Route exact path="/" component={Login} />
       {localStorage.getItem(config.accessTokenKey) ?
         <div className="dashboard-page">
@@ -192,7 +192,7 @@ const App = () => (
           </Col>
         </div> : <Redirect to='/' />
       }
-    </div>
+    </Switch>
   </Router>
 );
 
