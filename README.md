@@ -103,7 +103,7 @@ yarn db:migrate
 
 Step 7 (Optional), if you wanna deploy the RESTful API to AWS lambda function using ClaudiaJS, please make sure you follow [the instructions](https://medium.freecodecamp.org/express-js-and-aws-lambda-a-serverless-love-story-7c77ba0eaa35).
 
-**Notice that** ClaudiaJS doesn't create a Lambda function with environment variables by reading .env file, thus you'll need to pull all environment varibles in a .json file and run the following command when creating a Lambda function for the first time:
+**ClaudiaJS doesn't create a Lambda function with environment variables by reading .env file, thus you'll need to pull all environment varibles in a .json file and run the following command when creating a Lambda function for the first time:**
 
 ```console
 claudia create --handler lambda.handler --deploy-proxy-api --region AWS_REGION_NAME --set-env-from-json FILE_PATH
