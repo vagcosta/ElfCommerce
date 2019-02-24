@@ -6,7 +6,6 @@ const moment = require('moment');
 const shortid = require('shortid');
 const uniqid = require('uniqid');
 const randomstring = require('randomstring');
-const md5 = require('md5');
 require('dotenv').load();
 const {
   authMiddleware,
@@ -52,13 +51,13 @@ router.post('/stores/:storeId/accounts',
     try {
       //TODO: make sure the current user who creating a new account has admin right
       const salt = randomstring.generate(32);
-      const pwd = req.body.password || randomstring.generate(8);
+      const password = req.body.password || randomstring.generate(8);
       const account = new Account(
         uniqid(),
         req.params.storeId,
         req.body.name,
         req.body.email,
-        md5(`${pwd + salt}`),
+        password,
         salt,
         moment.utc().format('YYYY-MM-DD HH:mm:ss'),
         req.body.role,
@@ -69,7 +68,7 @@ router.post('/stores/:storeId/accounts',
         to: req.body.email,
         from: senderEmail,
         subject: 'Your new account has been created.',
-        message: `Hi ${req.body.name}: <br /><br />Your account has been created and your temp password is: <b>${pwd}</b>.<br /><br />Please change your password after login.`,
+        message: `Hi ${req.body.name}: <br /><br />Your account has been created and your temp password is: <b>${password}</b>.<br /><br />Please change your password after login.`,
         recipient: req.body.name,
         sender: 'Admin',
       }, {
@@ -108,8 +107,8 @@ router.put(
         req.params.storeId,
         req.body.name,
         req.body.email,
-        '',
-        '',
+        req.body.password,
+        req.body.password ? randomstring.generate(32) : undefined,
         '',
         req.body.role,
         1

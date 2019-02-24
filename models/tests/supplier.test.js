@@ -8,7 +8,7 @@ const { MySQL } = require('../../db');
 const Supplier = require('../supplier');
 
 const expect = chai.expect;
-const { host, user, password, testDb } = process.env;
+const { dbHost, dbUser, dbPassword, testDbName } = process.env;
 
 describe('Test supplier model', () => {
   const supplier = new Supplier(
@@ -23,7 +23,7 @@ describe('Test supplier model', () => {
     1,
     '40s1cqdw6jmyyiixe',
     true,
-    new MySQL(host, user, password, testDb)
+    new MySQL(dbHost, dbUser, dbPassword, testDbName)
   );
 
   it('should return a new supplier object by calling add method', async () => {
@@ -44,7 +44,7 @@ describe('Test supplier model', () => {
       1,
       '40s1cqdw6jmyyiixe',
       true,
-      new MySQL(host, user, password, testDb)
+      new MySQL(dbHost, dbUser, dbPassword, testDbName)
     );
 
     await expect(supplier.add(supplier)).to.be.rejected;

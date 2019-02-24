@@ -15,7 +15,7 @@ import {
   Table,
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import jwt from 'jsonwebtoken';
 import classnames from 'classnames';
 import { MdSave } from 'react-icons/md';
@@ -50,8 +50,11 @@ class Setting extends Component {
   };
 
   render() {
-    const { settings, history, intl: { formatMessage } } = this.props;
-    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+    const {
+      settings,
+      history,
+    } = this.props;
+    const { data: { storeId, accountId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     return (
       <div>
@@ -192,7 +195,11 @@ class Setting extends Component {
               <TabPane tabId="4">
                 <Row>
                   <Col md={{ size: 6 }}>
-                    <PasswordForm onSubmit={this.handleApiSettingSubmit} />
+                    <PasswordForm
+                      onSubmit={this.handleApiSettingSubmit}
+                      storeId={storeId}
+                      accountId={accountId}
+                    />
                   </Col>
                 </Row>
               </TabPane>
@@ -207,10 +214,6 @@ class Setting extends Component {
 Setting.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  intl: PropTypes.object.isRequired,
 };
 
-export default connect(
-  null,
-  null
-)(injectIntl(withRouter(Setting)));
+export default withRouter(Setting);

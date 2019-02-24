@@ -1,7 +1,7 @@
 'use strict';
 
 const router = require('express').Router();
-const shortid = require('shortid');
+const uuidv1 = require('uuid/v1');
 const moment = require('moment');
 require('dotenv').load();
 const {
@@ -99,7 +99,7 @@ router.post(
       } = req.body;
 
       const order = new Order(
-        shortid.generate(),
+        uuidv1(),
         req.params.storeId,
         moment.utc().format('YYYY-MM-DD HH:mm:ss'),
         res.locals.auth.accountId,

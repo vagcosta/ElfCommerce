@@ -9,7 +9,7 @@ const { MySQL } = require('../../db');
 const { Product } = require('../product');
 
 const expect = chai.expect;
-const { host, user, password, testDb } = process.env;
+const { dbHost, dbUser, dbPassword, testDbName } = process.env;
 
 describe('Create a new product object', () => {
   const product = new Product(
@@ -29,7 +29,7 @@ describe('Create a new product object', () => {
     'manufacture-asdfasdf',
     'supplier-adfsadsf',
     true,
-    new MySQL(host, user, password, testDb)
+    new MySQL(dbHost, dbUser, dbPassword, testDbName)
   );
 
   it('should return a new product object by calling add method', async () => {

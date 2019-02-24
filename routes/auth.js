@@ -19,7 +19,6 @@ router.post('/auth', async (req, res) => {
           req.body.password,
         );
       }
-
       res.send(data);
     } else {
       const auth = new OAuth2Request();

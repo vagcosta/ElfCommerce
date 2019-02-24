@@ -9,8 +9,8 @@ const {
 } = require('../exceptions');
 require('dotenv').load();
 
-const { host, user, password, database } = process.env;
-const db = new MySQL(host, user, password, database);
+const { dbHost, dbUser, dbPassword, dbName } = process.env;
+const db = new MySQL(dbHost, dbUser, dbPassword, dbName);
 
 function Product(
   code,
@@ -378,7 +378,7 @@ function ProductAttribute(
   this.productAttributeCategoryId = productAttributeCategoryId;
   this.productAttributeCategoryName = productAttributeCategoryName || '';
   this.status = status || 1;
-  this.db = dbConn || new MySQL(host, user, password, database);
+  this.db = dbConn || new MySQL(dbHost, dbUser, dbPassword, dbName);
 }
 
 ProductAttribute.prototype.get = function (id) {

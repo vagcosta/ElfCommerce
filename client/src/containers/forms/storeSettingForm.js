@@ -18,6 +18,7 @@ import {
   fetchStoreSettings,
   fetchCountries,
   fetchCurrencies,
+  clearSettings,
 } from '../../actions';
 import {
   ParallelLoader,
@@ -38,6 +39,14 @@ const renderField = ({
   );
 
 class StoreSettingForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.props.dispatch(
+      clearSettings()
+    );
+  }
+
   componentDidMount() {
     const {
       dispatch,

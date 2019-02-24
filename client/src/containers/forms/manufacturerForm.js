@@ -315,7 +315,7 @@ export default withRouter(
       countries: state.publicReducer.countries,
       uploadedFile: state.publicReducer.uploadedFile,
       done: state.manufacturerReducer.done,
-      error: state.supplierReducer.error,
+      error: state.manufacturerReducer.error,
       enableReinitialize: true,
     };
   })(ManufacturerForm)

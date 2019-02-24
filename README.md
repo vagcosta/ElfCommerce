@@ -46,11 +46,11 @@ Step 2, add the ***.env*** file in root directory with environment settings:
 ```
 
 tokenSecret=REPLACE_THIS_WITH_ANY_LONG_RANDOM_STRING
-host=MYSQL_SERVER_CONNECTION_STRING
-user=MYSQL_USER
-password=MYSQL_USER_PASSWORD
-database=MYSQL_DATABASE_NAME
-testDb=MYSQL_DATABASE_NAME_FOR_INTEGRATION_TEST
+dbHost=MYSQL_SERVER_CONNECTION_STRING
+dbUser=MYSQL_USER
+dbPassword=MYSQL_USER_PASSWORD
+dbName=MYSQL_DATABASE_NAME
+testDbName=MYSQL_DATABASE_NAME_FOR_INTEGRATION_TEST
 
 ```
 Step 3, install all dependancies for ExpressJS
@@ -100,6 +100,15 @@ Before run the following command, make sure you already created a database and h
 ```javascript
 yarn db:migrate
 ```
+
+Step 7 (Optional), if you wanna deploy the RESTful API to AWS lambda function using ClaudiaJS, please make sure you follow [the instructions](https://medium.freecodecamp.org/express-js-and-aws-lambda-a-serverless-love-story-7c77ba0eaa35).
+
+**Notice that** ClaudiaJS doesn't create a Lambda function with environment variables by reading .env file, thus you'll need to pull all environment varibles in a .json file and run the following command when creating a Lambda function for the first time:
+
+```console
+claudia create --handler lambda.handler --deploy-proxy-api --region AWS_REGION_NAME --set-env-from-json FILE_PATH
+```
+
 
 ## How to run this?
 

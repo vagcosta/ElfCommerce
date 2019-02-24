@@ -20,6 +20,7 @@
 
 .env
 claudia.json
+lambdaEnv.json
 
 # misc
 .DS_Store

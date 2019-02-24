@@ -25,7 +25,7 @@
   "sys.email": "Email",
   "sys.pwd": "Password",
   "sys.forgotPwd": "Forgot password?",
-  "sys.currentPwd": "Current password",
+  "sys.cfmPwd": "Confirm password",
   "sys.newPwd": "New password",
   "sys.resetPwd": "Reset password",
   "sys.fName": "First Name",
