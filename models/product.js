@@ -378,7 +378,7 @@ function ProductAttribute(
   this.productAttributeCategoryId = productAttributeCategoryId;
   this.productAttributeCategoryName = productAttributeCategoryName || '';
   this.status = status || 1;
-  this.db = dbConn || new MySQL(host, user, password, database);
+  this.db = dbConn || new MySQL(dbHost, dbUser, dbPassword, dbName);
 }
 
 ProductAttribute.prototype.get = function (id) {
