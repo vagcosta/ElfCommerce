@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { withRouter } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import {
   Form,
   CardHeader,
@@ -12,18 +14,15 @@ import {
   FormGroup,
   Label,
   Col,
+  Alert,
 } from 'reactstrap';
+import {
+  submitAccount,
+  submitAccountFailed,
+  clearAccountDetails,
+} from '../../actions';
 
-const validate = values => {
-  const errors = {};
-  if (!values.currentPwd) {
-    errors.currentPwd = 'Required';
-  }
-  if (!values.newPwd) {
-    errors.newPwd = 'Required';
-  }
-  return errors;
-};
+const required = value => (value ? undefined : 'Required');
 
 const renderField = ({
   input,
@@ -37,58 +36,120 @@ const renderField = ({
     </div>
   );
 
-const PasswordForm = props => {
-  const { handleSubmit } = props;
-  return (
-    <Form onSubmit={handleSubmit} id="reset-pwd-form">
-      <Card>
-        <CardHeader>
-          <FormattedMessage id="sys.resetPwd" />
-        </CardHeader>
-        <CardBody>
-          <FormGroup row>
-            <Label for="current-pwd" sm={4}>
-              <FormattedMessage id="sys.currentPwd" />
-            </Label>
-            <Col sm={8}>
-              <Field
-                component={renderField}
-                type="password"
-                name="currentPwd"
-                className="form-control"
-                id="current-pwd"
-              />
-            </Col>
-          </FormGroup>
-          <FormGroup row>
-            <Label for="new-pwd" sm={4}>
-              <FormattedMessage id="sys.newPwd" />
-            </Label>
-            <Col sm={8}>
-              <Field
-                component={renderField}
-                type="password"
-                name="newPwd"
-                className="form-control"
-                id="new-pwd"
-              />
-            </Col>
-          </FormGroup>
-          <Button color="primary" style={{ marginTop: 10 }}>
-            <FormattedMessage id="sys.save" />
-          </Button>
-        </CardBody>
-      </Card>
-    </Form>
-  );
-};
+class PasswordForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.props.dispatch(
+      clearAccountDetails()
+    );
+  }
+
+  onSubmit = data => {
+    const {
+      dispatch,
+      storeId,
+      accountId,
+    } = this.props;
+
+    data.storeId = storeId;
+    data.mode = 'update';
+    data.accountId = accountId;
+
+    if (data.password !== data.cfmPassword) {
+      dispatch(submitAccountFailed());
+    } else {
+      dispatch(submitAccount(data));
+    }
+  };
+
+  render() {
+    const {
+      handleSubmit,
+      error,
+      done,
+    } = this.props;
+    console.log(error);
+    return (
+      <Form onSubmit={handleSubmit(data => this.onSubmit(data))} id="reset-pwd-form">
+        <Card>
+          <CardHeader>
+            <FormattedMessage id="sys.resetPwd" />
+          </CardHeader>
+          <CardBody>
+            <FormGroup row>
+              <Label for="current-pwd" sm={4}>
+                <FormattedMessage id="sys.newPwd" />
+                <span className="text-danger mandatory-field">*</span>
+              </Label>
+              <Col sm={8}>
+                <Field
+                  component={renderField}
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  id="password"
+                  validate={[required]}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row>
+              <Label for="new-pwd" sm={4}>
+                <FormattedMessage id="sys.cfmPwd" />
+                <span className="text-danger mandatory-field">*</span>
+              </Label>
+              <Col sm={8}>
+                <Field
+                  component={renderField}
+                  type="password"
+                  name="cfmPassword"
+                  className="form-control"
+                  id="cfm-password"
+                  validate={[required]}
+                />
+              </Col>
+            </FormGroup>
+            <Button color="primary" style={{ marginTop: 10 }}>
+              <FormattedMessage id="sys.save" />
+            </Button>
+            {
+              error ?
+                <Alert color="danger">
+                  <FormattedMessage id="sys.newFailed" />
+                </Alert> :
+                done ?
+                  <Alert color="success">
+                    <FormattedMessage id="sys.newSuccess" />
+                  </Alert> : null
+            }
+          </CardBody>
+        </Card>
+      </Form>
+    );
+  }
+}
 
 PasswordForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  intl: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  storeId: PropTypes.string.isRequired,
+  accountId: PropTypes.string.isRequired,
+  error: PropTypes.bool,
+  done: PropTypes.bool.isRequired,
 };
 
-export default reduxForm({
+PasswordForm = reduxForm({
   form: 'passwordForm',
-  validate,
 })(PasswordForm);
+
+export default withRouter(
+  connect(state => {
+    console.log(state.accountReducer.error)
+    return {
+      initialValues: state.accountReducer.accountDetails,
+      done: state.accountReducer.done,
+      error: state.accountReducer.error,
+      enableReinitialize: true,
+    };
+  })(PasswordForm)
+);

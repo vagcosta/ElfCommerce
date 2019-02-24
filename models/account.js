@@ -1,6 +1,7 @@
 'use strict';
 
 const moment = require('moment');
+const md5 = require('md5');
 const { MySQL } = require('../db');
 const {
   BadRequestError,
@@ -9,15 +10,15 @@ const {
 } = require('../exceptions');
 require('dotenv').load();
 
-const { host, user, password, database } = process.env;
-const db = new MySQL(host, user, password, database);
+const { dbHost, dbUser, dbPassword, dbName } = process.env;
+const db = new MySQL(dbHost, dbUser, dbPassword, dbName);
 
 function Account(
   code,
   storeId,
   name,
   email,
-  pwd,
+  password,
   salt,
   joinedOn,
   role,
@@ -29,7 +30,7 @@ function Account(
   this.storeId = storeId;
   this.name = name;
   this.email = email;
-  this.password = pwd;
+  this.password = password;
   this.salt = salt;
   this.joinedOn = joinedOn || moment.utc().format('YYYY-MM-DD HH:mm:ss');
   this.role = role;
@@ -167,7 +168,7 @@ Account.prototype.add = function (account) {
 
       (this.db || db).query(
         `insert into user(code, store_id, name, email, password, salt, joined_on, role) 
-         values('${code}', '${storeId}', '${name}', '${email}','${password}', '${salt}', '${joinedOn}', ${role})`,
+         values('${code}', '${storeId}', '${name}', '${email}','${md5(password + salt)}', '${salt}', '${joinedOn}', ${role})`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalid account data.'));
@@ -202,11 +203,15 @@ Account.prototype.update = function (account) {
         storeId,
         name,
         email,
+        password,
+        salt,
         role,
       } = account;
 
       (this.db || db).query(
-        `update user set name='${name}', role=${role}
+        password ? `update user set password='${md5(password + salt)}', salt='${salt}' 
+        where code='${code}'` :
+          `update user set name='${name}', role=${role}
          where code='${code}'`,
         (error, results) => {
           if (error || results.affectedRows == 0) {

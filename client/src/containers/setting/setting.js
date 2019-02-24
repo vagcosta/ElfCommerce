@@ -50,8 +50,14 @@ class Setting extends Component {
   };
 
   render() {
-    const { settings, history, intl: { formatMessage } } = this.props;
-    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+    const {
+      settings,
+      history,
+      intl: {
+        formatMessage,
+      },
+    } = this.props;
+    const { data: { storeId, accountId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     return (
       <div>
@@ -192,7 +198,11 @@ class Setting extends Component {
               <TabPane tabId="4">
                 <Row>
                   <Col md={{ size: 6 }}>
-                    <PasswordForm onSubmit={this.handleApiSettingSubmit} />
+                    <PasswordForm
+                      onSubmit={this.handleApiSettingSubmit}
+                      storeId={storeId}
+                      accountId={accountId}
+                    />
                   </Col>
                 </Row>
               </TabPane>

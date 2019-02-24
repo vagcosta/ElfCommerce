@@ -7,8 +7,8 @@ const { MySQL } = require('../db');
 const { UnauthorisedError } = require('../exceptions');
 require('dotenv').load();
 
-const { tokenSecret, host, user, password, database } = process.env;
-const db = new MySQL(host, user, password, database);
+const { tokenSecret, dbHost, dbUser, dbPassword, dbName } = process.env;
+const db = new MySQL(dbHost, dbUser, dbPassword, dbName);
 
 function OAuth2Request(dbConn) {
   if (dbConn !== undefined) {

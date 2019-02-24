@@ -10,10 +10,10 @@ const {
 } = require('../auth');
 
 const expect = chai.expect;
-const { host, user, password, testDb } = process.env;
+const { dbHost, dbUser, dbPassword, testDbName } = process.env;
 
 describe('Test OAuth models', () => {
-  const auth = new OAuth2Request(new MySQL(host, user, password, testDb));
+  const auth = new OAuth2Request(new MySQL(dbHost, dbUser, dbPassword, testDbName));
   let res = null;
 
   it('Should return an OAuth2Response object with a valid OAuth2Request request object', async () => {
