@@ -18,7 +18,6 @@ import {
 } from 'reactstrap';
 import {
   submitAccount,
-  clearAccountDetails,
 } from '../../actions';
 
 const required = value => (value ? undefined : 'Required');
@@ -36,14 +35,6 @@ const renderField = ({
   );
 
 class PasswordForm extends Component {
-  constructor(props) {
-    super(props);
-
-    this.props.dispatch(
-      clearAccountDetails()
-    );
-  }
-
   onSubmit = data => {
     const {
       dispatch,
