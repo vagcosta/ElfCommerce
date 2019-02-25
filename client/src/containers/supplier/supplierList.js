@@ -84,8 +84,6 @@ class SupplierList extends Component {
       history,
       suppliers,
       total,
-      count,
-      loaded,
       intl: { formatMessage },
     } = this.props;
 
@@ -108,7 +106,7 @@ class SupplierList extends Component {
           <div className="table-container">
             <Col md={12} className="table-content">
               {
-                !loaded ? <Loader /> :
+                !suppliers ? <Loader /> :
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <div>
@@ -152,7 +150,7 @@ class SupplierList extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {suppliers.length > 0 ? suppliers.map(product => (
+                        {suppliers.data.length > 0 ? suppliers.data.map(product => (
                           <SupplierListItem
                             key={product.code}
                             id={product.code}
@@ -170,7 +168,7 @@ class SupplierList extends Component {
                       </tbody>
                     </Table>
                     <div className="pagination-container">
-                      <span className="text-muted">Total {count} entries</span>
+                      <span className="text-muted">Total {suppliers.count} entries</span>
                       <ReactPaginate
                         pageCount={total || 1}
                         pageRangeDisplayed={3}
@@ -201,20 +199,16 @@ class SupplierList extends Component {
 
 SupplierList.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  suppliers: PropTypes.array.isRequired,
-  count: PropTypes.number.isRequired,
+  suppliers: PropTypes.object,
   total: PropTypes.number.isRequired,
   history: PropTypes.object.isRequired,
   intl: PropTypes.object.isRequired,
-  loaded: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
-  const diff = state.supplierReducer.suppliers.count / 20;
+  const diff = state.manufacturerReducer.suppliers ? state.supplierReducer.suppliers.count / 20 : 0;
   return ({
-    suppliers: state.supplierReducer.suppliers.data,
-    count: state.supplierReducer.suppliers.count,
-    loaded: state.supplierReducer.loaded,
+    suppliers: state.supplierReducer.suppliers,
     total: Number.isInteger(diff) ? diff : parseInt(diff) + 1,
   });
 };

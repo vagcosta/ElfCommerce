@@ -74,8 +74,6 @@ class ManufacturerList extends Component {
       history,
       manufacturers,
       total,
-      count,
-      loaded,
       intl: { formatMessage },
     } = this.props;
 
@@ -98,7 +96,7 @@ class ManufacturerList extends Component {
           <div className="table-container">
             <Col md={12} className="table-content">
               {
-                !loaded ? <Loader /> :
+                !manufacturers ? <Loader /> :
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <div>
@@ -142,7 +140,7 @@ class ManufacturerList extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {manufacturers.length > 0 ? manufacturers.map(manufacturer => (
+                        {manufacturers.data.length > 0 ? manufacturers.data.map(manufacturer => (
                           <ManufacturerListItem
                             key={manufacturer.code}
                             id={manufacturer.code}
@@ -160,7 +158,7 @@ class ManufacturerList extends Component {
                       </tbody>
                     </Table>
                     <div className="pagination-container">
-                      <span className="text-muted">Total {count} entries</span>
+                      <span className="text-muted">Total {manufacturers.count} entries</span>
                       <ReactPaginate
                         pageCount={total || 1}
                         pageRangeDisplayed={3}
@@ -191,20 +189,16 @@ class ManufacturerList extends Component {
 
 ManufacturerList.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  manufacturers: PropTypes.array.isRequired,
+  manufacturers: PropTypes.object,
   history: PropTypes.object.isRequired,
   total: PropTypes.number.isRequired,
-  count: PropTypes.number.isRequired,
   intl: PropTypes.object.isRequired,
-  loaded: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
-  const diff = state.manufacturerReducer.manufacturers.count / 20;
+  const diff = state.manufacturerReducer.manufacturers ? state.manufacturerReducer.manufacturers.count / 20 : 0;
   return ({
-    manufacturers: state.manufacturerReducer.manufacturers.data,
-    count: state.manufacturerReducer.manufacturers.count,
-    loaded: state.manufacturerReducer.loaded,
+    manufacturers: state.manufacturerReducer.manufacturers,
     total: Number.isInteger(diff) ? diff : parseInt(diff) + 1,
   });
 };

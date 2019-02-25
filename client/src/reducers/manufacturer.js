@@ -11,21 +11,19 @@ import {
 } from '../actions';
 
 const initialState = {
-  manufacturers: { data: [], count: 0 },
-  manufacturerDetails: {},
-  loaded: false,
-  done: false,
-  error: false,
+  manufacturers: null,
+  manufacturerDetails: null,
+  status: -1,
 };
 
 export default function manufacturerReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_MANUFACTURERS_SUCCESS:
-      return { ...state, manufacturers: action.value, loaded: true };
+      return { ...state, manufacturers: action.value };
     case FETCH_MANUFACTURER_DETAILS_SUCCESS:
       return { ...state, manufacturerDetails: action.value };
     case SUBMIT_MANUFACTURER_SUCCESS:
-      return { ...state, manufacturerDetails: action.value, done: true };
+      return { ...state, manufacturerDetails: action.value, status: 1 };
     case UPDATE_MANUFACTURER_STATUS_SUCCESS:
       const newList = (state.manufacturers.data.map(item => {
 
@@ -45,7 +43,7 @@ export default function manufacturerReducer(state = initialState, action) {
     case FETCH_MANUFACTURERS_FAILED:
     case FETCH_MANUFACTURER_DETAILS_FAILED:
     case UPDATE_MANUFACTURER_STATUS_FAILED:
-      return { ...state, error: true };
+      return { ...state, status: 0 };
     case CLEAR_MANUFACTURER_DETAILS:
       return { ...state, ...initialState };
     default:

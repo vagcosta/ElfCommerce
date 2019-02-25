@@ -60,7 +60,8 @@ router.post(
         logo,
         req.params.storeId,
         countryId,
-        res.locals.auth.accountId
+        res.locals.auth.accountId,
+        1
       );
       const data = await supplier.add(supplier);
 

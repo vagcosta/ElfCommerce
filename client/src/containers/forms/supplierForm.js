@@ -129,13 +129,12 @@ class SupplierForm extends Component {
       countries,
       uploadedFile,
       mode,
-      error,
-      done,
+      status,
     } = this.props;
 
     let logo = null;
 
-    if (supplierDetails.logo) {
+    if (supplierDetails && supplierDetails.logo) {
       logo = `${supplierDetails.logo.indexOf('http') !== -1 ? '' : mediaFileDomain + '/'}${supplierDetails.logo}`;
     }
 
@@ -144,7 +143,7 @@ class SupplierForm extends Component {
     }
 
     return (
-      mode === 'update' && !('code' in supplierDetails) ?
+      mode === 'update' && !supplierDetails ?
         <ProfileLoader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
@@ -155,11 +154,11 @@ class SupplierForm extends Component {
           <br />
           <br />
           {
-            error ?
+            status == 0 ?
               <Alert color="danger">
                 <FormattedMessage id="sys.newFailed" />
               </Alert> :
-              done ?
+              status == 1 ?
                 <Alert color="success">
                   <FormattedMessage id="sys.newSuccess" />
                 </Alert> : null
@@ -294,12 +293,11 @@ class SupplierForm extends Component {
 
 SupplierForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  supplierDetails: PropTypes.object.isRequired,
+  supplierDetails: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
   mode: PropTypes.string.isRequired,
-  error: PropTypes.bool,
-  done: PropTypes.bool.isRequired,
+  status: PropTypes.number,
   storeId: PropTypes.string.isRequired,
   countries: PropTypes.array.isRequired,
   uploadedFile: PropTypes.object,
@@ -316,8 +314,7 @@ export default withRouter(
       supplierDetails: state.supplierReducer.supplierDetails,
       countries: state.publicReducer.countries,
       uploadedFile: state.publicReducer.uploadedFile,
-      done: state.supplierReducer.done,
-      error: state.supplierReducer.error,
+      status: state.supplierReducer.status,
       enableReinitialize: true,
     };
   })(SupplierForm)

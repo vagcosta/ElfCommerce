@@ -126,13 +126,12 @@ class ManufacturerForm extends Component {
       countries,
       uploadedFile,
       mode,
-      error,
-      done,
+      status,
     } = this.props;
 
     let logo = null;
 
-    if (manufacturerDetails.logo) {
+    if (manufacturerDetails && manufacturerDetails.logo) {
       logo = `${manufacturerDetails.logo.indexOf('http') !== -1 ? '' : mediaFileDomain + '/'}${manufacturerDetails.logo}`;
     }
 
@@ -141,7 +140,7 @@ class ManufacturerForm extends Component {
     }
 
     return (
-      mode === 'update' && !('code' in manufacturerDetails) ?
+      mode === 'update' && !manufacturerDetails ?
         <ProfileLoader /> :
         <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
           <Button size="sm" color="primary" className="pull-right form-btn">
@@ -152,11 +151,11 @@ class ManufacturerForm extends Component {
           <br />
           <br />
           {
-            error ?
+            status == 0 ?
               <Alert color="danger">
                 <FormattedMessage id="sys.newFailed" />
               </Alert> :
-              done ?
+              status == 1 ?
                 <Alert color="success">
                   <FormattedMessage id="sys.newSuccess" />
                 </Alert> : null
@@ -292,12 +291,11 @@ class ManufacturerForm extends Component {
 
 ManufacturerForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  manufacturerDetails: PropTypes.object.isRequired,
+  manufacturerDetails: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
   mode: PropTypes.string.isRequired,
-  error: PropTypes.bool,
-  done: PropTypes.bool.isRequired,
+  status: PropTypes.number,
   storeId: PropTypes.string.isRequired,
   countries: PropTypes.array.isRequired,
   uploadedFile: PropTypes.object,
@@ -314,8 +312,7 @@ export default withRouter(
       manufacturerDetails: state.manufacturerReducer.manufacturerDetails,
       countries: state.publicReducer.countries,
       uploadedFile: state.publicReducer.uploadedFile,
-      done: state.manufacturerReducer.done,
-      error: state.manufacturerReducer.error,
+      status: state.manufacturerReducer.status,
       enableReinitialize: true,
     };
   })(ManufacturerForm)

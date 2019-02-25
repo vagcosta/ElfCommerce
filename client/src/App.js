@@ -162,7 +162,7 @@ const routes = [
 
 const App = () => (
   <Router>
-    <Switch>
+    <div>
       <Route exact path="/" component={Login} />
       {localStorage.getItem(config.accessTokenKey) ?
         <div className="dashboard-page">
@@ -192,7 +192,7 @@ const App = () => (
           </Col>
         </div> : <Redirect to='/' />
       }
-    </Switch>
+    </div>
   </Router>
 );
 

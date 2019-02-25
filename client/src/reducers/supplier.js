@@ -11,21 +11,19 @@ import {
 } from '../actions';
 
 const initialState = {
-  suppliers: { data: [], count: 0 },
-  supplierDetails: {},
-  loaded: false,
-  done: false,
-  error: false,
+  suppliers: null,
+  supplierDetails: null,
+  status: -1,
 };
 
 export default function supplierReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_SUPPLIERS_SUCCESS:
-      return { ...state, suppliers: action.value, loaded: true };
+      return { ...state, suppliers: action.value };
     case FETCH_SUPPLIER_DETAILS_SUCCESS:
       return { ...state, supplierDetails: action.value };
     case SUBMIT_SUPPLIER_SUCCESS:
-      return { ...state, supplierDetails: action.value, done: true };
+      return { ...state, supplierDetails: action.value, status: 1 };
     case UPDATE_SUPPLIER_STATUS_SUCCESS:
       const newList = (state.suppliers.data.map(item => {
 
@@ -45,7 +43,7 @@ export default function supplierReducer(state = initialState, action) {
     case FETCH_SUPPLIERS_FAILED:
     case FETCH_SUPPLIER_DETAILS_FAILED:
     case UPDATE_SUPPLIER_STATUS_FAILED:
-      return { ...state, error: true };
+      return { ...state, status: 0 };
     case CLEAR_SUPPLIER_DETAILS:
       return { ...state, ...initialState };
     default:

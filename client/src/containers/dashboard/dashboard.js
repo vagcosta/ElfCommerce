@@ -11,7 +11,6 @@ import {
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
-import { Line, Pie } from 'react-chartjs-2';
 import {
   fetchDashboardData,
 } from '../../actions';
