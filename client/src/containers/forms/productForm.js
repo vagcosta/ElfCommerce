@@ -553,13 +553,29 @@ ProductForm = reduxForm({
 
 export default withRouter(
   connect(state => {
+    const {
+      productReducer: {
+        productDetails,
+        productAttributes,
+      },
+      categoryReducer: {
+        categories,
+      },
+      manufacturerReducer: {
+        manufacturers,
+      },
+      supplierReducer: {
+        suppliers,
+      },
+    } = state;
+
     return {
-      initialValues: state.productReducer.productDetails,
-      productDetails: state.productReducer.productDetails,
-      productAttributes: state.productReducer.productAttributes,
-      categories: state.categoryReducer.categories.data,
-      suppliers: state.supplierReducer.suppliers.data,
-      manufacturers: state.manufacturerReducer.manufacturers.data,
+      initialValues: productDetails,
+      productDetails,
+      productAttributes,
+      categories: categories ? categories.data : [],
+      suppliers: suppliers ? suppliers.data : [],
+      manufacturers: manufacturers ? manufacturers.data : [],
       done: state.productReducer.done,
       error: state.productReducer.error,
       enableReinitialize: true,

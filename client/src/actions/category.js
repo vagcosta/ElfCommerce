@@ -14,12 +14,6 @@ export const FETCH_CATEGORY_DETAILS_SUCCESS =
 export const FETCH_CATEGORY_DETAILS_FAILED =
   'FETCH_CATEGORY_DETAILS_FAILED';
 
-export const FETCH_PARENT_CATEGORIES = 'FETCH_PARENT_CATEGORIES';
-export const FETCH_PARENT_CATEGORIES_SUCCESS =
-  'FETCH_PARENT_CATEGORIES_SUCCESS';
-export const FETCH_PARENT_CATEGORIES_FAILED =
-  'FETCH_PARENT_CATEGORIES_FAILED';
-
 export const UPDATE_CATEGORY_STATUS = 'UPDATE_CATEGORY_STATUS';
 export const UPDATE_CATEGORY_STATUS_SUCCESS =
   'UPDATE_CATEGORY_STATUS_SUCCESS';
@@ -36,18 +30,6 @@ export function fetchCategoriesSuccess(data) {
 
 export function fetchCategoriesFailed() {
   return { type: FETCH_CATEGORIES_FAILED };
-}
-
-export function fetchParentCategories(data) {
-  return { type: FETCH_PARENT_CATEGORIES, value: data };
-}
-
-export function fetchParentCategoriesSuccess(data) {
-  return { type: FETCH_PARENT_CATEGORIES_SUCCESS, value: data };
-}
-
-export function fetchParentCategoriesFailed() {
-  return { type: FETCH_PARENT_CATEGORIES_FAILED };
 }
 
 export function fetchCategoryDetails(data) {
