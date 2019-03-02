@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Col,
-  Button,
-  Breadcrumb,
-  BreadcrumbItem,
-} from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Button, Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';
-import CategoryForm from '../forms/categoryForm';
-import config from '../../config';
+import { AccountForm } from './account';
+import config from '../config';
 
-class ProductCategory extends Component {
+class Account extends Component {
   render() {
     const { history, match: { path } } = this.props;
     const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
@@ -20,7 +15,7 @@ class ProductCategory extends Component {
     return (
       <div>
         <div className="page-navbar">
-          <div className="page-name"><FormattedMessage id="sys.category" /></div>
+          <div className="page-name"><FormattedMessage id="sys.account" /></div>
           <Breadcrumb>
             <BreadcrumbItem>
               <Button color="link" onClick={() => history.push('/dashboard')}>
@@ -28,21 +23,22 @@ class ProductCategory extends Component {
               </Button>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <Button color="link" onClick={() => history.push('/categories')}>
-                <FormattedMessage id="sys.categories" />
+              <Button color="link" onClick={() => history.push('/accounts')}>
+                <FormattedMessage id="sys.accounts" />
               </Button>
             </BreadcrumbItem>
             <BreadcrumbItem active>
-              <FormattedMessage id="sys.category" />
+              <FormattedMessage id="sys.account" />
             </BreadcrumbItem>
           </Breadcrumb>
         </div>
         <div className="content-body">
           <div className="table-container">
             <Col md={12} className="table-content">
-              <CategoryForm
-                mode={path === '/new-category' ? 'new' : 'update'}
-                storeId={storeId} />
+              <AccountForm
+                mode={path === '/new-account' ? 'new' : 'update'}
+                storeId={storeId}
+              />
             </Col>
           </div>
         </div>
@@ -51,9 +47,10 @@ class ProductCategory extends Component {
   }
 }
 
-ProductCategory.propTypes = {
+Account.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
 };
 
-export default withRouter(ProductCategory);
+
+export default withRouter(Account);

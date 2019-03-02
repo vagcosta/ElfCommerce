@@ -13,29 +13,37 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
+import {
+  MdAddCircleOutline,
+  MdSearch,
+} from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-import { fetchAccounts, updateAccountStatus } from '../../actions';
-import { AccountListItem, Loader } from '../../components';
-import config from '../../config';
+import { CategoryListItem, Loader } from '../../components';
+import {
+  fetchCategories,
+  updateCategoryStatus,
+} from '../../actions';
+import config from '../config';
 
-class AccountList extends Component {
+class CategoryList extends Component {
   constructor(props) {
     super(props);
     const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     this.state = {
-      pageSize: 20,
       storeId,
+      pageSize: 200,
     };
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
-
+    /*TODO: The page size is temporarily set to 200 until 
+      I figure out a good way to handle pagination for list with sub-items
+    */
     dispatch(
-      fetchAccounts(
+      fetchCategories(
         {
           storeId: this.state.storeId,
           pageSize: this.state.pageSize,
@@ -46,20 +54,19 @@ class AccountList extends Component {
   }
 
   onViewClick = id => {
-    this.props.history.push(`/accounts/${id}`);
+    this.props.history.push(`/categories/${id}`);
   };
 
   onStatusUpdateClick = (id, status) => {
     const { dispatch } = this.props;
 
-    dispatch(updateAccountStatus({ storeId: this.state.storeId, accountId: id, status }));
+    dispatch(updateCategoryStatus({ storeId: this.state.storeId, categoryId: id, status }));
   }
 
   onPageChange = page => {
     const { dispatch } = this.props;
-
     dispatch(
-      fetchAccounts(
+      fetchCategories(
         {
           storeId: this.state.storeId,
           pageSize: this.state.pageSize,
@@ -72,7 +79,7 @@ class AccountList extends Component {
   render() {
     const {
       history,
-      accounts,
+      categories,
       total,
       count,
       loaded,
@@ -82,7 +89,7 @@ class AccountList extends Component {
     return (
       <div>
         <div className="page-navbar">
-          <div className="page-name"><FormattedMessage id="sys.accounts" /></div>
+          <div className="page-name"><FormattedMessage id="sys.categories" /></div>
           <Breadcrumb>
             <BreadcrumbItem>
               <Button color="link" onClick={() => history.push('/dashboard')}>
@@ -90,7 +97,7 @@ class AccountList extends Component {
               </Button>
             </BreadcrumbItem>
             <BreadcrumbItem active>
-              <FormattedMessage id="sys.accounts" />
+              <FormattedMessage id="sys.categories" />
             </BreadcrumbItem>
           </Breadcrumb>
         </div>
@@ -115,7 +122,7 @@ class AccountList extends Component {
                         size="sm"
                         color="primary"
                         className="pull-right form-btn"
-                        onClick={() => history.push('/new-account')}
+                        onClick={() => history.push('/new-category')}
                       >
                         <MdAddCircleOutline />
                         &nbsp;
@@ -126,36 +133,27 @@ class AccountList extends Component {
                     <Table responsive size="sm">
                       <thead className="table-header">
                         <tr>
-                          <th width="25%">
-                            <FormattedMessage id="sys.name" />
-                          </th>
                           <th width="40%">
-                            <FormattedMessage id="sys.email" />
-                          </th>
-                          <th width="10%">
-                            <FormattedMessage id="sys.role" />
+                            <FormattedMessage id="sys.name" />
                           </th>
                           <th width="10%">
                             <FormattedMessage id="sys.status" />
                           </th>
-                          <th width="15%" />
+                          <th width="10%" />
                         </tr>
                       </thead>
-                      <tbody>
-                        {accounts.length > 0 ? accounts.map(acct => (
-                          <AccountListItem
-                            key={acct.code}
-                            id={acct.code}
-                            name={acct.name}
-                            email={acct.email}
-                            joinedOn={acct.joinedOn}
-                            role={acct.role}
-                            status={acct.status}
-                            onViewClick={this.onViewClick}
-                            onStatusUpdateClick={this.onStatusUpdateClick}
-                          />
-                        )) : <tr><td><FormattedMessage id="sys.noRecords" /></td></tr>}
-                      </tbody>
+
+                      {categories.length > 0 ? categories.map(cat => (
+                        <CategoryListItem
+                          key={cat.code}
+                          id={cat.code}
+                          name={cat.name}
+                          level={cat.level}
+                          status={cat.status}
+                          onViewClick={this.onViewClick}
+                          onStatusUpdateClick={this.onStatusUpdateClick}
+                        />
+                      )) : <tr><td><FormattedMessage id="sys.noRecords" /></td></tr>}
                     </Table>
                     <div className="pagination-container">
                       <span className="text-muted">Total {count} entries</span>
@@ -187,29 +185,29 @@ class AccountList extends Component {
   }
 }
 
-AccountList.propTypes = {
+CategoryList.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  accounts: PropTypes.array.isRequired,
   history: PropTypes.object.isRequired,
+  categories: PropTypes.array.isRequired,
+  intl: PropTypes.object.isRequired,
   total: PropTypes.number.isRequired,
   count: PropTypes.number.isRequired,
-  intl: PropTypes.object.isRequired,
   loaded: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
-  const diff = state.accountReducer.accounts.count / 20;
-  return ({
-    accounts: state.accountReducer.accounts.data,
-    count: state.accountReducer.accounts.count,
-    loaded: state.accountReducer.loaded,
+  const diff = state.categoryReducer.categories.count / 20;
+  return {
+    categories: state.categoryReducer.categories.data,
+    count: state.categoryReducer.categories.count,
+    loaded: state.categoryReducer.loaded,
     total: Number.isInteger(diff) ? diff : parseInt(diff) + 1,
-  });
+  };
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
     null
-  )(injectIntl(AccountList))
+  )(injectIntl(CategoryList))
 );

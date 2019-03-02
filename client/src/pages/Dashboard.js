@@ -19,7 +19,7 @@ import {
   ShipTodayItem,
   Tile,
 } from '../../components';
-import config from '../../config';
+import config from '../config';
 
 class Dashboard extends Component {
   componentDidMount() {
