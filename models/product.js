@@ -61,7 +61,7 @@ Product.prototype.get = function (id) {
        manufacturer_id as manufacturerId, supplier_id as supplierId, status
        from product where code='${id}'`,
       (error, results) => {
-        if (error || results.length == 0) {
+        if (error) {
           reject(new NoRecordFoundError('No product found.'));
         } else {
           const {
@@ -378,7 +378,9 @@ function ProductAttribute(
   this.productAttributeCategoryId = productAttributeCategoryId;
   this.productAttributeCategoryName = productAttributeCategoryName || '';
   this.status = status || 1;
-  this.db = dbConn || new MySQL(dbHost, dbUser, dbPassword, dbName);
+  if (dbConn !== undefined) {
+    this.db = dbConn;
+  }
 }
 
 ProductAttribute.prototype.get = function (id) {
@@ -432,7 +434,7 @@ ProductAttribute.prototype.getAllByProductId = function (id) {
        from product_attribute as pa left join product_attribute_category as pac on pa.product_attribute_category_id = pac.id
        where product_id='${id}' and status=1`,
       (error, results) => {
-        if (error || results.length == 0) {
+        if (error) {
           reject(new NoRecordFoundError('No product attributes found.'));
         } else {
           const productAttributes = results.map(attr => {

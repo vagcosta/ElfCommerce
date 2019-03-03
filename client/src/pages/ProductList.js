@@ -39,7 +39,6 @@ class ProductList extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     dispatch(
       fetchProducts(
@@ -82,8 +81,6 @@ class ProductList extends Component {
       history,
       products,
       total,
-      count,
-      loaded,
       intl: { formatMessage },
     } = this.props;
 
@@ -106,7 +103,7 @@ class ProductList extends Component {
           <div className="table-container">
             <Col md={12} className="table-content">
               {
-                !loaded ?
+                !products ?
                   <Loader />
                   :
                   <div>
@@ -158,7 +155,7 @@ class ProductList extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {products.length > 0 ? products.map(product => (
+                        {products.data.length > 0 ? products.data.map(product => (
                           <ProductListItem
                             key={product.code}
                             id={product.code}
@@ -177,7 +174,7 @@ class ProductList extends Component {
                       </tbody>
                     </Table>
                     <div className="pagination-container">
-                      <span className="text-muted">Total {count} entries</span>
+                      <span className="text-muted">Total {products.count} entries</span>
                       <ReactPaginate
                         pageCount={total || 1}
                         pageRangeDisplayed={3}
@@ -209,19 +206,15 @@ class ProductList extends Component {
 ProductList.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  products: PropTypes.array,
+  products: PropTypes.object,
   total: PropTypes.number.isRequired,
-  count: PropTypes.number.isRequired,
   intl: PropTypes.object.isRequired,
-  loaded: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
-  const diff = state.productReducer.products.count / 20;
+  const diff = state.productReducer.products ? state.productReducer.products.count / 20 : 0;
   return {
-    products: state.productReducer.products.data,
-    count: state.productReducer.products.count,
-    loaded: state.productReducer.loaded,
+    products: state.productReducer.products,
     total: Number.isInteger(diff) ? diff : parseInt(diff) + 1,
   };
 };

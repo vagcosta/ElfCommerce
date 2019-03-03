@@ -29,9 +29,7 @@ export default function manufacturerReducer(state = initialState, action) {
       return { ...state, manufacturerDetails: action.value, status: 1 };
     case UPDATE_ITEM_STATUS_SUCCESS:
       const newList = (state.manufacturers.data.map(item => {
-
         if (item.code === action.value.manufacturerId) {
-
           item.status = action.value.status;
         }
 
@@ -152,11 +150,7 @@ export function* upsertManufacturerHandler(action) {
 
     yield put(submitManufacturerSuccess(res.data));
   } catch (error) {
-    // if (error.response.status === 401) {
-    //   yield put(clearToken());
-    // } else {
     yield put(submitManufacturerFailed());
-    // }
   }
 }
 

@@ -309,12 +309,22 @@ ManufacturerForm = reduxForm({
 
 export default withRouter(
   connect(state => {
+    const {
+      manufacturerReducer: {
+        manufacturerDetails,
+        status,
+      },
+      publicReducer: {
+        countries,
+        uploadedFile,
+      },
+    } = state;
     return {
-      initialValues: state.manufacturerReducer.manufacturerDetails,
-      manufacturerDetails: state.manufacturerReducer.manufacturerDetails,
-      countries: state.publicReducer.countries,
-      uploadedFile: state.publicReducer.uploadedFile,
-      status: state.manufacturerReducer.status,
+      initialValues: manufacturerDetails,
+      manufacturerDetails,
+      countries,
+      uploadedFile,
+      status,
       enableReinitialize: true,
     };
   })(ManufacturerForm)

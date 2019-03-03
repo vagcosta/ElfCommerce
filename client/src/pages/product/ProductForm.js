@@ -117,9 +117,7 @@ class ProductForm extends Component {
       activeTab: '1',
       modal: false,
     };
-  }
 
-  componentWillMount() {
     this.props.dispatch(
       clearProductDetails()
     );
@@ -164,10 +162,6 @@ class ProductForm extends Component {
   }
 
   onAddProductAttributeClick = (data) => {
-    const {
-      dispatch,
-    } = this.props;
-
     this.setState({
       modal: !this.state.modal,
     });
@@ -203,15 +197,14 @@ class ProductForm extends Component {
       productAttributes,
       categories,
       suppliers,
-      done,
-      error,
+      status,
       manufacturers,
       mode,
       storeId,
     } = this.props;
 
     return (
-      mode === 'update' && !('code' in productDetails) ?
+      mode === 'update' && !productDetails ?
         <ParallelLoader /> :
         <div>
           <Nav tabs>
@@ -254,11 +247,11 @@ class ProductForm extends Component {
                 <br />
                 <br />
                 {
-                  error ?
+                  status === 0 ?
                     <Alert color="danger">
                       <FormattedMessage id="sys.newFailed" />
                     </Alert> :
-                    done ?
+                    status === 1 ?
                       <Alert color="success">
                         <FormattedMessage id="sys.newSuccess" />
                       </Alert> : null
@@ -457,11 +450,11 @@ class ProductForm extends Component {
             <TabPane tabId="2">
               <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
                 {
-                  error ?
+                  status === 0 ?
                     <Alert color="danger">
                       <FormattedMessage id="sys.newFailed" />
                     </Alert> :
-                    done ?
+                    status === 1 ?
                       <Alert color="success">
                         <FormattedMessage id="sys.newSuccess" />
                       </Alert> : null
@@ -542,9 +535,8 @@ ProductForm.propTypes = {
   suppliers: PropTypes.array.isRequired,
   manufacturers: PropTypes.array.isRequired,
   productAttributes: PropTypes.array,
-  done: PropTypes.bool.isRequired,
-  productDetails: PropTypes.object.isRequired,
-  error: PropTypes.bool,
+  productDetails: PropTypes.object,
+  status: PropTypes.number,
   intl: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
@@ -563,6 +555,7 @@ export default withRouter(
       productReducer: {
         productDetails,
         productAttributes,
+        status,
       },
       categoryReducer: {
         categories,
@@ -582,8 +575,7 @@ export default withRouter(
       categories: categories ? categories.data : [],
       suppliers: suppliers ? suppliers.data : [],
       manufacturers: manufacturers ? manufacturers.data : [],
-      done: state.productReducer.done,
-      error: state.productReducer.error,
+      status,
       enableReinitialize: true,
     };
   })(injectIntl(ProductForm))

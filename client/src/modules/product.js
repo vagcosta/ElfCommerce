@@ -19,29 +19,26 @@ const CLEAR_ITEM = 'app.product.clearItem';
 const CLEAR_SEARCH = 'app.product.clearSearch';
 
 const initialState = {
-  products: { data: [], count: 0 },
-  productDetails: {},
+  products: null,
+  productDetails: null,
   productAttributes: [],
-  loaded: false,
-  done: false,
-  error: false,
+  status: -1,
 };
 
 export default function productReducer(state = initialState, action) {
   switch (action.type) {
     case GET_ALL_SUCCESS:
     case SEARCH_SUCCESS:
-      return { ...state, products: action.value, loaded: true };
+      return { ...state, products: action.value };
     case GET_ITEM_SUCCESS:
       return { ...state, productDetails: action.value };
     case GET_ITEM_ATTRIBUTES_SUCCESS:
-      return { ...state, productAttributes: action.value, loaded: true };
+      return { ...state, productAttributes: action.value };
     case SUBMIT_SUCCESS:
-      return { ...state, productDetails: action.value, done: true };
+      return { ...state, productDetails: action.value, status: 1 };
     case UPDATE_ITEM_STATUS_SUCCESS:
       const newList = (state.products.data.map(item => {
         if (item.code === action.value.productId) {
-
           item.status = action.value.status;
         }
 
@@ -53,7 +50,7 @@ export default function productReducer(state = initialState, action) {
         products: { data: newList, count: state.products.count },
       };
     case FAILED:
-      return { ...state, error: true };
+      return { ...state, status: 0 };
     case CLEAR_ITEM:
     case CLEAR_SEARCH:
       return { ...state, ...initialState };

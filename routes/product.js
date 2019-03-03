@@ -183,6 +183,7 @@ router.get(
 
       res.send(data);
     } catch (err) {
+      console.log(err)
       res.status(err.statusCode).send(err);
     }
   }
