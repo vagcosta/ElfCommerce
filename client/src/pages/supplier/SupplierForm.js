@@ -154,11 +154,11 @@ class SupplierForm extends Component {
           <br />
           <br />
           {
-            status == 0 ?
+            status === 0 ?
               <Alert color="danger">
                 <FormattedMessage id="sys.newFailed" />
               </Alert> :
-              status == 1 ?
+              status === 1 ?
                 <Alert color="success">
                   <FormattedMessage id="sys.newSuccess" />
                 </Alert> : null

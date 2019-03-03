@@ -8,8 +8,8 @@ import pathReducer from './path';
 import reportReducer from './report';
 import settingReducer from './setting';
 import authReducer from './auth';
-import supplierReducer from './supplier';
-import manufacturerReducer from './manufacturer';
+import manufacturerReducer from '../modules/manufacturer';
+import supplierReducer from '../modules/supplier';
 import publicReducer from './public';
 import accountReducer from './account';
 import categoryReducer from './category';
@@ -25,8 +25,8 @@ const rootReducer = combineReducers({
   reportReducer,
   settingReducer,
   authReducer,
-  supplierReducer,
   manufacturerReducer,
+  supplierReducer,
   publicReducer,
   accountReducer,
 });

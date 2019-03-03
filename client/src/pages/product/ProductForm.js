@@ -37,10 +37,12 @@ import {
   clearProductDetails,
   fetchCategories,
   fetchSuppliers,
-  fetchManufacturers,
   fetchProductAttributes,
   submitProduct,
 } from '../../actions';
+import {
+  fetchManufacturers,
+} from '../../modules/manufacturer';
 import ProductAttributeForm from './ProductAttributeForm';
 import ProductAttributeListItem from './ProductAttributeListItem';
 import {

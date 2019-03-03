@@ -1,27 +1,19 @@
-import { call, put } from 'redux-saga/effects';
+import { all, put, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 import config from '../config';
 
-const FETCH_MANUFACTURERS = 'FETCH_MANUFACTURERS';
-const FETCH_MANUFACTURERS_SUCCESS = 'FETCH_MANUFACTURERS_SUCCESS';
-const FETCH_MANUFACTURERS_FAILED = 'FETCH_MANUFACTURERS_FAILED';
-const CLEAR_MANUFACTURER_DETAILS = 'CLEAR_MANUFACTURER_DETAILS';
+const GET_ALL = 'app.manufacturer.getAll';
+const GET_ITEM = 'app.manufacturer.getItem';
+const SUBMIT = 'app.manufacturer.submit';
+const UPDATE_ITEM_STATUS = 'app.manufacturer.updateItemStatus';
 
-const SUBMIT_MANUFACTURER = 'SUBMIT_MANUFACTURER';
-const SUBMIT_MANUFACTURER_SUCCESS = 'SUBMIT_MANUFACTURER_SUCCESS';
-const SUBMIT_MANUFACTURER_FAILED = 'SUBMIT_MANUFACTURER_FAILED';
+const GET_ALL_SUCCESS = 'app.manufacturer.getAllSuccess';
+const GET_ITEM_SUCCESS = 'app.manufacturer.getItemSuccess';
+const SUBMIT_SUCCESS = 'app.manufacturer.submitSuccess';
+const UPDATE_ITEM_STATUS_SUCCESS = 'app.manufacturer.updateItemStatusSuccess';
 
-const FETCH_MANUFACTURER_DETAILS = 'FETCH_MANUFACTURE_DETAILS';
-const FETCH_MANUFACTURER_DETAILS_SUCCESS =
-  'FETCH_MANUFACTURE_DETAILS_SUCCESS';
-const FETCH_MANUFACTURER_DETAILS_FAILED =
-  'FETCH_MANUFACTURE_DETAILS_FAILED';
-
-const UPDATE_MANUFACTURER_STATUS = 'UPDATE_MANUFACTURER_STATUS';
-const UPDATE_MANUFACTURER_STATUS_SUCCESS =
-  'UPDATE_MANUFACTURER_STATUS_SUCCESS';
-const UPDATE_MANUFACTURER_STATUS_FAILED =
-  'UPDATE_MANUFACTURER_STATUS_FAILED';
+const FAILED = 'app.manufacturer.failed';
+const CLEAR_ITEM = 'app.manufacturer.clearItem';
 
 const initialState = {
   manufacturers: null,
@@ -31,13 +23,13 @@ const initialState = {
 
 export default function manufacturerReducer(state = initialState, action) {
   switch (action.type) {
-    case FETCH_MANUFACTURERS_SUCCESS:
+    case GET_ALL_SUCCESS:
       return { ...state, manufacturers: action.value };
-    case FETCH_MANUFACTURER_DETAILS_SUCCESS:
+    case GET_ITEM_SUCCESS:
       return { ...state, manufacturerDetails: action.value };
-    case SUBMIT_MANUFACTURER_SUCCESS:
+    case SUBMIT_SUCCESS:
       return { ...state, manufacturerDetails: action.value, status: 1 };
-    case UPDATE_MANUFACTURER_STATUS_SUCCESS:
+    case UPDATE_ITEM_STATUS_SUCCESS:
       const newList = (state.manufacturers.data.map(item => {
 
         if (item.code === action.value.manufacturerId) {
@@ -52,12 +44,9 @@ export default function manufacturerReducer(state = initialState, action) {
         ...state,
         manufacturers: { data: newList, count: state.manufacturers.count },
       };
-    case SUBMIT_MANUFACTURER_FAILED:
-    case FETCH_MANUFACTURERS_FAILED:
-    case FETCH_MANUFACTURER_DETAILS_FAILED:
-    case UPDATE_MANUFACTURER_STATUS_FAILED:
+    case FAILED:
       return { ...state, status: 0 };
-    case CLEAR_MANUFACTURER_DETAILS:
+    case CLEAR_ITEM:
       return { ...state, ...initialState };
     default:
       return state;
@@ -65,55 +54,55 @@ export default function manufacturerReducer(state = initialState, action) {
 }
 
 export function fetchManufacturers(data) {
-  return { type: FETCH_MANUFACTURERS, value: data };
+  return { type: GET_ALL, value: data };
 }
 
 export function fetchManufacturersSuccess(data) {
-  return { type: FETCH_MANUFACTURERS_SUCCESS, value: data };
+  return { type: GET_ALL_SUCCESS, value: data };
 }
 
 export function fetchManufacturersFailed() {
-  return { type: FETCH_MANUFACTURERS_FAILED };
+  return { type: FAILED };
 }
 
 export function clearManufacturerDetails() {
-  return { type: CLEAR_MANUFACTURER_DETAILS };
+  return { type: CLEAR_ITEM };
 }
 
 export function submitManufacturer(data) {
-  return { type: SUBMIT_MANUFACTURER, value: data };
+  return { type: SUBMIT, value: data };
 }
 
 export function submitManufacturerSuccess(data) {
-  return { type: SUBMIT_MANUFACTURER_SUCCESS, value: data };
+  return { type: SUBMIT_SUCCESS, value: data };
 }
 
 export function submitManufacturerFailed() {
-  return { type: SUBMIT_MANUFACTURER_FAILED };
+  return { type: FAILED };
 }
 
 export function fetchManufacturerDetails(data) {
-  return { type: FETCH_MANUFACTURER_DETAILS, value: data };
+  return { type: GET_ITEM, value: data };
 }
 
 export function fetchManufacturerDetailsSuccess(data) {
-  return { type: FETCH_MANUFACTURER_DETAILS_SUCCESS, value: data };
+  return { type: GET_ITEM_SUCCESS, value: data };
 }
 
 export function fetchManufacturerDetailsFailed() {
-  return { type: FETCH_MANUFACTURER_DETAILS_FAILED };
+  return { type: FAILED };
 }
 
 export function updateManufacturerStatus(data) {
-  return { type: UPDATE_MANUFACTURER_STATUS, value: data };
+  return { type: UPDATE_ITEM_STATUS, value: data };
 }
 
 export function updateManufacturerStatusSuccess(data) {
-  return { type: UPDATE_MANUFACTURER_STATUS_SUCCESS, value: data };
+  return { type: UPDATE_ITEM_STATUS_SUCCESS, value: data };
 }
 
 export function updateManufacturerStatusFailed() {
-  return { type: UPDATE_MANUFACTURER_STATUS_FAILED };
+  return { type: FAILED };
 }
 
 export function* getManufacturersHandler(action) {
@@ -201,3 +190,10 @@ export function* updateManufacturerStatusHandler(action) {
     // }
   }
 }
+
+export const manufacturerSagas = [
+  takeEvery(GET_ALL, getManufacturersHandler),
+  takeEvery(SUBMIT, upsertManufacturerHandler),
+  takeEvery(GET_ITEM, getManufacturerDetailsHandler),
+  takeEvery(UPDATE_ITEM_STATUS, updateManufacturerStatusHandler),
+];

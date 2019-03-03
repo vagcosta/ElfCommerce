@@ -20,11 +20,13 @@ import {
 import { MdSave } from 'react-icons/md';
 import {
   fetchCountries,
-  submitManufacturer,
-  fetchManufacturerDetails,
-  clearManufacturerDetails,
   uploadFile,
 } from '../../actions';
+import {
+  fetchManufacturerDetails,
+  clearManufacturerDetails,
+  submitManufacturer,
+} from '../../modules/manufacturer';
 import { ProfileLoader } from '../../components';
 import config from '../../config';
 
@@ -151,11 +153,11 @@ class ManufacturerForm extends Component {
           <br />
           <br />
           {
-            status == 0 ?
+            status === 0 ?
               <Alert color="danger">
                 <FormattedMessage id="sys.newFailed" />
               </Alert> :
-              status == 1 ?
+              status === 1 ?
                 <Alert color="success">
                   <FormattedMessage id="sys.newSuccess" />
                 </Alert> : null
