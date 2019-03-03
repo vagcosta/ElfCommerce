@@ -136,7 +136,7 @@ yarn test [test_directory]
 
 Your contribution is appreicated. For the purpose of having good project management, I encourage you to understand the project structure and *way of working* before you start to contribute to this project.
 
-***Project restructured to Fractal + ducks for great scalability***
+***Project restructured based on Fractal + ducks for greater scalability***
 
 ```
 ├── client                       # The web frontend written in ReactJS
