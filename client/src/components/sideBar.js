@@ -24,7 +24,7 @@ import {
   productMenuClose,
   reportMenuOpen,
   reportMenuClose,
-} from '../actions';
+} from '../modules/ui';
 
 class SideBarContent extends Component {
   constructor(props) {

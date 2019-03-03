@@ -136,22 +136,22 @@ yarn test [test_directory]
 
 Your contribution is appreicated. For the purpose of having good project management, I encourage you to understand the project structure and *way of working* before you start to contribute to this project.
 
+***Project restructured to Fractal + ducks for great scalability***
+
 ```
 ├── client                       # The web frontend written in ReactJS
 │   ├── public                   # Static public assets and uploads
 │   ├── src                      # ReactJS source code
-│   │   ├── actions              # Actions and Action creators of Redux
-│   │   ├── apis                 # Files for REST APIs
-│   │   │   ├── mocks            # Mocked API response
-│   │   ├── components           # React components
-│   │   |   ├── __tests__        # Unit test for components
-│   │   ├── containers           # React containers
-│   │   |   ├── __tests__        # Unit test for containers
-│   │   ├── reducers             # React reducers
-│   │   |   ├── __tests__        # Unit test for reducers
-│   │   ├── sagas                # Redux saga files
-│   │   |   ├── __tests__        # Unit test for sagas
-│   │   ├── translations         # All language translation .json files
+│   │   ├── components           # Shared components, like Button, Input etc.
+│   │   │   ├── __tests__        # Unit test for components
+│   │   ├── pages                # Top level components
+│   │   │   ├── __tests__        # Unit test for containers
+│   │   │   ├── ...              # Sub components of top level components
+│   │   ├── modules              # Actions + Reducers using ducks file structure
+│   │   │   ├── __tests__        # Unit test for reducers
+│   │   ├── utils                # Utilities like language, date utils, string utils etc.
+│   │   │   ├── languages        # All language translation .json files
+│   │   │   │   └── en.json      # Language file
 │   │   └── App.css              # Your customized styles should be added here
 │   │   └── App.js               # ** Where React webapp routes configured.
 │   │   └── index.js             # React webapp start point
