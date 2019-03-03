@@ -13,7 +13,6 @@ import {
   CardBody,
   Input,
 } from 'reactstrap';
-import { fetchStoreSettings } from '../../actions';
 
 const required = value => (value ? undefined : 'Required');
 

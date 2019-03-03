@@ -15,11 +15,13 @@ import {
   Input,
 } from 'reactstrap';
 import {
-  fetchStoreSettings,
   fetchCountries,
   fetchCurrencies,
+} from '../../modules/common';
+import {
+  fetchStoreSettings,
   clearSettings,
-} from '../../actions';
+} from '../../modules/setting';
 import {
   ParallelLoader,
 } from '../../components/Loader';

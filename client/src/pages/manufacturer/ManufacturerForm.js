@@ -21,7 +21,7 @@ import { MdSave } from 'react-icons/md';
 import {
   fetchCountries,
   uploadFile,
-} from '../../actions';
+} from '../../modules/common';
 import {
   fetchManufacturerDetails,
   clearManufacturerDetails,

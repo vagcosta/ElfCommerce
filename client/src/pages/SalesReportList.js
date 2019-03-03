@@ -29,7 +29,7 @@ import ReactPaginate from 'react-paginate';
 import {
   fetchSalesReportProducts,
   fetchSalesReportCategories,
-} from '../actions';
+} from '../modules/report';
 import SalesReportListProductItem from './report/SalesReportListProductItem';
 import SalesReportListCategoryItem from './report/SalesReportListCategoryItem';
 
@@ -297,8 +297,8 @@ class SalesReportList extends Component {
             breakClassName="page-item"
             breakLabel="..."
             pageLinkClassName="page-link"
-            previousLabel={formatMessage({ id: 'sys.prev' })}
-            nextLabel={formatMessage({ id: 'sys.next' })}
+            previousLabel="‹"
+            nextLabel="›"
             previousLinkClassName="page-link"
             nextLinkClassName="page-link"
             activeClassName="active"
