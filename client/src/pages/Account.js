@@ -4,7 +4,7 @@ import { Breadcrumb, BreadcrumbItem, Button, Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';
-import { AccountForm } from './account';
+import AccountForm from './account/AccountForm';
 import config from '../config';
 
 class Account extends Component {

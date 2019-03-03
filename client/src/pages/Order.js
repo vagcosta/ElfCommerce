@@ -10,8 +10,8 @@ import {
 } from 'reactstrap';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';
-import { OrderForm } from '../forms';
-import config from '../../config';
+import OrderForm from './order/OrderForm';
+import config from '../config';
 
 class Order extends Component {
   render() {

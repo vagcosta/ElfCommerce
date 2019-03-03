@@ -41,10 +41,10 @@ import {
   fetchProductAttributes,
   submitProduct,
 } from '../../actions';
-import { ProductAttributeForm } from '../forms';
+import ProductAttributeForm from './ProductAttributeForm';
+import ProductAttributeListItem from './ProductAttributeListItem';
 import {
   ParallelLoader,
-  ProductAttributeListItem,
 } from '../../components';
 import config from '../../config';
 

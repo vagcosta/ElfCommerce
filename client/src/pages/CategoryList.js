@@ -19,11 +19,12 @@ import {
 } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-import { CategoryListItem, Loader } from '../../components';
+import CategoryListItem from './category/CategoryListItem';
+import { Loader } from '../components';
 import {
   fetchCategories,
   updateCategoryStatus,
-} from '../../actions';
+} from '../actions';
 import config from '../config';
 
 class CategoryList extends Component {

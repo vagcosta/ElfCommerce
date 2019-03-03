@@ -10,8 +10,8 @@ import {
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';
-import { ProductForm } from '../forms';
-import config from '../../config';
+import ProductForm from './product/ProductForm';
+import config from '../config';
 
 class Product extends Component {
   render() {

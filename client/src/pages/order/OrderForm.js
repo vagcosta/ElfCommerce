@@ -34,10 +34,10 @@ import classnames from 'classnames';
 import numeral from 'numeral';
 import {
   ProfileLoader,
-  OrderShippingItem,
-  OrderProductListItem,
 } from '../../components';
-import { ProductSearchForm } from '../forms';
+import OrderShippingItem from './OrderShippingItem';
+import OrderProductListItem from './OrderProductListItem';
+import ProductSearchForm from '../product/ProductSearchForm';
 import {
   fetchOrderDetails,
   clearOrderDetails,

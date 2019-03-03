@@ -22,9 +22,10 @@ import jwt from 'jsonwebtoken';
 import {
   fetchProducts,
   updateProductStatus,
-} from '../../actions';
-import { ProductListItem, Loader } from '../../components';
-import config from '../../config';
+} from '../actions';
+import ProductListItem from './product/ProductListItem';
+import { Loader } from '../components';
+import config from '../config';
 
 class ProductList extends Component {
   constructor(props) {

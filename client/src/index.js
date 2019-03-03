@@ -9,7 +9,7 @@ import App from './App';
 import store from './store';
 import registerServiceWorker from './registerServiceWorker';
 import './App.css';
-import messages_en from './translations/en.json';
+import messages_en from './utils/translations/en.json';
 
 addLocaleData([...locale_en]);
 

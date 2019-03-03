@@ -29,11 +29,9 @@ import ReactPaginate from 'react-paginate';
 import {
   fetchSalesReportProducts,
   fetchSalesReportCategories,
-} from '../../actions';
-import {
-  SalesReportListProductItem,
-  SalesReportListCategoryItem,
-} from '../../components';
+} from '../actions';
+import SalesReportListProductItem from './report/SalesReportListProductItem';
+import SalesReportListCategoryItem from './report/SalesReportListCategoryItem';
 
 class SalesReportList extends Component {
   constructor(props) {

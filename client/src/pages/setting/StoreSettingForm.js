@@ -22,7 +22,7 @@ import {
 } from '../../actions';
 import {
   ParallelLoader,
-} from '../../components/loader';
+} from '../../components/Loader';
 
 const required = value => (value ? undefined : 'Required');
 

@@ -1,10 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import { Col } from 'reactstrap';
-import Login from './containers/login';
-import Dashboard from './containers/dashboard/dashboard';
-import CustomerList from './containers/customerList';
 import {
+  Login,
+  Dashboard,
   OrderList,
   Order,
   ProductList,
@@ -20,9 +19,9 @@ import {
   Manufacturer,
   AccountList,
   Account,
-} from './containers';
-import NavBar from './containers/navigation';
-import SideBarContent from './components/sideBar';
+} from './pages';
+import NavBar from './components/Navigation';
+import SideBarContent from './components/SideBar';
 import config from './config';
 
 const routes = [
@@ -68,7 +67,7 @@ const routes = [
     path: '/customers',
     exact: true,
     sidebar: () => <SideBarContent />,
-    main: () => <CustomerList />,
+    main: () => <ProductList />,
   },
   {
     path: '/products',

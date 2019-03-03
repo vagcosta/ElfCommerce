@@ -3,8 +3,6 @@ import axios from 'axios';
 import {
   fetchCategoriesSuccess,
   fetchCategoriesFailed,
-  fetchParentCategoriesSuccess,
-  fetchParentCategoriesFailed,
   submitCategorySuccess,
   submitCategoryFailed,
   fetchCategoryDetailsSuccess,

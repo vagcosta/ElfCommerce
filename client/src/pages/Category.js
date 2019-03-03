@@ -9,7 +9,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';
-import CategoryForm from '../forms/categoryForm';
+import CategoryForm from './category/CategoryForm';
 import config from '../config';
 
 class ProductCategory extends Component {

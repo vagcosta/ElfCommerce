@@ -19,14 +19,11 @@ import { FormattedMessage } from 'react-intl';
 import jwt from 'jsonwebtoken';
 import classnames from 'classnames';
 import { MdSave } from 'react-icons/md';
-import {
-  StoreSettingForm,
-  AccountSettingForm,
-  PasswordForm,
-  CredentialForm,
-} from '../forms';
-import { CredentialListItem } from '../../components';
-import config from '../../config';
+import AccountSettingForm from './account/AccountSettingForm';
+import PasswordForm from './account/PasswordForm';
+import StoreSettingForm from './setting/StoreSettingForm';
+import CredentialListItem from './setting/CredentialListItem';
+import config from '../config';
 
 class Setting extends Component {
   constructor(props) {

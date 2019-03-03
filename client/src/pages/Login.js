@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
-import { LoginForm, ResetForm } from './forms';
-import Footer from '../components/footer';
+import LoginForm from './login/LoginForm';
+import ResetForm from './login/ResetForm';
+import Footer from '../components/Footer';
 
 class Login extends Component {
   constructor(props) {

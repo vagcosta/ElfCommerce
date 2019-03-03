@@ -19,9 +19,10 @@ import { MdSearch, MdAddCircleOutline } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
 import 'react-datepicker/dist/react-datepicker.css';
-import { fetchOrders } from '../../actions';
-import { OrderListItem, Loader } from '../../components';
-import config from '../../config';
+import { fetchOrders } from '../actions';
+import OrderListItem from './order/OrderListItem';
+import { Loader } from '../components';
+import config from '../config';
 
 class OrderList extends Component {
   constructor(props) {

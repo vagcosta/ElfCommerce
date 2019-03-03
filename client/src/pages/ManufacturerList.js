@@ -16,9 +16,10 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-import { fetchManufacturers, updateManufacturerStatus } from '../../actions';
-import { ManufacturerListItem, Loader } from '../../components';
-import config from '../../config';
+import { fetchManufacturers, updateManufacturerStatus } from '../actions';
+import ManufacturerListItem from './manufacturer/ManufacturerListItem';
+import { Loader } from '../components';
+import config from '../config';
 
 class ManufacturerList extends Component {
   constructor(props) {

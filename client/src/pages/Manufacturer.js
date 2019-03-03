@@ -4,8 +4,8 @@ import { Breadcrumb, BreadcrumbItem, Button, Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';
-import { ManufacturerForm } from '../forms';
-import config from '../../config';
+import ManufacturerForm from './manufacturer/ManufacturerForm';
+import config from '../config';
 
 class Manufacturer extends Component {
   render() {

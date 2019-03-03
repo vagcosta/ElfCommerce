@@ -22,12 +22,12 @@ import jwt from 'jsonwebtoken';
 import {
   fetchSuppliers,
   updateSupplierStatus,
-} from '../../actions';
+} from '../actions';
+import SupplierListItem from './supplier/SupplierListItem';
 import {
-  SupplierListItem,
   Loader,
-} from '../../components';
-import config from '../../config';
+} from '../components';
+import config from '../config';
 
 class SupplierList extends Component {
   constructor(props) {

@@ -5,14 +5,10 @@ import {
   fetchSalesReportCategoriesSuccess,
   fetchSalesReportCategoriesFailed,
 } from '../actions';
-import {
-  salesReportProducts,
-  salesReportCategories,
-} from '../apis/mocks/responses';
 
 export function* fetchSalesReportProducts(action) {
   try {
-    yield put(fetchSalesReportProductsSuccess(salesReportProducts));
+    yield put(fetchSalesReportProductsSuccess([]));
   } catch (error) {
     yield put(fetchSalesReportProductsFailed());
   }
@@ -20,7 +16,7 @@ export function* fetchSalesReportProducts(action) {
 
 export function* fetchSalesReportCategories(action) {
   try {
-    yield put(fetchSalesReportCategoriesSuccess(salesReportCategories));
+    yield put(fetchSalesReportCategoriesSuccess([]));
   } catch (error) {
     yield put(fetchSalesReportCategoriesFailed());
   }

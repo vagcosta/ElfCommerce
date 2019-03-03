@@ -1,20 +1,24 @@
-import OrderList from './order/orderList';
-import Order from './order/order';
-import ProductList from './product/productList';
-import Product from './product/product';
-import SupplierList from './supplier/supplierList';
-import Supplier from './supplier/supplier';
-import CategoryList from './category/categoryList';
-import Category from './category/category';
-import ManufacturerList from './manufacturer/manufacturerList';
-import Manufacturer from './manufacturer/manufacturer';
-import Payment from './payment/payment';
-import Setting from './setting/setting';
-import SalesReportList from './report/salesReportList';
-import AccountList from './account/accountList';
-import Account from './account/account';
+import Login from './Login';
+import Dashboard from './Dashboard';
+import OrderList from './OrderList';
+import Order from './Order';
+import ProductList from './ProductList';
+import Product from './Product';
+import SupplierList from './SupplierList';
+import Supplier from './Supplier';
+import CategoryList from './CategoryList';
+import Category from './Category';
+import ManufacturerList from './ManufacturerList';
+import Manufacturer from './Manufacturer';
+import Payment from './Payment';
+import Setting from './Setting';
+import SalesReportList from './SalesReportList';
+import AccountList from './AccountList';
+import Account from './Account';
 
 export {
+  Login,
+  Dashboard,
   OrderList,
   Order,
   ProductList,

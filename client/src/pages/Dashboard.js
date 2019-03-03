@@ -13,12 +13,10 @@ import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import {
   fetchDashboardData,
-} from '../../actions';
-import {
-  FeedItem,
-  ShipTodayItem,
-  Tile,
-} from '../../components';
+} from '../actions';
+import FeedItem from './dashboard/FeedItem';
+import ShipTodayItem from './dashboard/ShipTodayItem';
+import Tile from '../components/Tile';
 import config from '../config';
 
 class Dashboard extends Component {
