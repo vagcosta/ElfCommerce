@@ -3,8 +3,10 @@ import axios from 'axios';
 import {
   fetchStoreSettingsSuccess,
   fetchStoreSettingsFailed,
-  clearToken,
 } from '../actions';
+import {
+  clearToken,
+} from '../modules/auth';
 import config from '../config';
 
 export function* fetchStoreSettings(action) {

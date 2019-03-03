@@ -15,7 +15,7 @@ import numeral from 'numeral';
 import {
   selectOrderProduct,
   addOrderProduct,
-} from '../../actions';
+} from '../../modules/order';
 import {
   searchProducts,
   clearSearchProducts,

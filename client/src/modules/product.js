@@ -2,25 +2,18 @@ import { put, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 import config from '../config';
 
-export const GET_ALL = 'app.product.getAll';
-export const GET_ALL_SUCCESS = 'app.product.getAllSuccess';
-
-export const GET_ITEM = 'app.product.getItem';
-export const GET_ITEM_SUCCESS = 'app.product.getItemSuccess';
-
-export const GET_ITEM_ATTRIBUTES = 'app.product.getItemAttributes';
-export const GET_ITEM_ATTRIBUTES_SUCCESS =
-  'app.product.getItemAttributesSuccess';
-
-export const SUBMIT = 'app.product.submit';
-export const SUBMIT_SUCCESS = 'app.product.submitSuccess';
-
-export const SEARCH = 'app.product.search';
-export const SEARCH_SUCCESS = 'app.product.searchSuccess';
-
-export const UPDATE_ITEM_STATUS = 'app.product.updateItemStatus';
-export const UPDATE_ITEM_STATUS_SUCCESS = 'updateItemStatusSuccess';
-
+const GET_ALL = 'app.product.getAll';
+const GET_ALL_SUCCESS = 'app.product.getAllSuccess';
+const GET_ITEM = 'app.product.getItem';
+const GET_ITEM_SUCCESS = 'app.product.getItemSuccess';
+const GET_ITEM_ATTRIBUTES = 'app.product.getItemAttributes';
+const GET_ITEM_ATTRIBUTES_SUCCESS = 'app.product.getItemAttributesSuccess';
+const SUBMIT = 'app.product.submit';
+const SUBMIT_SUCCESS = 'app.product.submitSuccess';
+const SEARCH = 'app.product.search';
+const SEARCH_SUCCESS = 'app.product.searchSuccess';
+const UPDATE_ITEM_STATUS = 'app.product.updateItemStatus';
+const UPDATE_ITEM_STATUS_SUCCESS = 'updateItemStatusSuccess';
 const FAILED = 'app.product.failed';
 const CLEAR_ITEM = 'app.product.clearItem';
 const CLEAR_SEARCH = 'app.product.clearSearch';
@@ -149,7 +142,7 @@ export function updateProductStatusFailed() {
   return { type: FAILED };
 }
 
-export function* fetchProductsHandler(action) {
+export function* getProductsHandler(action) {
   try {
     const { storeId, pageNo, pageSize } = action.value;
     const res = yield axios({
@@ -183,7 +176,7 @@ export function* searchProductsHandler(action) {
   }
 }
 
-export function* fetchProductDetailsHandler(action) {
+export function* getProductDetailsHandler(action) {
   try {
     const res = yield axios({
       method: 'get',
@@ -254,9 +247,9 @@ export function* getProductAttributesHandler(action) {
 }
 
 export const productSagas = [
-  takeEvery(GET_ALL, fetchProductsHandler),
+  takeEvery(GET_ALL, getProductsHandler),
   takeEvery(SEARCH, searchProductsHandler),
-  takeEvery(GET_ITEM, fetchProductDetailsHandler),
+  takeEvery(GET_ITEM, getProductDetailsHandler),
   takeEvery(SUBMIT, upsertProductHandler),
   takeEvery(UPDATE_ITEM_STATUS, updateProductStatusHandler),
   takeEvery(GET_ITEM_ATTRIBUTES, getProductAttributesHandler),

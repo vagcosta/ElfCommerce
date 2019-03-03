@@ -22,7 +22,7 @@ import {
   submitAccount,
   fetchAccountDetails,
   clearAccountDetails,
-} from '../../actions';
+} from '../../modules/account';
 import { Loader } from '../../components';
 
 const required = value => (value ? undefined : 'Required');

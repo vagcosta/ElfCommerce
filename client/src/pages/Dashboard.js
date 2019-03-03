@@ -13,7 +13,7 @@ import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import {
   fetchDashboardData,
-} from '../actions';
+} from '../modules/dashboard';
 import FeedItem from './dashboard/FeedItem';
 import ShipTodayItem from './dashboard/ShipTodayItem';
 import Tile from '../components/Tile';

@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import {
   submitAccount,
-} from '../../actions';
+} from '../../modules/account';
 
 const required = value => (value ? undefined : 'Required');
 

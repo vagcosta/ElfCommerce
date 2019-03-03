@@ -15,7 +15,7 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { MdNotificationsNone } from 'react-icons/md';
 import jwt from 'jsonwebtoken';
-import { fetchAccountDetails } from '../actions';
+import { fetchAccountDetails } from '../modules/account';
 import config from '../config';
 
 class Navigation extends Component {

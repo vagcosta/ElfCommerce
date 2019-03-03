@@ -24,7 +24,7 @@ import { Loader } from '../components';
 import {
   fetchCategories,
   updateCategoryStatus,
-} from '../actions';
+} from '../modules/category';
 import config from '../config';
 
 class CategoryList extends Component {

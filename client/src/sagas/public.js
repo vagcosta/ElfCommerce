@@ -7,8 +7,10 @@ import {
   fetchCurrenciesFailed,
   uploadFileSuccess,
   uploadFileFailed,
-  clearToken,
 } from '../actions';
+import {
+  clearToken,
+} from '../modules/auth';
 import config from '../config';
 
 export function* fetchCountries(action) {

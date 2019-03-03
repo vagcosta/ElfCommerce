@@ -5,7 +5,7 @@ import { Field, reduxForm } from 'redux-form';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Form, Input, Button, Alert } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
-import { submitLoginData } from '../../actions';
+import { submitLoginData } from '../../modules/auth';
 import config from '../../config';
 
 const required = value => (value ? undefined : 'Required');

@@ -6,12 +6,10 @@ const GET_ALL = 'app.supplier.getAll';
 const GET_ITEM = 'app.supplier.getItem';
 const SUBMIT = 'app.supplier.submit';
 const UPDATE_ITEM_STATUS = 'app.supplier.updateItemStatus';
-
 const GET_ALL_SUCCESS = 'app.supplier.getAllSuccess';
 const GET_ITEM_SUCCESS = 'app.supplier.getItemSuccess';
 const SUBMIT_SUCCESS = 'app.supplier.submitSuccess';
 const UPDATE_ITEM_STATUS_SUCCESS = 'app.supplier.updateItemStatusSuccess';
-
 const FAILED = 'app.supplier.failed';
 const CLEAR_ITEM = 'app.supplier.clearItem';
 

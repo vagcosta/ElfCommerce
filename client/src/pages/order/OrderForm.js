@@ -44,7 +44,7 @@ import {
   submitOrder,
   clearOrderSearchedProductResult,
   removeOrderProduct,
-} from '../../actions';
+} from '../../modules/order';
 import {
   clearSearchProducts,
 } from '../../modules/product';

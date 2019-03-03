@@ -34,7 +34,7 @@ import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import {
   fetchCategories,
-} from '../../actions';
+} from '../../modules/category';
 import {
   fetchSuppliers,
 } from '../../modules/supplier';

@@ -16,7 +16,10 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-import { fetchAccounts, updateAccountStatus } from '../actions';
+import {
+  fetchAccounts,
+  updateAccountStatus,
+} from '../modules/account';
 import AccountListItem from './account/AccountListItem';
 import { Loader } from '../components';
 import config from '../config';

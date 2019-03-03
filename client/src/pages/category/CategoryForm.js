@@ -11,7 +11,7 @@ import {
   fetchCategoryDetails,
   submitCategory,
   clearCategoryDetails,
-} from '../../actions';
+} from '../../modules/category';
 import { Loader } from '../../components';
 
 const required = value => (value ? undefined : 'Required');
