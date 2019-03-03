@@ -42,10 +42,12 @@ import {
   fetchOrderDetails,
   clearOrderDetails,
   submitOrder,
-  clearSearchProducts,
   clearOrderSearchedProductResult,
   removeOrderProduct,
 } from '../../actions';
+import {
+  clearSearchProducts,
+} from '../../modules/product';
 import config from '../../config';
 
 const required = value => (value ? undefined : 'Required');

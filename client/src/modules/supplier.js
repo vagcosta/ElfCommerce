@@ -1,4 +1,4 @@
-import { all, put, takeEvery } from 'redux-saga/effects';
+import { put, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 import config from '../config';
 
@@ -118,11 +118,7 @@ export function* getSuppliersHandler(action) {
 
     yield put(fetchSuppliersSuccess(res.data));
   } catch (error) {
-    // if (error.response.status === 401) {
-    //   yield put(clearToken());
-    // } else {
     yield put(fetchSuppliersFailed());
-    // }
   }
 }
 
@@ -139,11 +135,7 @@ export function* getSupplierDetailsHandler(action) {
 
     yield put(fetchSupplierDetailsSuccess(res.data));
   } catch (error) {
-    // if (error.response.status === 401) {
-    //   yield put(clearToken());
-    // } else {
     yield put(fetchSupplierDetailsFailed());
-    // }
   }
 }
 
@@ -162,11 +154,7 @@ export function* upsertSupplierHandler(action) {
 
     yield put(submitSupplierSuccess(res.data));
   } catch (error) {
-    // if (error.response.status === 401) {
-    //   yield put(clearToken());
-    // } else {
     yield put(submitSupplierFailed());
-    // }
   }
 }
 
@@ -183,11 +171,7 @@ export function* updateSupplierStatusHandler(action) {
 
     yield put(updateSupplierStatusSuccess({ supplierId, status }));
   } catch (error) {
-    // if (error.response.status === 401) {
-    //   yield put(clearToken());
-    // } else {
     yield put(updateSupplierStatusFailed());
-    // }
   }
 }
 

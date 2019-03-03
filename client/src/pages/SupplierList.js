@@ -22,7 +22,7 @@ import jwt from 'jsonwebtoken';
 import {
   fetchSuppliers,
   updateSupplierStatus,
-} from '../actions';
+} from '../modules/supplier';
 import SupplierListItem from './supplier/SupplierListItem';
 import {
   Loader,

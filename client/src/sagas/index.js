@@ -1,19 +1,12 @@
 import { all, takeEvery } from 'redux-saga/effects';
 import { manufacturerSagas } from '../modules/manufacturer';
 import { supplierSagas } from '../modules/supplier';
+import { productSagas } from '../modules/product';
 import {
   fetchOrders,
   fetchOrderDetails,
   upsertOrder,
 } from './order';
-import {
-  fetchProducts,
-  fetchProductDetails,
-  fetchProductAttributes,
-  upsertProduct,
-  searchProducts,
-  updateProductStatus,
-} from './product';
 import {
   fetchCategories,
   fetchCategoryDetails,
@@ -80,12 +73,6 @@ export default function* rootSaga() {
     takeEvery(SUBMIT_CATEGORY, upsertCategory),
     takeEvery(UPDATE_CATEGORY_STATUS, updateCategoryStatus),
     takeEvery(FETCH_CATEGORY_DETAILS, fetchCategoryDetails),
-    takeEvery(FETCH_PRODUCTS, fetchProducts),
-    takeEvery(FETCH_PRODUCT_DETAILS, fetchProductDetails),
-    takeEvery(FETCH_PRODUCT_ATTRIBUTES, fetchProductAttributes),
-    takeEvery(SEARCH_PRODUCTS, searchProducts),
-    takeEvery(SUBMIT_PRODUCT, upsertProduct),
-    takeEvery(UPDATE_PRODUCT_STATUS, updateProductStatus),
     takeEvery(FETCH_DASHBOARD_DATA, fetchDashboardData),
     takeEvery(FETCH_SALES_REPORT_PRODUCTS, fetchSalesReportProducts),
     takeEvery(FETCH_SALES_REPORT_CATEGORIES, fetchSalesReportCategories),
@@ -98,6 +85,7 @@ export default function* rootSaga() {
     takeEvery(SUBMIT_ACCOUNT, upsertAccount),
     takeEvery(UPDATE_ACCOUNT_STATUS, updateAccountStatus),
     takeEvery(UPLOAD_FILE, uploadFile),
+    productSagas,
     supplierSagas,
     manufacturerSagas,
   ]);

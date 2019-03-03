@@ -13,11 +13,13 @@ import {
 import { withRouter } from 'react-router-dom';
 import numeral from 'numeral';
 import {
-  searchProducts,
-  clearSearchProducts,
   selectOrderProduct,
   addOrderProduct,
 } from '../../actions';
+import {
+  searchProducts,
+  clearSearchProducts,
+} from '../../modules/product';
 
 const renderField = ({ input, type, placeholder, className, style, meta: { touched, error } }) => (
   <div>

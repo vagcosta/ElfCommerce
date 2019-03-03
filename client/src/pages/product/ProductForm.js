@@ -33,16 +33,20 @@ import {
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import {
-  fetchProductDetails,
-  clearProductDetails,
   fetchCategories,
-  fetchSuppliers,
-  fetchProductAttributes,
-  submitProduct,
 } from '../../actions';
+import {
+  fetchSuppliers,
+} from '../../modules/supplier';
 import {
   fetchManufacturers,
 } from '../../modules/manufacturer';
+import {
+  fetchProductDetails,
+  clearProductDetails,
+  fetchProductAttributes,
+  submitProduct,
+} from '../../modules/product';
 import ProductAttributeForm from './ProductAttributeForm';
 import ProductAttributeListItem from './ProductAttributeListItem';
 import {

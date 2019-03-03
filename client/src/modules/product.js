@@ -1,3 +1,7 @@
+import { put, takeEvery } from 'redux-saga/effects';
+import axios from 'axios';
+import config from '../config';
+
 export const GET_ALL = 'app.product.getAll';
 export const GET_ALL_SUCCESS = 'app.product.getAllSuccess';
 
@@ -66,43 +70,43 @@ export default function productReducer(state = initialState, action) {
 }
 
 export function fetchProducts(data) {
-  return { type: FETCH_PRODUCTS, value: data };
+  return { type: GET_ALL, value: data };
 }
 
 export function fetchProductsSuccess(data) {
-  return { type: FETCH_PRODUCTS_SUCCESS, value: data };
+  return { type: GET_ALL_SUCCESS, value: data };
 }
 
 export function fetchProductsFailed() {
-  return { type: FETCH_PRODUCTS_FAILED };
+  return { type: FAILED };
 }
 
 export function fetchProductDetails(data) {
-  return { type: FETCH_PRODUCT_DETAILS, value: data };
+  return { type: GET_ITEM, value: data };
 }
 
 export function clearProductDetails() {
-  return { type: CLEAR_PRODUCT_DETAILS };
+  return { type: CLEAR_ITEM };
 }
 
 export function fetchProductDetailsSuccess(data) {
-  return { type: FETCH_PRODUCT_DETAILS_SUCCESS, value: data };
+  return { type: GET_ITEM_SUCCESS, value: data };
 }
 
 export function fetchProductDetailsFailed() {
-  return { type: FETCH_PRODUCT_DETAILS_FAILED };
+  return { type: FAILED };
 }
 
 export function fetchProductAttributes(data) {
-  return { type: FETCH_PRODUCT_ATTRIBUTES, value: data };
+  return { type: GET_ITEM_ATTRIBUTES, value: data };
 }
 
 export function fetchProductAttributesSuccess(data) {
-  return { type: FETCH_PRODUCT_ATTRIBUTES_SUCCESS, value: data };
+  return { type: GET_ITEM_ATTRIBUTES_SUCCESS, value: data };
 }
 
 export function fetchProductAttributesFailed() {
-  return { type: FETCH_PRODUCT_ATTRIBUTES_FAILED };
+  return { type: FAILED };
 }
 
 export function submitProduct(data) {
@@ -110,42 +114,42 @@ export function submitProduct(data) {
 }
 
 export function submitProductSuccess(data) {
-  return { type: SUBMIT_PRODUCT_SUCCESS, value: data };
+  return { type: SUBMIT_SUCCESS, value: data };
 }
 
 export function submitProductFailed() {
-  return { type: SUBMIT_PRODUCT_FAILED };
+  return { type: FAILED };
 }
 
 export function searchProducts(data) {
-  return { type: SEARCH_PRODUCTS, value: data };
+  return { type: SEARCH, value: data };
 }
 
 export function searchProductsSuccess(data) {
-  return { type: SEARCH_PRODUCTS_SUCCESS, value: data };
+  return { type: SEARCH_SUCCESS, value: data };
 }
 
 export function searchProductsFailed() {
-  return { type: SEARCH_PRODUCTS_FAILED };
+  return { type: FAILED };
 }
 
 export function clearSearchProducts() {
-  return { type: CLEAR_SEARCH_PRODUCTS };
+  return { type: CLEAR_SEARCH };
 }
 
 export function updateProductStatus(data) {
-  return { type: UPDATE_PRODUCT_STATUS, value: data };
+  return { type: UPDATE_ITEM_STATUS, value: data };
 }
 
 export function updateProductStatusSuccess(data) {
-  return { type: UPDATE_PRODUCT_STATUS_SUCCESS, value: data };
+  return { type: UPDATE_ITEM_STATUS_SUCCESS, value: data };
 }
 
 export function updateProductStatusFailed() {
-  return { type: UPDATE_PRODUCT_STATUS_FAILED };
+  return { type: FAILED };
 }
 
-export function* fetchProducts(action) {
+export function* fetchProductsHandler(action) {
   try {
     const { storeId, pageNo, pageSize } = action.value;
     const res = yield axios({
@@ -158,15 +162,11 @@ export function* fetchProducts(action) {
 
     yield put(fetchProductsSuccess(res.data));
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put(clearToken());
-    } else {
-      yield put(fetchProductsFailed());
-    }
+    yield put(fetchProductsFailed());
   }
 }
 
-export function* searchProducts(action) {
+export function* searchProductsHandler(action) {
   try {
     const { storeId, keyword, pageNo, pageSize } = action.value;
     const res = yield axios({
@@ -179,15 +179,11 @@ export function* searchProducts(action) {
 
     yield put(searchProductsSuccess(res.data));
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put(clearToken());
-    } else {
-      yield put(searchProductsFailed());
-    }
+    yield put(searchProductsFailed());
   }
 }
 
-export function* fetchProductDetails(action) {
+export function* fetchProductDetailsHandler(action) {
   try {
     const res = yield axios({
       method: 'get',
@@ -201,15 +197,11 @@ export function* fetchProductDetails(action) {
 
     yield put(fetchProductDetailsSuccess(res.data));
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put(clearToken());
-    } else {
-      yield put(fetchProductDetailsFailed());
-    }
+    yield put(fetchProductDetailsFailed());
   }
 }
 
-export function* upsertProduct(action) {
+export function* upsertProductHandler(action) {
   try {
     const { value } = action;
     const res = yield axios({
@@ -223,15 +215,11 @@ export function* upsertProduct(action) {
 
     yield put(submitProductSuccess(res.data));
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put(clearToken());
-    } else {
-      yield put(submitProductFailed());
-    }
+    yield put(submitProductFailed());
   }
 }
 
-export function* updateProductStatus(action) {
+export function* updateProductStatusHandler(action) {
   try {
     const { storeId, productId, status } = action.value;
     const res = yield axios({
@@ -244,15 +232,11 @@ export function* updateProductStatus(action) {
 
     yield put(updateProductStatusSuccess({ productId, status }));
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put(clearToken());
-    } else {
-      yield put(updateProductStatusFailed());
-    }
+    yield put(updateProductStatusFailed());
   }
 }
 
-export function* getProductAttributes(action) {
+export function* getProductAttributesHandler(action) {
   try {
     const { storeId, productId } = action.value;
     const res = yield axios({
@@ -265,10 +249,15 @@ export function* getProductAttributes(action) {
 
     yield put(fetchProductAttributesSuccess(res.data));
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put(clearToken());
-    } else {
-      yield put(fetchProductAttributesFailed());
-    }
+    yield put(fetchProductAttributesFailed());
   }
 }
+
+export const productSagas = [
+  takeEvery(GET_ALL, fetchProductsHandler),
+  takeEvery(SEARCH, searchProductsHandler),
+  takeEvery(GET_ITEM, fetchProductDetailsHandler),
+  takeEvery(SUBMIT, upsertProductHandler),
+  takeEvery(UPDATE_ITEM_STATUS, updateProductStatusHandler),
+  takeEvery(GET_ITEM_ATTRIBUTES, getProductAttributesHandler),
+];

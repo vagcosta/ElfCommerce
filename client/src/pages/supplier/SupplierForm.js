@@ -20,11 +20,13 @@ import {
 import { MdSave } from 'react-icons/md';
 import {
   fetchCountries,
-  submitSupplier,
-  fetchSupplierDetails,
-  clearSupplierDetails,
   uploadFile,
 } from '../../actions';
+import {
+  fetchSupplierDetails,
+  clearSupplierDetails,
+  submitSupplier,
+} from '../../modules/supplier';
 import { ProfileLoader } from '../../components';
 import config from '../../config';
 
