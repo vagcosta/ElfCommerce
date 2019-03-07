@@ -180,7 +180,6 @@ class ManufacturerForm extends Component {
                   /> :
                   <div>
                     <FormattedMessage id="sys.pasteImageUrl" /><br />
-
                     <Field
                       component={renderField}
                       name="logo"

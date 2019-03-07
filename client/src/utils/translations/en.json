@@ -16,6 +16,7 @@
   "sys.logout": "Log Out",
   "sys.myAccount": "My Account",
   "sys.addProduct": "Add Product",
+  "sys.addProductAttribute": "Add Product Attribute",
   "sys.checkout": "Checkout",
   "sys.add": "Add",
   "sys.delete": "Delete",

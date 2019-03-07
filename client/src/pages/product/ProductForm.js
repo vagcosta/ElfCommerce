@@ -516,7 +516,7 @@ class ProductForm extends Component {
                 </Row>
               </Form>
               <Modal isOpen={this.state.modal} toggle={this.modalToggle} zIndex="10000">
-                <ModalHeader toggle={this.modalToggle}><FormattedMessage id="sys.addProduct" /></ModalHeader>
+                <ModalHeader toggle={this.modalToggle}><FormattedMessage id="sys.addProductAttribute" /></ModalHeader>
                 <ModalBody>
                   <ProductAttributeForm
                     storeId={storeId} />
