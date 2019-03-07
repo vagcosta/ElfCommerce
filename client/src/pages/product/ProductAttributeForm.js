@@ -67,22 +67,13 @@ class ProductAttributeForm extends Component {
   }
 
   onAddProductSubmit = item => {
-    const { dispatch, productSelected, reset } = this.props;
-
-    dispatch(addOrderProduct({
-      code: productSelected.code,
-      name: productSelected.name,
-      unitPrice: productSelected.unitPrice,
-      quantity: parseInt(item.qty),
-      amount: productSelected.unitPrice * parseInt(item.qty),
-    }));
-
-    reset();
+    const { dispatch, reset } = this.props;
   }
 
   render() {
     const {
       handleSubmit,
+      categories,
     } = this.props;
 
     return (
@@ -115,7 +106,7 @@ class ProductAttributeForm extends Component {
                   name="category"
                   className="form-control"
                   id="category"
-                  data={[]}
+                  data={categories}
                   validate={[required]}
                 />
               </Col>
@@ -168,9 +159,8 @@ ProductAttributeForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
   match: PropTypes.object,
-  productSelected: PropTypes.object,
+  categories: PropTypes.array.isRequired,
   history: PropTypes.object.isRequired,
-  products: PropTypes.array.isRequired,
 };
 
 ProductAttributeForm = reduxForm({
@@ -181,8 +171,7 @@ export default withRouter(
   connect(state => {
     return {
       initialValues: { search: '', qty: '1' },
-      products: state.productReducer.products,
-      productSelected: state.orderReducer.productSelected,
+      categories: [],
       enableReinitialize: true,
     };
   })(injectIntl(ProductAttributeForm))
