@@ -271,7 +271,4 @@ Account.prototype.activate = function (code) {
   });
 };
 
-const acct = new Account();
-acct.get('123');
-
 module.exports = Account;
