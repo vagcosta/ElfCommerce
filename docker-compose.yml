@@ -1,0 +1,24 @@
+version: '3'
+services: 
+  mysql-server:
+    restart: always
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: ${dbName}
+      MYSQL_USER: ${dbUser}
+      MYSQL_PASSWORD: ${dbPassword}
+      MYSQL_ROOT_PASSWORD: ${dbPassword}
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - db:/var/lib/mysql
+  express-server:
+    restart: always
+    build: .
+    ports: 
+      - '88:8080'
+volumes:
+  db:
+      
