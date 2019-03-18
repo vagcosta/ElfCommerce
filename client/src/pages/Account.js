@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Breadcrumb, BreadcrumbItem, Button, Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import AccountForm from './account/AccountForm';
 import config from '../config';
 
-class Account extends Component {
+export class Account extends Component {
   render() {
     const { history, match: { path } } = this.props;
     const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
