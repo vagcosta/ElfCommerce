@@ -33,28 +33,31 @@ function Category(
   }
 }
 
-Category.prototype.get = function (code) {
+Category.prototype.get = function(code) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select code, name, store_id as storeId, level, parent_id as parentId, status from category where code='${code}'`,
       (error, results) => {
-
         if (error) {
           reject(new NoRecordFoundError('No category found.'));
         } else {
           const { code, name, storeId, level, parentId, status } = results[0];
-          resolve(new Category(code, name, storeId, '', level, parentId, status));
+          resolve(
+            new Category(code, name, storeId, '', level, parentId, status)
+          );
         }
       }
     );
   });
 };
 
-Category.prototype.getTotalCountByStoreId = function (id, activeOnly = false) {
+Category.prototype.getTotalCountByStoreId = function(id, activeOnly = false) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select count(*) as total 
-       from category where store_id='${id}'${activeOnly ? ' and status=1' : ''}`,
+       from category where store_id='${id}'${
+        activeOnly ? ' and status=1' : ''
+      }`,
       (error, results) => {
         if (error) {
           reject(new NoRecordFoundError('No categorys found.'));
@@ -66,25 +69,33 @@ Category.prototype.getTotalCountByStoreId = function (id, activeOnly = false) {
   });
 };
 
-Category.prototype.getAllByStoreId = function (
+Category.prototype.getAllByStoreId = function(
   id,
   page = 1,
   pageSize = 20,
-  activeOnly = false) {
+  activeOnly = false
+) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select code, name, store_id as storeId, level, parent_id as parentId, status 
-       from category where store_id='${id}'${activeOnly ? ' and status=1' : ''} order by parent_id, level limit ${(page -
-        1) *
-      pageSize}, ${pageSize}`,
+       from category where store_id='${id}'${
+        activeOnly ? ' and status=1' : ''
+      } order by parent_id, level limit ${(page - 1) * pageSize}, ${pageSize}`,
       (error, results) => {
-
         if (error) {
           reject(new NoRecordFoundError('No categories found.'));
         } else {
           const categories = results.map(cat => {
             const { code, name, storeId, level, parentId, status } = cat;
-            return new Category(code, name, storeId, '', level, parentId, status);
+            return new Category(
+              code,
+              name,
+              storeId,
+              '',
+              level,
+              parentId,
+              status
+            );
           });
           resolve(categories);
         }
@@ -93,12 +104,12 @@ Category.prototype.getAllByStoreId = function (
   });
 };
 
-Category.prototype.add = function (category) {
+Category.prototype.add = function(category) {
   return new Promise((resolve, reject) => {
     let proceed = true;
 
     if (category instanceof Category) {
-      Object.keys(category).forEach(function (key, index) {
+      Object.keys(category).forEach(function(key, index) {
         if (category[key] === undefined) {
           reject(
             new InvalidModelArgumentsError(
@@ -117,12 +128,23 @@ Category.prototype.add = function (category) {
 
       (this.db || db).query(
         `insert into category(code, name, store_id, added_by, parent_id) 
-         values('${code}', '${name}', '${storeId}', '${addedBy}', ${parentId ? 2 : 1}, '${parentId ? parentId : code}')`,
+         values('${code}', '${name}', '${storeId}', '${addedBy}', ${
+          parentId ? 2 : 1
+        }, '${parentId ? parentId : code}')`,
         (error, results) => {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalid category data.'));
           } else {
-            resolve(new Category(code, name, storeId, addedBy, parentId ? 2 : 1, parentId));
+            resolve(
+              new Category(
+                code,
+                name,
+                storeId,
+                addedBy,
+                parentId ? 2 : 1,
+                parentId
+              )
+            );
           }
         }
       );
@@ -132,7 +154,7 @@ Category.prototype.add = function (category) {
   });
 };
 
-Category.prototype.update = function (category) {
+Category.prototype.update = function(category) {
   return new Promise((resolve, reject) => {
     if (category instanceof Category) {
       const { code, name, storeId, addedBy, parentId } = category;
@@ -145,7 +167,9 @@ Category.prototype.update = function (category) {
           if (error || results.affectedRows == 0) {
             reject(new BadRequestError('Invalid category data.'));
           } else {
-            resolve(new Category(code, name, storeId, parentId ? 2 : 1, parentId));
+            resolve(
+              new Category(code, name, storeId, parentId ? 2 : 1, parentId)
+            );
           }
         }
       );
@@ -155,27 +179,33 @@ Category.prototype.update = function (category) {
   });
 };
 
-Category.prototype.delete = function (code) {
+Category.prototype.delete = function(code) {
   return new Promise((resolve, reject) => {
-    (this.db || db).query(`update category set status = 0 where code = '${code}'`, error => {
-      if (error) {
-        reject(new BadRequestError('Archiving category failed.'));
-      } else {
-        resolve('Category archived.');
+    (this.db || db).query(
+      `update category set status = 0 where code = '${code}'`,
+      error => {
+        if (error) {
+          reject(new BadRequestError('Archiving category failed.'));
+        } else {
+          resolve('Category archived.');
+        }
       }
-    });
+    );
   });
 };
 
-Category.prototype.activate = function (code) {
+Category.prototype.activate = function(code) {
   return new Promise((resolve, reject) => {
-    (this.db || db).query(`update category set status = 1 where code = '${code}'`, error => {
-      if (error) {
-        reject(new BadRequestError('Activating category failed.'));
-      } else {
-        resolve('Category activated.');
+    (this.db || db).query(
+      `update category set status = 1 where code = '${code}'`,
+      error => {
+        if (error) {
+          reject(new BadRequestError('Activating category failed.'));
+        } else {
+          resolve('Category activated.');
+        }
       }
-    });
+    );
   });
 };
 

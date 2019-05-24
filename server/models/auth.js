@@ -22,7 +22,7 @@ function OAuth2Response(id, accessToken, refreshToken) {
   this.refreshToken = refreshToken;
 }
 
-OAuth2Request.prototype.authByPassword = function (username, pwd) {
+OAuth2Request.prototype.authByPassword = function(username, pwd) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select code, password, salt, token, urt.status as tokenStatus, store_id as storeId
@@ -63,18 +63,16 @@ OAuth2Request.prototype.authByPassword = function (username, pwd) {
                 .format('YYYY-MM-DD HH:mm:ss')}')`,
               error => {
                 if (error) {
-
                   reject(new UnauthorisedError('Not authorised.'));
                 } else if (!token) {
                   const refreshToken = md5(
                     `${code +
-                    salt +
-                    moment.utc().format('YYYY-MM-DD HH:mm:ss')}`
+                      salt +
+                      moment.utc().format('YYYY-MM-DD HH:mm:ss')}`
                   );
                   (this.db || db).query(
                     `insert into user_refresh_token(token, user_id) values('${refreshToken}', '${code}')`,
                     error => {
-
                       if (error) {
                         reject(new UnauthorisedError('Not authorised.'));
                       } else {
@@ -85,13 +83,11 @@ OAuth2Request.prototype.authByPassword = function (username, pwd) {
                     }
                   );
                 } else {
-
                   resolve(new OAuth2Response(code, accessToken, token));
                 }
               }
             );
           } else {
-
             reject(new UnauthorisedError('No account found.'));
           }
         }
@@ -100,7 +96,7 @@ OAuth2Request.prototype.authByPassword = function (username, pwd) {
   });
 };
 
-OAuth2Request.prototype.validateToken = function (token) {
+OAuth2Request.prototype.validateToken = function(token) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select * from user_access_token where token='${token}' and expired_on > '${moment
@@ -117,7 +113,7 @@ OAuth2Request.prototype.validateToken = function (token) {
   });
 };
 
-OAuth2Request.prototype.refreshToken = function (token) {
+OAuth2Request.prototype.refreshToken = function(token) {
   return new Promise((resolve, reject) => {
     (this.db || db).query(
       `select user_id as userId from user_refresh_token where token='${token}' and status=1 order by id desc limit 1`,

@@ -9,15 +9,32 @@
   "parserOptions": {
     "ecmaVersion": 2017
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "plugins": [
     "react"
   ],
   "rules": {
     "no-unused-vars": 0,
-    "max-len": [2,  { "code": 80 }, { "ignoreComments": true }],
-    "indent": [2, 2],
-    "quotes": [2, "single"],
+    "max-len": [
+      2,
+      {
+        "code": 120
+      },
+      {
+        "ignoreComments": true
+      }
+    ],
+    "indent": [
+      2,
+      2
+    ],
+    "quotes": [
+      2,
+      "single"
+    ],
     "semi": [
       2,
       "always"
@@ -27,11 +44,13 @@
     "react/jsx-filename-extension": [
       2,
       {
-        "extensions": [".js"]
+        "extensions": [
+          ".js"
+        ]
       }
     ],
     "comma-dangle": [
-      2, 
+      2,
       "always-multiline"
     ],
     "func-names": [

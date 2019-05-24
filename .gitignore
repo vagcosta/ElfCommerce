@@ -1,12 +1,11 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
 /client/node_modules
 /client/src/config.js
-/client/src/containers/home.js
 .vscode
 
+/server/node_modules
 # testing
 /coverage
 .nyc_output/
