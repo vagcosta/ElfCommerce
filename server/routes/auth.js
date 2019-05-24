@@ -2,9 +2,7 @@
 
 const router = require('express').Router();
 require('dotenv').load();
-const {
-  OAuth2Request,
-} = require('../models');
+const { OAuth2Request } = require('../models');
 
 router.post('/auth', async (req, res) => {
   try {
@@ -12,12 +10,8 @@ router.post('/auth', async (req, res) => {
     if (!req.body.refreshToken) {
       const auth = new OAuth2Request();
       if (req.body.grantType === 'password') {
-
         //TODO: Check for req.body.scope
-        data = await auth.authByPassword(
-          req.body.username,
-          req.body.password,
-        );
+        data = await auth.authByPassword(req.body.username, req.body.password);
       }
       res.send(data);
     } else {

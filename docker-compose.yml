@@ -19,6 +19,8 @@ services:
     build: .
     ports: 
       - '88:8080'
+  web:
+    restart: always
 volumes:
   db:
       

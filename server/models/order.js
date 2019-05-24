@@ -271,7 +271,7 @@ Order.prototype.update = function (order) {
       } = order;
 
       (this.db || db).query(
-        `update \`order\` set paid_on=` + (paidOn ? `'${paidOn}'` : null) + `, customer_name='${customerName}', 
+        'update `order` set paid_on=' + (paidOn ? `'${paidOn}'` : null) + `, customer_name='${customerName}', 
          shipping_address='${shippingAddress}', billing_address='${billingAddress}', customer_contact='${customerContact}'
          where code='${code}' and added_by='${addedBy}'`,
         (error, results) => {

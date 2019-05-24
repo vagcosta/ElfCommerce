@@ -165,10 +165,10 @@ Store.prototype.add = function (store) {
       (this.db || db).query(
         `insert into store(name, code, description, created_on, created_by, logo, country_id, language, currency_id, facebook, twitter) 
          values('${name}', '${code}', '${description}', '${moment
-          .utc()
-          .format(
-            'YYYY-MM-DD HH:mm:ss'
-          )}', '${createdBy}', '${logo}', ${countryId}, '${language}', ${currencyId}, '${facebook}', '${twitter}')`,
+  .utc()
+  .format(
+    'YYYY-MM-DD HH:mm:ss'
+  )}', '${createdBy}', '${logo}', ${countryId}, '${language}', ${currencyId}, '${facebook}', '${twitter}')`,
         (error, results) => {
 
           if (error || results.affectedRows == 0) {

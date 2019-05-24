@@ -24,17 +24,10 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "lint:client": "./node_modules/.bin/eslint --fix client/src/",
-    "lint:server": "./node_modules/.bin/eslint --fix models/",
-    "prettier": "prettier --single-quote --trailing-comma=es5 --write \"./**/*.js\"",
-    "build:client": "cd client && yarn build",
-    "client": "cd client && yarn start",
-    "client:analyze": "cd client && yarn analyze",
-    "server": "nodemon app.local.js",
-    "test:models": "mocha -t 60000 --exit \"./models/tests/**/*.js\"",
-    "test:client": "cd client && yarn test",
-    "coverage:server": "nyc --reporter=text mocha -t 60000 --exit \"./models/tests/**/*.js\"",
-    "serverless": "claudia update --handler lambda.handler --deploy-proxy-api",
+    "lint": "./node_modules/.bin/eslint --fix models/",
+    "start": "nodemon app.local.js",
+    "test": "nyc --reporter=text mocha -t 60000 --exit \"./models/tests/**/*.js\"",
+    "deploy": "claudia update --handler lambda.handler --deploy-proxy-api",
     "db:migrate": "node ./db/migrate.js"
   },
   "devDependencies": {
