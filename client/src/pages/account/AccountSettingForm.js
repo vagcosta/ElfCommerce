@@ -12,7 +12,9 @@ import {
   CardHeader,
   CardBody,
   Input,
+  Button,
 } from 'reactstrap';
+import { MdSave } from 'react-icons/md';
 
 const required = value => (value ? undefined : 'Required');
 
@@ -22,20 +24,29 @@ const renderField = ({
   type,
   meta: { touched, error },
 }) => (
-    <div>
-      <Input {...input} placeholder={placeholder} type={type} />
-      {touched && (error && <span className="text-danger">{error}</span>)}
-    </div>
-  );
+  <div>
+    <Input {...input} placeholder={placeholder} type={type} />
+    {touched && (error && <span className="text-danger">{error}</span>)}
+  </div>
+);
 
 class AccountSettingForm extends Component {
   render() {
-    const {
-      handleSubmit,
-    } = this.props;
+    const { handleSubmit } = this.props;
 
     return (
       <Form onSubmit={handleSubmit}>
+        <Row>
+          <Col sm="12">
+            <Button size="sm" color="primary" className="pull-right">
+              <MdSave />
+              &nbsp;
+              <FormattedMessage id="sys.save" />
+            </Button>
+            <br />
+            <br />
+          </Col>
+        </Row>
         <Row>
           <Col md={6}>
             <Card>

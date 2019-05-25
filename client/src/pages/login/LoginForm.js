@@ -16,11 +16,11 @@ const renderField = ({
   type,
   meta: { touched, error },
 }) => (
-    <div>
-      <Input {...input} placeholder={placeholder} type={type} />
-      {touched && (error && <span className="text-danger">{error}</span>)}
-    </div>
-  );
+  <div>
+    <Input {...input} placeholder={placeholder} type={type} />
+    {touched && (error && <span className="text-danger">{error}</span>)}
+  </div>
+);
 
 class LoginForm extends Component {
   constructor(props) {
@@ -63,7 +63,8 @@ class LoginForm extends Component {
           id="username"
           placeholder={formatMessage({ id: 'sys.email' })}
           validate={[required]}
-        /><br />
+        />
+        <br />
         <Field
           component={renderField}
           type="password"
@@ -71,14 +72,15 @@ class LoginForm extends Component {
           id="password"
           placeholder={formatMessage({ id: 'sys.pwd' })}
           validate={[required]}
-        /><br />
-        {
-          this.state.showLoading && auth === null ?
-            <img src={require('../../assets/coffee_loader.svg')} /> :
-            <Button color="dark" type="submit" block>
-              <FormattedMessage id="sys.signin" />
-            </Button>
-        }
+        />
+        <br />
+        {this.state.showLoading && auth === null ? (
+          <img src={require('../../assets/coffee_loader.svg')} />
+        ) : (
+          <Button color="dark" type="submit" block>
+            <FormattedMessage id="sys.signin" />
+          </Button>
+        )}
         {auth === false ? (
           <Alert color="danger" style={{ marginTop: 20 }}>
             <FormattedMessage id="sys.invalidAuth" />

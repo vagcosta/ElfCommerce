@@ -9,13 +9,8 @@
   "parserOptions": {
     "ecmaVersion": 2017
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
-  ],
-  "plugins": [
-    "react"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["react"],
   "rules": {
     "no-unused-vars": 0,
     "max-len": [
@@ -27,35 +22,18 @@
         "ignoreComments": true
       }
     ],
-    "indent": [
-      2,
-      2
-    ],
-    "quotes": [
-      2,
-      "single"
-    ],
-    "semi": [
-      2,
-      "always"
-    ],
+    "indent": [2, 2],
+    "quotes": [2, "single"],
+    "semi": [2, "always"],
     "class-methods-use-this": 0,
     "import/no-named-as-default": 0,
     "react/jsx-filename-extension": [
       2,
       {
-        "extensions": [
-          ".js"
-        ]
+        "extensions": [".js"]
       }
     ],
-    "comma-dangle": [
-      2,
-      "always-multiline"
-    ],
-    "func-names": [
-      2,
-      "never"
-    ]
+    "comma-dangle": [2, "always-multiline"],
+    "func-names": [2, "never"]
   }
 }
