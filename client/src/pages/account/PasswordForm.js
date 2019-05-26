@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
-  Form,
   CardHeader,
   Input,
   Button,
@@ -16,31 +16,15 @@ import {
   Col,
   Alert,
 } from 'reactstrap';
-import {
-  submitAccount,
-} from '../../modules/account';
+import { submitAccount } from '../../modules/account';
 
-const required = value => (value ? undefined : 'Required');
-
-const renderField = ({
-  input,
-  placeholder,
-  type,
-  meta: { touched, error },
-}) => (
-    <div>
-      <Input {...input} placeholder={placeholder} type={type} />
-      {touched && (error && <span className="text-danger">{error}</span>)}
-    </div>
-  );
+const passwordValidation = Yup.object().shape({
+  password: Yup.string().required('Required'),
+});
 
 class PasswordForm extends Component {
   onSubmit = data => {
-    const {
-      dispatch,
-      storeId,
-      accountId,
-    } = this.props;
+    const { dispatch, storeId, accountId } = this.props;
 
     data.storeId = storeId;
     data.mode = 'update';
@@ -50,57 +34,71 @@ class PasswordForm extends Component {
   };
 
   render() {
-    const {
-      handleSubmit,
-      error,
-      done,
-    } = this.props;
+    const { error, done } = this.props;
 
     return (
-      <Form onSubmit={handleSubmit(data => this.onSubmit(data))} id="reset-pwd-form">
-        <Card>
-          <CardHeader>
-            <FormattedMessage id="sys.resetPwd" />
-          </CardHeader>
-          <CardBody>
-            <FormGroup row>
-              <Label for="current-pwd" sm={4}>
-                <FormattedMessage id="sys.newPwd" />
-                <span className="text-danger mandatory-field">*</span>
-              </Label>
-              <Col sm={8}>
-                <Field
-                  component={renderField}
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  id="password"
-                  validate={[required]}
-                />
-              </Col>
-            </FormGroup>
-            <Button color="primary" style={{ marginTop: 10 }}>
-              <FormattedMessage id="sys.save" />
-            </Button><br /><br />
-            {
-              error ?
-                <Alert color="danger">
-                  <FormattedMessage id="sys.newFailed" />
-                </Alert> :
-                done ?
+      <Formik
+        enableReinitialize
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(true);
+          this.onSubmit(values);
+          setSubmitting(false);
+        }}
+        validationSchema={passwordValidation}
+      >
+        {({ handleChange, isSubmitting, errors }) => (
+          <Form id="reset-pwd-form">
+            <Card>
+              <CardHeader>
+                <FormattedMessage id="sys.resetPwd" />
+              </CardHeader>
+              <CardBody>
+                <FormGroup row>
+                  <Label for="current-pwd" sm={4}>
+                    <FormattedMessage id="sys.newPwd" />
+                    <span className="text-danger mandatory-field">*</span>
+                  </Label>
+                  <Col sm={8}>
+                    <Input
+                      type="password"
+                      name="password"
+                      id="password"
+                      onChange={handleChange}
+                    />
+                    {errors.password && (
+                      <div className="text-danger">{errors.password}</div>
+                    )}
+                  </Col>
+                </FormGroup>
+                <Button
+                  color="primary"
+                  style={{ marginTop: 10 }}
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  <FormattedMessage id="sys.save" />
+                </Button>
+                <br />
+                <br />
+                {error ? (
+                  <Alert color="danger">
+                    <FormattedMessage id="sys.newFailed" />
+                  </Alert>
+                ) : done ? (
                   <Alert color="success">
                     <FormattedMessage id="sys.newSuccess" />
-                  </Alert> : null
-            }
-          </CardBody>
-        </Card>
-      </Form>
+                  </Alert>
+                ) : null}
+              </CardBody>
+            </Card>
+          </Form>
+        )}
+      </Formik>
     );
   }
 }
 
 PasswordForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
   storeId: PropTypes.string.isRequired,
   accountId: PropTypes.string.isRequired,
@@ -108,17 +106,11 @@ PasswordForm.propTypes = {
   done: PropTypes.bool.isRequired,
 };
 
-PasswordForm = reduxForm({
-  form: 'passwordForm',
-})(PasswordForm);
-
 export default withRouter(
   connect(state => {
     return {
-      initialValues: state.accountReducer.accountDetails,
       done: state.accountReducer.done,
       error: state.accountReducer.error,
-      enableReinitialize: true,
     };
   })(PasswordForm)
 );
