@@ -68,10 +68,8 @@ class StoreSettingForm extends Component {
             twitter = '',
           },
           handleChange,
-          handleBlur,
           isSubmitting,
           errors,
-          /* and other goodies */
         }) => (
           <Form>
             <Row>
@@ -108,10 +106,11 @@ class StoreSettingForm extends Component {
                           name="name"
                           id="name"
                           value={name}
-                          onBlur={handleBlur}
                           onChange={handleChange}
                         />
-                        <div className="text-danger">{errors.name}</div>
+                        {errors.name && (
+                          <div className="text-danger">{errors.name}</div>
+                        )}
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -124,7 +123,6 @@ class StoreSettingForm extends Component {
                           name="description"
                           id="description"
                           value={description}
-                          onBlur={handleBlur}
                           onChange={handleChange}
                         />
                       </Col>
@@ -140,7 +138,6 @@ class StoreSettingForm extends Component {
                           name="currencyId"
                           id="currency-id"
                           onChange={handleChange}
-                          onBlur={handleBlur}
                           value={currencyId}
                         >
                           <option value="">--</option>
@@ -150,7 +147,9 @@ class StoreSettingForm extends Component {
                             </option>
                           ))}
                         </Input>
-                        <div className="text-danger">{errors.currencyId}</div>
+                        {errors.currencyId && (
+                          <div className="text-danger">{errors.currencyId}</div>
+                        )}
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -164,7 +163,6 @@ class StoreSettingForm extends Component {
                           name="countryId"
                           id="country-id"
                           onChange={handleChange}
-                          onBlur={handleBlur}
                           value={countryId}
                         >
                           <option value="">--</option>
@@ -174,7 +172,9 @@ class StoreSettingForm extends Component {
                             </option>
                           ))}
                         </Input>
-                        <div className="text-danger">{errors.countryId}</div>
+                        {errors.countryId && (
+                          <div className="text-danger">{errors.countryId}</div>
+                        )}
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -188,7 +188,6 @@ class StoreSettingForm extends Component {
                           name="language"
                           id="language"
                           onChange={handleChange}
-                          onBlur={handleBlur}
                           value={language}
                         >
                           {[{ id: 'en', name: 'English' }].map(lang => (
@@ -197,7 +196,9 @@ class StoreSettingForm extends Component {
                             </option>
                           ))}
                         </Input>
-                        <div className="text-danger">{errors.language}</div>
+                        {errors.language && (
+                          <div className="text-danger">{errors.language}</div>
+                        )}
                       </Col>
                     </FormGroup>
                   </CardBody>
@@ -217,7 +218,6 @@ class StoreSettingForm extends Component {
                         <Input
                           name="facebook"
                           id="facebook"
-                          onBlur={handleBlur}
                           onChange={handleChange}
                           value={facebook}
                         />
@@ -231,7 +231,6 @@ class StoreSettingForm extends Component {
                         <Input
                           name="twitter"
                           id="twitter"
-                          onBlur={handleBlur}
                           onChange={handleChange}
                           value={twitter}
                         />

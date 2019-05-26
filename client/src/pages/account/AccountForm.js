@@ -93,10 +93,8 @@ class AccountForm extends Component {
         {({
           values: { name = '', email = '', role = '' },
           handleChange,
-          handleBlur,
           isSubmitting,
           errors,
-          /* and other goodies */
         }) => (
           <Form>
             <Button
@@ -147,10 +145,11 @@ class AccountForm extends Component {
                           name="name"
                           id="name"
                           value={name}
-                          onBlur={handleBlur}
                           onChange={handleChange}
                         />
-                        <div className="text-danger">{errors.name}</div>
+                        {errors.name && (
+                          <div className="text-danger">{errors.name}</div>
+                        )}
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -163,12 +162,13 @@ class AccountForm extends Component {
                           type="email"
                           name="email"
                           id="email"
-                          onBlur={handleBlur}
                           onChange={handleChange}
                           readOnly={mode === 'update' ? true : false}
                           value={email || ''}
                         />
-                        <div className="text-danger">{errors.email}</div>
+                        {errors.email && (
+                          <div className="text-danger">{errors.email}</div>
+                        )}
                       </Col>
                     </FormGroup>
                     {mode === 'new' ? (
@@ -181,11 +181,12 @@ class AccountForm extends Component {
                           <Input
                             name="password"
                             type="password"
-                            onBlur={handleBlur}
                             onChange={handleChange}
                             id="password"
                           />
-                          <div className="text-danger">{errors.password}</div>
+                          {errors.password && (
+                            <div className="text-danger">{errors.password}</div>
+                          )}
                         </Col>
                       </FormGroup>
                     ) : null}
@@ -199,7 +200,6 @@ class AccountForm extends Component {
                           type="select"
                           name="role"
                           id="role"
-                          onBlur={handleBlur}
                           onChange={handleChange}
                           value={role}
                         >
@@ -213,7 +213,9 @@ class AccountForm extends Component {
                             </option>
                           ))}
                         </Input>
-                        <div className="text-danger">{errors.role}</div>
+                        {errors.role && (
+                          <div className="text-danger">{errors.role}</div>
+                        )}
                       </Col>
                     </FormGroup>
                   </CardBody>

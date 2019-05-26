@@ -85,13 +85,12 @@ class CategoryForm extends Component {
         {({
           values: { name = '', parentId = '' },
           handleChange,
-          handleBlur,
           isSubmitting,
           errors,
-          /* and other goodies */
         }) => (
           <Form>
             <Button
+              type="submit"
               size="sm"
               color="primary"
               className="pull-right form-btn"
@@ -122,10 +121,11 @@ class CategoryForm extends Component {
                   name="name"
                   id="name"
                   value={name}
-                  onBlur={handleBlur}
                   onChange={handleChange}
                 />
-                <div className="text-danger">{errors.name}</div>
+                {errors.name && (
+                  <div className="text-danger">{errors.name}</div>
+                )}
               </Col>
             </FormGroup>
             <FormGroup row>
@@ -138,7 +138,6 @@ class CategoryForm extends Component {
                   id="parent-id"
                   name="parentId"
                   value={parentId}
-                  onBlur={handleBlur}
                   onChange={handleChange}
                   disabled={categoryDetails.level === 1 ? true : false}
                 >
