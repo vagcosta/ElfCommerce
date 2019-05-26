@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Formik, ErrorMessage, Form } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
