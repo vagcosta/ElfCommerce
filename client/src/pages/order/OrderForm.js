@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { MdSave } from 'react-icons/md';
 import {
   Col,
   Row,
-  Form,
   Card,
   Nav,
   TabContent,
@@ -43,48 +43,13 @@ import {
 import { clearSearchProducts } from '../../modules/product';
 import config from '../../config';
 
-const required = value => (value ? undefined : 'Required');
-
-const renderField = ({ input, type, meta: { touched, error } }) => (
-  <div>
-    <Input {...input} type={type} />
-    {touched && (error && <span className="text-danger">{error}</span>)}
-  </div>
-);
-
-const renderDecimalField = ({
-  input,
-  type,
-  style,
-  currencySign,
-  meta: { touched, error },
-}) => (
-  <div>
-    {currencySign || ''}
-    <input {...input} placeholder="0.00" type={type} style={style} step=".01" />
-    <br />
-    {touched && (error && <span className="text-danger">{error}</span>)}
-  </div>
-);
-
-const renderSelect = ({ input, type, data, meta: { touched, error } }) => (
-  <div>
-    <select {...input} className="form-control">
-      <option />
-      {data.map(item => (
-        <option key={item.code} value={item.code}>
-          {item.name}
-        </option>
-      ))}
-    </select>
-    {touched &&
-      (error && (
-        <div>
-          <span className="text-danger">{error}</span>
-        </div>
-      ))}
-  </div>
-);
+const orderValidation = Yup.object().shape({
+  shippingFee: Yup.number(),
+  customerName: Yup.string().required('Required'),
+  customerContact: Yup.string().required('Required'),
+  shippingAddress: Yup.string().required('Required'),
+  billingAddress: Yup.string().required('Required'),
+});
 
 class OrderForm extends Component {
   constructor(props) {
@@ -172,15 +137,7 @@ class OrderForm extends Component {
   };
 
   render() {
-    const {
-      history,
-      handleSubmit,
-      done,
-      error,
-      mode,
-      storeId,
-      orderDetails,
-    } = this.props;
+    const { history, done, error, mode, storeId, orderDetails } = this.props;
 
     const products = orderDetails.products;
     const subTotal =
@@ -233,218 +190,275 @@ class OrderForm extends Component {
         </Nav>
         <TabContent activeTab={this.state.activeTab} className="table-content">
           <TabPane tabId="1">
-            <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
-              <Row>
-                <Col md={4}>
-                  {mode === 'update' ? (
-                    <span className="tab-content-title">
-                      <FormattedMessage id="sys.orderNumber" />:{' '}
-                      <b>{orderDetails.code}</b>
-                    </span>
-                  ) : null}
-                </Col>
-                <Col md={8}>
-                  <Button
-                    size="sm"
-                    color="secondary"
-                    className="pull-right form-btn"
-                    onClick={() => history.push('/new-product')}
-                  >
-                    <MdFileDownload />
-                    &nbsp;
-                    <FormattedMessage id="sys.downloadInvoice" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    color="primary"
-                    className="pull-right form-btn"
-                    style={{ marginRight: 10 }}
-                  >
-                    <MdSave />
-                    &nbsp;
-                    <FormattedMessage id="sys.save" />
-                  </Button>
-                </Col>
-              </Row>
-              <br />
-              <Row>
-                <Col md={7}>
-                  <CardTitle>
-                    <FormattedMessage id="sys.products" />
-                  </CardTitle>
-                  <Table responsive size="sm">
-                    <thead className="table-header">
-                      <tr>
-                        <th>
-                          <FormattedMessage id="sys.productName" />
-                        </th>
-                        <th>
-                          <FormattedMessage id="sys.unitPrice" />
-                        </th>
-                        <th>
-                          <FormattedMessage id="sys.qty" />
-                        </th>
-                        <th>
-                          <FormattedMessage id="sys.amount" />
-                        </th>
-                        <th />
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {products.length > 0 ? (
-                        products.map(product => {
-                          return (
-                            <OrderProductListItem
-                              key={product.code}
-                              code={product.code}
-                              name={product.name}
-                              unitPrice={product.unitPrice}
-                              quantity={product.quantity}
-                              currencySign="$"
-                              onDeleteClick={this.onProductItemDeleteClick}
+            <Formik
+              enableReinitialize
+              initialValues={{ ...orderDetails }}
+              onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true);
+                this.onSubmit(values);
+                setSubmitting(false);
+              }}
+              validationSchema={orderValidation}
+            >
+              {({
+                values: {
+                  shippingFee = '',
+                  customerName = '',
+                  customerContact = '',
+                  shippingAddress = '',
+                  billingAddress = '',
+                },
+                handleChange,
+                isSubmitting,
+                errors,
+              }) => (
+                <Form>
+                  <Row>
+                    <Col md={4}>
+                      {mode === 'update' ? (
+                        <span className="tab-content-title">
+                          <FormattedMessage id="sys.orderNumber" />:{' '}
+                          <b>{orderDetails.code}</b>
+                        </span>
+                      ) : null}
+                    </Col>
+                    <Col md={8}>
+                      <Button
+                        size="sm"
+                        color="secondary"
+                        className="pull-right form-btn"
+                        onClick={() => history.push('/new-product')}
+                      >
+                        <MdFileDownload />
+                        &nbsp;
+                        <FormattedMessage id="sys.downloadInvoice" />
+                      </Button>
+                      <Button
+                        type="submit"
+                        size="sm"
+                        color="primary"
+                        className="pull-right form-btn"
+                        style={{ marginRight: 10 }}
+                        disabled={isSubmitting}
+                      >
+                        <MdSave />
+                        &nbsp;
+                        <FormattedMessage id="sys.save" />
+                      </Button>
+                    </Col>
+                  </Row>
+                  <br />
+                  <Row>
+                    <Col md={7}>
+                      <CardTitle>
+                        <FormattedMessage id="sys.products" />
+                      </CardTitle>
+                      <Table responsive size="sm">
+                        <thead className="table-header">
+                          <tr>
+                            <th>
+                              <FormattedMessage id="sys.productName" />
+                            </th>
+                            <th>
+                              <FormattedMessage id="sys.unitPrice" />
+                            </th>
+                            <th>
+                              <FormattedMessage id="sys.qty" />
+                            </th>
+                            <th>
+                              <FormattedMessage id="sys.amount" />
+                            </th>
+                            <th />
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {products.length > 0 ? (
+                            products.map(product => {
+                              return (
+                                <OrderProductListItem
+                                  key={product.code}
+                                  code={product.code}
+                                  name={product.name}
+                                  unitPrice={product.unitPrice}
+                                  quantity={product.quantity}
+                                  currencySign="$"
+                                  onDeleteClick={this.onProductItemDeleteClick}
+                                />
+                              );
+                            })
+                          ) : (
+                            <tr>
+                              <td>
+                                <FormattedMessage id="sys.noRecords" />
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </Table>
+                      <Button
+                        color="link"
+                        className="pull-right form-btn"
+                        onClick={this.onAddProductClick}
+                      >
+                        <MdAddCircleOutline />
+                        &nbsp;
+                        <FormattedMessage id="sys.addNew" />
+                      </Button>
+                      <br />
+                      <br />
+                      <br />
+                      <Col md={6} className="pull-right">
+                        <Table size="sm" responsive>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <FormattedMessage id="sys.subTotal" />:
+                              </td>
+                              <td>${numeral(subTotal).format('0,0.00')}</td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <FormattedMessage id="sys.tax" />:
+                              </td>
+                              <td>
+                                ${numeral(subTotal * 0.07).format('0,0.00')}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <FormattedMessage id="sys.shipping" />:
+                              </td>
+                              <td>
+                                $
+                                <Input
+                                  name="shippingFee"
+                                  id="shipping-fee"
+                                  type="number"
+                                  style={{ width: 80 }}
+                                  value={shippingFee}
+                                  onChange={handleChange}
+                                />
+                                {errors.shippingFee && (
+                                  <div className="text-danger">
+                                    {errors.shippingFee}
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <b>
+                                  <FormattedMessage id="sys.total" />:
+                                </b>
+                              </td>
+                              <td>
+                                <b>
+                                  $
+                                  {numeral(subTotal * 1.07 + shipping).format(
+                                    '0,0.00'
+                                  )}
+                                </b>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Col>
+                    <Col md={5}>
+                      <CardTitle>
+                        <FormattedMessage id="sys.customerInfo" />
+                      </CardTitle>
+                      <Card body>
+                        <FormGroup row>
+                          <Label for="customer-name" sm={4}>
+                            <FormattedMessage id="sys.customerName" />
+                            <span className="text-danger mandatory-field">
+                              *
+                            </span>
+                          </Label>
+                          <Col sm={8}>
+                            <Input
+                              name="customerName"
+                              id="customer-name"
+                              value={customerName}
+                              onChange={handleChange}
                             />
-                          );
-                        })
-                      ) : (
-                        <tr>
-                          <td>
-                            <FormattedMessage id="sys.noRecords" />
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </Table>
-                  <Button
-                    color="link"
-                    className="pull-right form-btn"
-                    onClick={this.onAddProductClick}
-                  >
-                    <MdAddCircleOutline />
-                    &nbsp;
-                    <FormattedMessage id="sys.addNew" />
-                  </Button>
-                  <br />
-                  <br />
-                  <br />
-                  <Col md={6} className="pull-right">
-                    <Table size="sm" responsive>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <FormattedMessage id="sys.subTotal" />:
-                          </td>
-                          <td>${numeral(subTotal).format('0,0.00')}</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <FormattedMessage id="sys.tax" />:
-                          </td>
-                          <td>${numeral(subTotal * 0.07).format('0,0.00')}</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <FormattedMessage id="sys.shipping" />:
-                          </td>
-                          <td>
-                            <Field
-                              component={renderDecimalField}
-                              name="shipping-fee"
-                              id="shipping-fee"
-                              type="number"
-                              style={{ width: 80 }}
-                              currencySign="$"
-                              validate={[required]}
+                            {errors.customerName && (
+                              <div className="text-danger">
+                                {errors.customerName}
+                              </div>
+                            )}
+                          </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                          <Label for="customer-contact" sm={4}>
+                            <FormattedMessage id="sys.contactNo" />
+                            <span className="text-danger mandatory-field">
+                              *
+                            </span>
+                          </Label>
+                          <Col sm={8}>
+                            <Input
+                              name="customerContact"
+                              id="customer-contact"
+                              value={customerContact}
+                              onChange={handleChange}
                             />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <b>
-                              <FormattedMessage id="sys.total" />:
-                            </b>
-                          </td>
-                          <td>
-                            <b>
-                              $
-                              {numeral(subTotal * 1.07 + shipping).format(
-                                '0,0.00'
-                              )}
-                            </b>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </Col>
-                </Col>
-                <Col md={5}>
-                  <CardTitle>
-                    <FormattedMessage id="sys.customerInfo" />
-                  </CardTitle>
-                  <Card body>
-                    <FormGroup row>
-                      <Label for="customer-name" sm={4}>
-                        <FormattedMessage id="sys.customerName" />
-                        <span className="text-danger mandatory-field">*</span>
-                      </Label>
-                      <Col sm={8}>
-                        <Field
-                          component={renderField}
-                          name="customerName"
-                          className="form-control"
-                          id="customer-name"
-                          validate={[required]}
-                        />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label for="customer-contact" sm={4}>
-                        <FormattedMessage id="sys.contactNo" />
-                        <span className="text-danger mandatory-field">*</span>
-                      </Label>
-                      <Col sm={8}>
-                        <Field
-                          component={renderField}
-                          name="customerContact"
-                          className="form-control"
-                          id="customer-contact"
-                          validate={[required]}
-                        />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label for="shipping-address" sm={4}>
-                        <FormattedMessage id="sys.shippingAddr" />
-                        <span className="text-danger mandatory-field">*</span>
-                      </Label>
-                      <Col sm={8}>
-                        <Field
-                          component={renderField}
-                          name="shippingAddress"
-                          className="form-control"
-                          id="shipping-address"
-                          validate={[required]}
-                        />
-                      </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                      <Label for="billing-address" sm={4}>
-                        <FormattedMessage id="sys.billingAddr" />
-                        <span className="text-danger mandatory-field">*</span>
-                      </Label>
-                      <Col sm={8}>
-                        <Field
-                          component={renderField}
-                          name="billingAddress"
-                          className="form-control"
-                          id="billing-address"
-                          validate={[required]}
-                        />
-                      </Col>
-                    </FormGroup>
-                  </Card>
-                </Col>
-              </Row>
-            </Form>
+                            {errors.customerContact && (
+                              <div className="text-danger">
+                                {errors.customerContact}
+                              </div>
+                            )}
+                          </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                          <Label for="shipping-address" sm={4}>
+                            <FormattedMessage id="sys.shippingAddr" />
+                            <span className="text-danger mandatory-field">
+                              *
+                            </span>
+                          </Label>
+                          <Col sm={8}>
+                            <Input
+                              name="shippingAddress"
+                              id="shipping-address"
+                              value={shippingAddress}
+                              onChange={handleChange}
+                            />
+                            {errors.shippingAddress && (
+                              <div className="text-danger">
+                                {errors.shippingAddress}
+                              </div>
+                            )}
+                          </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                          <Label for="billing-address" sm={4}>
+                            <FormattedMessage id="sys.billingAddr" />
+                            <span className="text-danger mandatory-field">
+                              *
+                            </span>
+                          </Label>
+                          <Col sm={8}>
+                            <Input
+                              name="billingAddress"
+                              id="billing-address"
+                              value={billingAddress}
+                              onChange={handleChange}
+                            />
+                            {errors.billingAddress && (
+                              <div className="text-danger">
+                                {errors.billingAddress}
+                              </div>
+                            )}
+                          </Col>
+                        </FormGroup>
+                      </Card>
+                    </Col>
+                  </Row>
+                </Form>
+              )}
+            </Formik>
           </TabPane>
           <TabPane tabId="2">
             <Row>
@@ -505,7 +519,6 @@ class OrderForm extends Component {
 }
 
 OrderForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
   storeId: PropTypes.string.isRequired,
   done: PropTypes.bool.isRequired,
   error: PropTypes.bool,
@@ -517,19 +530,13 @@ OrderForm.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-OrderForm = reduxForm({
-  form: 'orderForm',
-})(OrderForm);
-
 export default withRouter(
   connect(state => {
     return {
-      initialValues: state.orderReducer.orderDetails,
       orderDetails: state.orderReducer.orderDetails,
       done: state.orderReducer.done,
       error: state.orderReducer.error,
       counter: state.orderReducer.counter,
-      enableReinitialize: true,
     };
   })(injectIntl(OrderForm))
 );
