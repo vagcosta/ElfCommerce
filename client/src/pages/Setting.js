@@ -42,7 +42,7 @@ class Setting extends Component {
   };
 
   render() {
-    const { settings, history } = this.props;
+    const { history } = this.props;
     const {
       data: { storeId, accountId },
     } = jwt.decode(localStorage.getItem(config.accessTokenKey));

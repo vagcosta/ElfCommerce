@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Formik } from 'formik';
+import { Formik, ErrorMessage, Form } from 'formik';
+import * as Yup from 'yup';
 import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
   Col,
   Row,
-  Form,
   FormGroup,
   Label,
   Card,
@@ -24,6 +24,13 @@ import {
   clearAccountDetails,
 } from '../../modules/account';
 import { Loader } from '../../components';
+
+const accountValidation = Yup.object().shape({
+  name: Yup.string().required('Required'),
+  email: Yup.string().required('Required'),
+  password: Yup.string().required('Required'),
+  role: Yup.number().required('Required'),
+});
 
 class AccountForm extends Component {
   constructor(props) {
@@ -68,24 +75,37 @@ class AccountForm extends Component {
   };
 
   render() {
-    const { handleSubmit, accountDetails, mode, error, done } = this.props;
+    const { accountDetails, mode, error, done } = this.props;
 
     return mode === 'update' && !('code' in accountDetails) ? (
       <Loader />
     ) : (
-      <Formik initialValues={{ ...accountDetails }}>
+      <Formik
+        enableReinitialize
+        initialValues={{ ...accountDetails }}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(true);
+          this.onSubmit(values);
+          setSubmitting(false);
+        }}
+        validationSchema={accountValidation}
+      >
         {({
-          values: { name, email },
-          errors,
-          touched,
+          values: { name = '', email = '', role = '' },
           handleChange,
           handleBlur,
-          handleSubmit,
           isSubmitting,
+          errors,
           /* and other goodies */
         }) => (
-          <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
-            <Button size="sm" color="primary" className="pull-right form-btn">
+          <Form>
+            <Button
+              size="sm"
+              color="primary"
+              type="submit"
+              className="pull-right form-btn"
+              disabled={isSubmitting}
+            >
               <MdSave />
               &nbsp;
               <FormattedMessage id="sys.save" />
@@ -125,10 +145,12 @@ class AccountForm extends Component {
                       <Col sm={10}>
                         <Input
                           name="name"
-                          className="form-control"
                           id="name"
                           value={name}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
                         />
+                        <div className="text-danger">{errors.name}</div>
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -140,11 +162,13 @@ class AccountForm extends Component {
                         <Input
                           type="email"
                           name="email"
-                          className="form-control"
                           id="email"
-                          readonly={mode === 'update' ? true : false}
-                          value={email}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          readOnly={mode === 'update' ? true : false}
+                          value={email || ''}
                         />
+                        <div className="text-danger">{errors.email}</div>
                       </Col>
                     </FormGroup>
                     {mode === 'new' ? (
@@ -157,9 +181,11 @@ class AccountForm extends Component {
                           <Input
                             name="password"
                             type="password"
-                            className="form-control"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
                             id="password"
                           />
+                          <div className="text-danger">{errors.password}</div>
                         </Col>
                       </FormGroup>
                     ) : null}
@@ -173,11 +199,21 @@ class AccountForm extends Component {
                           type="select"
                           name="role"
                           id="role"
-                          data={[
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={role}
+                        >
+                          <option value="">--</option>
+                          {[
                             { id: 1, name: 'Admin' },
                             { id: 2, name: 'User' },
-                          ]}
-                        />
+                          ].map(role => (
+                            <option key={role.id} value={role.id}>
+                              {role.name}
+                            </option>
+                          ))}
+                        </Input>
+                        <div className="text-danger">{errors.role}</div>
                       </Col>
                     </FormGroup>
                   </CardBody>
@@ -192,7 +228,6 @@ class AccountForm extends Component {
 }
 
 AccountForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
   accountDetails: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   match: PropTypes.object,
@@ -208,7 +243,6 @@ export default withRouter(
       accountDetails: state.accountReducer.accountDetails,
       done: state.accountReducer.done,
       error: state.accountReducer.error,
-      enableReinitialize: true,
     };
   })(AccountForm)
 );

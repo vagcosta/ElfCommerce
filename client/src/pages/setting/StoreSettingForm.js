@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik, ErrorMessage, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -10,7 +10,6 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Form,
   FormGroup,
   Label,
   Input,
@@ -23,7 +22,9 @@ import { ParallelLoader } from '../../components/Loader';
 
 const storeSettingValidation = Yup.object().shape({
   name: Yup.string().required('Required'),
-  currencyId: Yup.string().required('Required'),
+  currencyId: Yup.number().required('Required'),
+  countryId: Yup.number().required('Required'),
+  language: Yup.string().required('Required'),
 });
 
 class StoreSettingForm extends Component {
@@ -49,6 +50,7 @@ class StoreSettingForm extends Component {
       <ParallelLoader />
     ) : (
       <Formik
+        enableReinitialize
         initialValues={{ ...storeSettings }}
         onSubmit={(values, { setSubmitting }) => {
           console.log(values);
@@ -57,23 +59,21 @@ class StoreSettingForm extends Component {
       >
         {({
           values: {
-            name,
-            description,
-            currencyId,
-            countryId,
-            language,
-            facebook,
-            twitter,
+            name = '',
+            description = '',
+            currencyId = '',
+            countryId = '',
+            language = '',
+            facebook = '',
+            twitter = '',
           },
-          errors,
-          touched,
           handleChange,
           handleBlur,
-          handleSubmit,
           isSubmitting,
+          errors,
           /* and other goodies */
         }) => (
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <Row>
               <Col sm="12">
                 <Button
@@ -81,6 +81,7 @@ class StoreSettingForm extends Component {
                   size="sm"
                   color="primary"
                   className="pull-right"
+                  disabled={isSubmitting}
                 >
                   <MdSave />
                   &nbsp;
@@ -107,11 +108,10 @@ class StoreSettingForm extends Component {
                           name="name"
                           id="name"
                           value={name}
+                          onBlur={handleBlur}
                           onChange={handleChange}
                         />
-                        <ErrorMessage name="name">
-                          {msg => <div className="text-danger">{msg}</div>}
-                        </ErrorMessage>
+                        <div className="text-danger">{errors.name}</div>
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -124,6 +124,7 @@ class StoreSettingForm extends Component {
                           name="description"
                           id="description"
                           value={description}
+                          onBlur={handleBlur}
                           onChange={handleChange}
                         />
                       </Col>
@@ -131,6 +132,7 @@ class StoreSettingForm extends Component {
                     <FormGroup row>
                       <Label for="currencyId" sm={3}>
                         <FormattedMessage id="sys.currency" />
+                        <span className="text-danger mandatory-field">*</span>
                       </Label>
                       <Col sm={9}>
                         <Input
@@ -148,14 +150,13 @@ class StoreSettingForm extends Component {
                             </option>
                           ))}
                         </Input>
-                        <ErrorMessage name="currencyId">
-                          {msg => <div className="text-danger">{msg}</div>}
-                        </ErrorMessage>
+                        <div className="text-danger">{errors.currencyId}</div>
                       </Col>
                     </FormGroup>
                     <FormGroup row>
                       <Label for="countryId" sm={3}>
                         <FormattedMessage id="sys.country" />
+                        <span className="text-danger mandatory-field">*</span>
                       </Label>
                       <Col sm={9}>
                         <Input
@@ -173,14 +174,13 @@ class StoreSettingForm extends Component {
                             </option>
                           ))}
                         </Input>
-                        <ErrorMessage name="countryId">
-                          {msg => <div className="text-danger">{msg}</div>}
-                        </ErrorMessage>
+                        <div className="text-danger">{errors.countryId}</div>
                       </Col>
                     </FormGroup>
                     <FormGroup row>
                       <Label for="language" sm={3}>
                         <FormattedMessage id="sys.lang" />
+                        <span className="text-danger mandatory-field">*</span>
                       </Label>
                       <Col sm={9}>
                         <Input
@@ -191,16 +191,13 @@ class StoreSettingForm extends Component {
                           onBlur={handleBlur}
                           value={language}
                         >
-                          <option value="">--</option>
                           {[{ id: 'en', name: 'English' }].map(lang => (
                             <option key={lang.id} value={lang.id}>
                               {lang.name}
                             </option>
                           ))}
                         </Input>
-                        <ErrorMessage name="language">
-                          {msg => <div className="text-danger">{msg}</div>}
-                        </ErrorMessage>
+                        <div className="text-danger">{errors.language}</div>
                       </Col>
                     </FormGroup>
                   </CardBody>
@@ -220,12 +217,10 @@ class StoreSettingForm extends Component {
                         <Input
                           name="facebook"
                           id="facebook"
+                          onBlur={handleBlur}
                           onChange={handleChange}
                           value={facebook}
                         />
-                        <ErrorMessage name="facebook">
-                          {msg => <div className="text-danger">{msg}</div>}
-                        </ErrorMessage>
                       </Col>
                     </FormGroup>
                     <FormGroup row>
@@ -236,12 +231,10 @@ class StoreSettingForm extends Component {
                         <Input
                           name="twitter"
                           id="twitter"
+                          onBlur={handleBlur}
                           onChange={handleChange}
                           value={twitter}
                         />
-                        <ErrorMessage name="twitter">
-                          {msg => <div className="text-danger">{msg}</div>}
-                        </ErrorMessage>
                       </Col>
                     </FormGroup>
                   </CardBody>
