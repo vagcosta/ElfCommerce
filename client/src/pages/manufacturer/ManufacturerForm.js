@@ -137,7 +137,6 @@ class ManufacturerForm extends Component {
             address = '',
           },
           handleChange,
-          handleBlur,
           isSubmitting,
           errors,
         }) => (
@@ -241,7 +240,6 @@ class ManufacturerForm extends Component {
                           name="email"
                           id="email"
                           value={email}
-                          onBlur={handleBlur}
                           onChange={handleChange}
                         />
                       </Col>
@@ -338,7 +336,6 @@ export default withRouter(
       countries,
       uploadedFile,
       status,
-      enableReinitialize: true,
     };
   })(ManufacturerForm)
 );

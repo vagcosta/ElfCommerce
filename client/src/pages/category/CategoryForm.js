@@ -178,7 +178,6 @@ export default withRouter(
       done: state.categoryReducer.done,
       error: state.categoryReducer.error,
       categories: state.categoryReducer.categories.data,
-      enableReinitialize: true,
     };
   })(CategoryForm)
 );
