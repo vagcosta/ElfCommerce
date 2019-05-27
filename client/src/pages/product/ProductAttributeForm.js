@@ -1,50 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import {
-  Form,
-  Button,
-  Row,
-  Col,
-  Table,
-  FormGroup,
-  Label,
-} from 'reactstrap';
+import { Button, Row, Col, Input, FormGroup, Label } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import numeral from 'numeral';
-import {
-  selectOrderProduct,
-  addOrderProduct,
-} from '../../modules/order';
-import {
-  searchProducts,
-  clearSearchProducts,
-} from '../../modules/product';
+import { selectOrderProduct, addOrderProduct } from '../../modules/order';
+import { searchProducts, clearSearchProducts } from '../../modules/product';
 
-const required = value => (value ? undefined : 'Required');
-
-const renderField = ({ input, type, placeholder, className, style, meta: { touched, error } }) => (
-  <div>
-    <input {...input} placeholder={placeholder} type={type} className={className} style={style} />
-    {touched && (error && <span className="text-danger">{error}</span>)}
-  </div>
-);
-
-const renderSelect = ({ input, data, meta: { touched, error } }) => (
-  <div>
-    <select {...input} className="form-control">
-      <option />
-      {data.map(item => (
-        <option key={item.id} value={item.id}>
-          {item.name}
-        </option>
-      ))}
-    </select>
-    {touched && (error && <div><span className="text-danger">{error}</span></div>)}
-  </div>
-);
+const productAttrValidation = Yup.object().shape({
+  attributeName: Yup.string().required('Required'),
+  category: Yup.string().required('Required'),
+  varPrice: Yup.number().required('Required'),
+  qty: Yup.number()
+    .integer()
+    .required('Required'),
+});
 
 class ProductAttributeForm extends Component {
   onSearchChange = event => {
@@ -52,7 +25,14 @@ class ProductAttributeForm extends Component {
 
     // TODO: replace hardcoded page number and page size
     if (event.target.value.length >= 3) {
-      dispatch(searchProducts({ storeId, keyword: event.target.value, pageNo: 1, pageSize: 200 }));
+      dispatch(
+        searchProducts({
+          storeId,
+          keyword: event.target.value,
+          pageNo: 1,
+          pageSize: 200,
+        })
+      );
     } else {
       dispatch(clearSearchProducts());
     }
@@ -64,115 +44,146 @@ class ProductAttributeForm extends Component {
     dispatch(selectOrderProduct(item));
 
     reset();
-  }
+  };
 
   onAddProductSubmit = item => {
     const { dispatch, reset } = this.props;
-  }
+  };
 
   render() {
-    const {
-      handleSubmit,
-      categories,
-    } = this.props;
+    const { categories } = this.props;
 
     return (
-      <Form onSubmit={handleSubmit(data => this.onAddProductSubmit(data))}>
-        <Row>
-          <Col md={10}>
-            <FormGroup row>
-              <Label for="name" sm={5}>
-                <FormattedMessage id="sys.attributeName" />
-                <span className="text-danger mandatory-field">*</span>
-              </Label>
-              <Col md={7}>
-                <Field
-                  component={renderField}
-                  name="attributeName"
-                  className="form-control"
-                  id="attribute-name"
-                  validate={[required]}
-                />
+      <Formik
+        enableReinitialize
+        initialValues={{ search: '', qty: '1' }}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(true);
+          this.onAddProductSubmit(values);
+          setSubmitting(false);
+        }}
+        validationSchema={productAttrValidation}
+      >
+        {({
+          values: {
+            attributeName = '',
+            category = '',
+            varPrice = '',
+            qty = '',
+          },
+          handleChange,
+          isSubmitting,
+          errors,
+        }) => (
+          <Form>
+            <Row>
+              <Col md={10}>
+                <FormGroup row>
+                  <Label for="name" sm={5}>
+                    <FormattedMessage id="sys.attributeName" />
+                    <span className="text-danger mandatory-field">*</span>
+                  </Label>
+                  <Col md={7}>
+                    <Input
+                      name="attributeName"
+                      id="attribute-name"
+                      value={attributeName}
+                      onChange={handleChange}
+                    />
+                    {errors.attributeName && (
+                      <div className="text-danger">{errors.attributeName}</div>
+                    )}
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="name" sm={5}>
+                    <FormattedMessage id="sys.category" />
+                    <span className="text-danger mandatory-field">*</span>
+                  </Label>
+                  <Col md={7}>
+                    <Input
+                      type="select"
+                      name="category"
+                      id="category"
+                      value={category}
+                      onChange={handleChange}
+                    >
+                      <option value="">--</option>
+                      {categories.map(item => (
+                        <option key={item.id} value={item.id}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </Input>
+                    {errors.category && (
+                      <div className="text-danger">{errors.category}</div>
+                    )}
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="name" sm={5}>
+                    <FormattedMessage id="sys.varPrice" />
+                    <span className="text-danger mandatory-field">*</span>
+                  </Label>
+                  <Col md={7}>
+                    <Input
+                      name="varPrice"
+                      id="var-price"
+                      value={varPrice}
+                      onChange={handleChange}
+                    />
+                    {errors.varPrice && (
+                      <div className="text-danger">{errors.varPrice}</div>
+                    )}
+                  </Col>
+                </FormGroup>
+                <FormGroup row>
+                  <Label for="name" sm={5}>
+                    <FormattedMessage id="sys.qty" />
+                    <span className="text-danger mandatory-field">*</span>
+                  </Label>
+                  <Col md={7}>
+                    <Input
+                      name="qty"
+                      id="qty"
+                      type="number"
+                      style={{ width: 60, padding: 2 }}
+                      value={qty}
+                      onChange={handleChange}
+                    />
+                    {errors.qty && (
+                      <div className="text-danger">{errors.qty}</div>
+                    )}
+                  </Col>
+                </FormGroup>
               </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="name" sm={5}>
-                <FormattedMessage id="sys.category" />
-                <span className="text-danger mandatory-field">*</span>
-              </Label>
-              <Col md={7}>
-                <Field
-                  component={renderSelect}
-                  name="category"
-                  className="form-control"
-                  id="category"
-                  data={categories}
-                  validate={[required]}
-                />
+              <Col md={2} style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <Button color="success" type="submit" disabled={isSubmitting}>
+                  <FormattedMessage id="sys.add" />
+                </Button>
               </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="name" sm={5}>
-                <FormattedMessage id="sys.varPrice" />
-                <span className="text-danger mandatory-field">*</span>
-              </Label>
-              <Col md={7}>
-                <Field
-                  component={renderField}
-                  name="varPrice"
-                  className="form-control"
-                  id="var-price"
-                  validate={[required]}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="name" sm={5}>
-                <FormattedMessage id="sys.qty" />
-                <span className="text-danger mandatory-field">*</span>
-              </Label>
-              <Col md={7}>
-                <Field
-                  component={renderField}
-                  name="qty"
-                  id="qty"
-                  type="number"
-                  style={{ width: 60, padding: 2 }}
-                  validate={[required]}
-                />
-              </Col>
-            </FormGroup>
-          </Col>
-          <Col md={2} style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <Button color="success"><FormattedMessage id="sys.add" /></Button>
-          </Col>
-        </Row>
-      </Form >
+            </Row>
+          </Form>
+        )}
+      </Formik>
     );
   }
 }
 
 ProductAttributeForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
   storeId: PropTypes.string.isRequired,
   intl: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  reset: PropTypes.func.isRequired,
+  reset: PropTypes.func,
   match: PropTypes.object,
   categories: PropTypes.array.isRequired,
   history: PropTypes.object.isRequired,
 };
 
-ProductAttributeForm = reduxForm({
-  form: 'productAttributeForm',
-})(ProductAttributeForm);
-
 export default withRouter(
   connect(state => {
     return {
-      initialValues: { search: '', qty: '1' },
       categories: [],
-      enableReinitialize: true,
     };
   })(injectIntl(ProductAttributeForm))
 );

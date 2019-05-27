@@ -18,7 +18,6 @@ import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import jwt from 'jsonwebtoken';
 import classnames from 'classnames';
-import { MdSave } from 'react-icons/md';
 import AccountSettingForm from './account/AccountSettingForm';
 import PasswordForm from './account/PasswordForm';
 import StoreSettingForm from './setting/StoreSettingForm';
@@ -42,21 +41,18 @@ class Setting extends Component {
     }
   };
 
-  handleSettingSubmit = values => {
-    console.log(values);
-  };
-
   render() {
+    const { history } = this.props;
     const {
-      settings,
-      history,
-    } = this.props;
-    const { data: { storeId, accountId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+      data: { storeId, accountId },
+    } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     return (
       <div>
         <div className="page-navbar">
-          <div className="page-name"><FormattedMessage id="sys.settings" /></div>
+          <div className="page-name">
+            <FormattedMessage id="sys.settings" />
+          </div>
           <Breadcrumb>
             <BreadcrumbItem>
               <Button color="link" onClick={() => history.push('/dashboard')}>
@@ -125,36 +121,10 @@ class Setting extends Component {
               className="bg-white padding-v20 padding-h20"
             >
               <TabPane tabId="1">
-                <Row>
-                  <Col sm="12">
-                    <Button size="sm" color="primary" className="pull-right">
-                      <MdSave />
-                      &nbsp;
-                      <FormattedMessage id="sys.save" />
-                    </Button>
-                    <br />
-                    <br />
-                    <StoreSettingForm
-                      storeId={storeId}
-                    />
-                  </Col>
-                </Row>
+                <StoreSettingForm storeId={storeId} />
               </TabPane>
               <TabPane tabId="2">
-                <Row>
-                  <Col sm="12">
-                    <Button size="sm" color="primary" className="pull-right">
-                      <MdSave />
-                      &nbsp;
-                      <FormattedMessage id="sys.save" />
-                    </Button>
-                    <br />
-                    <br />
-                    <AccountSettingForm
-                      onSubmit={this.handleApiSettingSubmit}
-                    />
-                  </Col>
-                </Row>
+                <AccountSettingForm onSubmit={this.handleApiSettingSubmit} />
               </TabPane>
               <TabPane tabId="3">
                 <Row>
@@ -209,7 +179,6 @@ class Setting extends Component {
 }
 
 Setting.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 

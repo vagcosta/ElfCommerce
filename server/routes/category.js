@@ -3,13 +3,8 @@
 const router = require('express').Router();
 const shortid = require('shortid');
 require('dotenv').load();
-const {
-  authMiddleware,
-  storeIdVerifier,
-} = require('../middlewares');
-const {
-  Category,
-} = require('../models');
+const { authMiddleware, storeIdVerifier } = require('../middlewares');
+const { Category } = require('../models');
 const { UnauthorisedError } = require('../exceptions');
 
 router.get(
@@ -41,16 +36,15 @@ router.post(
   [authMiddleware, storeIdVerifier],
   async (req, res) => {
     try {
-      const {
-        name,
-        parentId,
-      } = req.body;
+      const { name, parentId } = req.body;
       const category = new Category(
         shortid.generate(),
         name,
         req.params.storeId,
         res.locals.auth.accountId,
+        parentId ? 2 : 1,
         parentId,
+        true
       );
       const data = await category.add(category);
 
@@ -66,16 +60,13 @@ router.put(
   [authMiddleware, storeIdVerifier],
   async (req, res) => {
     try {
-      const {
-        name,
-        parentId,
-      } = req.body;
+      const { name, parentId } = req.body;
       const category = new Category(
         req.params.categoryId,
         name,
         req.params.storeId,
         res.locals.auth.accountId,
-        parentId,
+        parentId
       );
       const data = await category.update(category);
 

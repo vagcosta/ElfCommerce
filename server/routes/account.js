@@ -6,16 +6,9 @@ const moment = require('moment');
 const uniqid = require('uniqid');
 const randomstring = require('randomstring');
 require('dotenv').load();
-const {
-  authMiddleware,
-  storeIdVerifier,
-} = require('../middlewares');
-const {
-  Account,
-} = require('../models');
-const {
-  UnauthorisedError,
-} = require('../exceptions');
+const { authMiddleware, storeIdVerifier } = require('../middlewares');
+const { Account } = require('../models');
+const { UnauthorisedError } = require('../exceptions');
 const {
   senderEmail,
   sendgridApiKey,
@@ -23,7 +16,6 @@ const {
   elasticemailApiKey,
   elasticemailDailyLimit,
 } = process.env;
-
 
 router.get(
   '/stores/:storeId/accounts',
@@ -39,9 +31,7 @@ router.get(
           req.query.page || 1,
           req.query.size || 20
         );
-        const count = await account.getTotalCountByStoreId(
-          req.params.storeId
-        );
+        const count = await account.getTotalCountByStoreId(req.params.storeId);
 
         res.send({ data, count });
       } else {
@@ -53,7 +43,8 @@ router.get(
   }
 );
 
-router.post('/stores/:storeId/accounts',
+router.post(
+  '/stores/:storeId/accounts',
   [authMiddleware, storeIdVerifier],
   async (req, res) => {
     try {
@@ -75,17 +66,28 @@ router.post('/stores/:storeId/accounts',
 
       if (acct.role == 1) {
         const data = await account.add(account);
-        const result = await sendEmail({
-          to: req.body.email,
-          from: senderEmail,
-          subject: 'Your new account has been created.',
-          message: `Hi ${req.body.name}: <br /><br />Your account has been created and your temp password is: <b>${password}</b>.<br /><br />Please change your password after login.`,
-          recipient: req.body.name,
-          sender: 'Admin',
-        }, {
-            elasticEmail: { apiKey: elasticemailApiKey, dailyLimit: elasticemailDailyLimit },
-            sendGrid: { apiKey: sendgridApiKey, dailyLimit: sendgridDailyLimit },
-          });
+        const result = await sendEmail(
+          {
+            to: req.body.email,
+            from: senderEmail,
+            subject: 'Your new account has been created.',
+            message: `Hi ${
+              req.body.name
+            }: <br /><br />Your account has been created and your temp password is: <b>${password}</b>.<br /><br />Please change your password after login.`,
+            recipient: req.body.name,
+            sender: 'Admin',
+          },
+          {
+            elasticEmail: {
+              apiKey: elasticemailApiKey,
+              dailyLimit: elasticemailDailyLimit,
+            },
+            sendGrid: {
+              apiKey: sendgridApiKey,
+              dailyLimit: sendgridDailyLimit,
+            },
+          }
+        );
         res.send(data);
       } else {
         throw new UnauthorisedError('Unauthorised action.');
@@ -93,7 +95,8 @@ router.post('/stores/:storeId/accounts',
     } catch (err) {
       res.status(err.statusCode).send(err);
     }
-  });
+  }
+);
 
 router.get(
   '/stores/:storeId/accounts/:accountId',
@@ -115,7 +118,6 @@ router.get(
     }
   }
 );
-
 
 router.put(
   '/stores/:storeId/accounts/:accountId',

@@ -26,7 +26,7 @@ function Category(
   this.storeId = storeId;
   this.addedBy = addedBy;
   this.level = level;
-  this.parentId = parentId;
+  this.parentId = parentId || '';
   this.status = status;
   if (dbConn !== undefined) {
     this.db = dbConn;
@@ -127,7 +127,7 @@ Category.prototype.add = function(category) {
       const { code, name, storeId, addedBy, parentId } = category;
 
       (this.db || db).query(
-        `insert into category(code, name, store_id, added_by, parent_id) 
+        `insert into category(code, name, store_id, added_by, level, parent_id) 
          values('${code}', '${name}', '${storeId}', '${addedBy}', ${
           parentId ? 2 : 1
         }, '${parentId ? parentId : code}')`,

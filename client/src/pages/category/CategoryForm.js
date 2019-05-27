@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
-import { Col, Form, FormGroup, Label, Button, Input, Alert } from 'reactstrap';
+import { Col, FormGroup, Label, Button, Input, Alert } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { MdSave } from 'react-icons/md';
 import {
@@ -14,39 +15,13 @@ import {
 } from '../../modules/category';
 import { Loader } from '../../components';
 
-const required = value => (value ? undefined : 'Required');
-
-const renderField = ({
-  input,
-  placeholder,
-  type,
-  meta: { touched, error },
-}) => (
-    <div>
-      <Input {...input} placeholder={placeholder} type={type} />
-      {touched && (error && <span className="text-danger">{error}</span>)}
-    </div>
-  );
-
-const renderSelect = ({ input, disabled, data, meta: { touched, error } }) => (
-  <div>
-    <select {...input} className="form-control" disabled={disabled}>
-      <option />
-      {data.map(cat => (
-        <option key={cat.code} value={cat.code}>
-          {cat.name}
-        </option>
-      ))}
-    </select>
-    {touched && (error && <div><span className="text-danger">{error}</span></div>)}
-  </div>
-);
+const categoryValidation = Yup.object().shape({
+  name: Yup.string().required('Required'),
+});
 
 class CategoryForm extends Component {
   componentWillMount() {
-    this.props.dispatch(
-      clearCategoryDetails()
-    );
+    this.props.dispatch(clearCategoryDetails());
   }
 
   componentDidMount() {
@@ -92,73 +67,99 @@ class CategoryForm extends Component {
   };
 
   render() {
-    const {
-      handleSubmit,
-      categories,
-      categoryDetails,
-      mode,
-      done,
-      error,
-    } = this.props;
+    const { categories, categoryDetails, mode, done, error } = this.props;
 
-    return (
-      mode === 'update' && !('code' in categoryDetails) ?
-        <Loader /> :
-        <Form onSubmit={handleSubmit(data => this.onSubmit(data))}>
-          <Button size="sm" color="primary" className="pull-right form-btn">
-            <MdSave />
-            &nbsp;
-            <FormattedMessage id="sys.save" />
-          </Button>
-          <br />
-          <br />
-          {
-            error ?
+    return mode === 'update' && !('code' in categoryDetails) ? (
+      <Loader />
+    ) : (
+      <Formik
+        enableReinitialize
+        initialValues={{ ...categoryDetails }}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(true);
+          this.onSubmit(values);
+          setSubmitting(false);
+        }}
+        validationSchema={categoryValidation}
+      >
+        {({
+          values: { name = '', parentId = '' },
+          handleChange,
+          isSubmitting,
+          errors,
+        }) => (
+          <Form>
+            <Button
+              type="submit"
+              size="sm"
+              color="primary"
+              className="pull-right form-btn"
+              disabled={isSubmitting}
+            >
+              <MdSave />
+              &nbsp;
+              <FormattedMessage id="sys.save" />
+            </Button>
+            <br />
+            <br />
+            {error ? (
               <Alert color="danger">
                 <FormattedMessage id="sys.newFailed" />
-              </Alert> :
-              done ?
-                <Alert color="success">
-                  <FormattedMessage id="sys.newSuccess" />
-                </Alert> : null
-          }
-          <FormGroup row>
-            <Label for="name" sm={2}>
-              <FormattedMessage id="sys.categoryName" />
-              <span className="text-danger mandatory-field">*</span>
-            </Label>
-            <Col sm={10}>
-              <Field
-                component={renderField}
-                name="name"
-                className="form-control"
-                id="name"
-                validate={[required]}
-              />
-            </Col>
-          </FormGroup>
-          <FormGroup row>
-            <Label for="parent-id" sm={2}>
-              <FormattedMessage id="sys.parentCategory" />
-            </Label>
-            <Col sm={10}>
-              <Field
-                component={renderSelect}
-                id="parent-id"
-                name="parentId"
-                data={categories.filter(cat => cat.level === 1)}
-                disabled={categoryDetails.level === 1 ? true : false}
-              >
-              </Field>
-            </Col>
-          </FormGroup>
-        </Form >
+              </Alert>
+            ) : done ? (
+              <Alert color="success">
+                <FormattedMessage id="sys.newSuccess" />
+              </Alert>
+            ) : null}
+            <FormGroup row>
+              <Label for="name" sm={2}>
+                <FormattedMessage id="sys.categoryName" />
+                <span className="text-danger mandatory-field">*</span>
+              </Label>
+              <Col sm={10}>
+                <Input
+                  name="name"
+                  id="name"
+                  value={name}
+                  onChange={handleChange}
+                />
+                {errors.name && (
+                  <div className="text-danger">{errors.name}</div>
+                )}
+              </Col>
+            </FormGroup>
+            <FormGroup row>
+              <Label for="parent-id" sm={2}>
+                <FormattedMessage id="sys.parentCategory" />
+              </Label>
+              <Col sm={10}>
+                <Input
+                  type="select"
+                  id="parent-id"
+                  name="parentId"
+                  value={parentId}
+                  onChange={handleChange}
+                  disabled={categoryDetails.level === 1 ? true : false}
+                >
+                  <option value="">--</option>
+                  {categories
+                    .filter(cat => cat.level === 1)
+                    .map(cat => (
+                      <option key={cat.code} value={cat.code}>
+                        {cat.name}
+                      </option>
+                    ))}
+                </Input>
+              </Col>
+            </FormGroup>
+          </Form>
+        )}
+      </Formik>
     );
   }
 }
 
 CategoryForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
   storeId: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
@@ -170,19 +171,13 @@ CategoryForm.propTypes = {
   mode: PropTypes.string.isRequired,
 };
 
-CategoryForm = reduxForm({
-  form: 'categoryForm',
-})(CategoryForm);
-
 export default withRouter(
   connect(state => {
     return {
-      initialValues: state.categoryReducer.categoryDetails,
       categoryDetails: state.categoryReducer.categoryDetails,
       done: state.categoryReducer.done,
       error: state.categoryReducer.error,
       categories: state.categoryReducer.categories.data,
-      enableReinitialize: true,
     };
   })(CategoryForm)
 );
