@@ -20,7 +20,9 @@ const categoryValidation = Yup.object().shape({
 });
 
 class CategoryForm extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
     this.props.dispatch(clearCategoryDetails());
   }
 
@@ -35,7 +37,6 @@ class CategoryForm extends Component {
     } = this.props;
 
     dispatch(fetchCategories({ storeId, pageSize: 200, pageNo: 1 }));
-
     if (mode === 'update') {
       dispatch(
         fetchCategoryDetails({

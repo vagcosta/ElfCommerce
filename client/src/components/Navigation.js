@@ -15,7 +15,7 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { MdNotificationsNone } from 'react-icons/md';
 import jwt from 'jsonwebtoken';
-import { fetchAccountDetails } from '../modules/account';
+import { fetchAccount } from '../modules/account';
 import config from '../config';
 
 class Navigation extends Component {
@@ -24,9 +24,11 @@ class Navigation extends Component {
 
     if (window.location.pathname !== '/') {
       if (localStorage.getItem(config.accessTokenKey)) {
-        const { data: { storeId, accountId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+        const {
+          data: { storeId, accountId },
+        } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
-        dispatch(fetchAccountDetails({ storeId, accountId }));
+        dispatch(fetchAccount({ storeId, accountId }));
       } else {
         window.location.href = '/';
       }
@@ -94,7 +96,10 @@ Navigation.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  account: state.accountReducer.accountDetails,
+  account: state.accountReducer.accountSession,
 });
 
-export default connect(mapStateToProps, null)(Navigation);
+export default connect(
+  mapStateToProps,
+  null
+)(Navigation);

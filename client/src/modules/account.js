@@ -6,6 +6,8 @@ const SUBMIT = 'app.account.submit';
 const SUBMIT_SUCCESS = 'app.account.submitSuccess';
 const GET_ALL = 'app.account.getAll';
 const GET_ALL_SUCCESS = 'app.account.getAllSuccess';
+const GET_ACCOUNT = 'app.account.getAccount';
+const GET_ACCOUNT_SUCCESS = 'app.account.getAccountSuccess';
 const GET_ITEM = 'app.account.getItem';
 const GET_ITEM_SUCCESS = 'app.account.getItemSuccess';
 const UPDATE_ITEM_STATUS = 'app.account.updateItemStatus';
@@ -16,6 +18,7 @@ const CLEAR_ITEM = 'app.account.clearItem';
 const initialState = {
   accounts: { data: [], count: 0 },
   accountDetails: {},
+  accountSession: {},
   loaded: false,
   done: false,
   error: false,
@@ -26,26 +29,36 @@ export default function accountReducer(state = initialState, action) {
     case GET_ALL_SUCCESS:
       return { ...state, accounts: action.value, loaded: true };
     case GET_ITEM_SUCCESS:
-      return { ...state, accountDetails: action.value };
+      return {
+        ...state,
+        accountDetails: action.value,
+      };
     case SUBMIT_SUCCESS:
       return { ...state, accountDetails: action.value, done: true };
+    case GET_ACCOUNT_SUCCESS:
+      return { ...state, accountSession: action.value };
     case UPDATE_ITEM_STATUS_SUCCESS:
-      const newList = (state.accounts.data.map(item => {
-
+      const newList = state.accounts.data.map(item => {
         if (item.code === action.value.accountId) {
-
           item.status = action.value.status;
         }
 
         return item;
-      }));
+      });
 
       return {
         ...state,
         accounts: { data: newList, count: state.accounts.count },
       };
     case CLEAR_ITEM:
-      return { ...state, ...initialState };
+      return {
+        ...state,
+        accounts: { data: [], count: 0 },
+        accountDetails: {},
+        loaded: false,
+        done: false,
+        error: false,
+      };
     case FAILED:
       return { ...state, error: true };
     default:
@@ -71,6 +84,18 @@ export function fetchAccountDetails(data) {
 
 export function fetchAccountDetailsSuccess(data) {
   return { type: GET_ITEM_SUCCESS, value: data };
+}
+
+export function fetchAccount(data) {
+  return { type: GET_ACCOUNT, value: data };
+}
+
+export function fetchAccountSuccess(data) {
+  return { type: GET_ACCOUNT_SUCCESS, value: data };
+}
+
+export function fetchAccountFailed() {
+  return { type: FAILED };
 }
 
 export function fetchAccountDetailsFailed() {
@@ -110,7 +135,9 @@ export function* getAccountsHandler(action) {
     const { storeId, pageNo, pageSize } = action.value;
     const res = yield axios({
       method: 'get',
-      url: `${config.apiDomain}/stores/${storeId}/accounts?page=${pageNo}&size=${pageSize}`,
+      url: `${
+        config.apiDomain
+      }/stores/${storeId}/accounts?page=${pageNo}&size=${pageSize}`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
       },
@@ -119,22 +146,42 @@ export function* getAccountsHandler(action) {
     yield put(fetchAccountsSuccess(res.data));
   } catch (error) {
     yield put(fetchAccountsFailed());
-
   }
 }
 
 export function* getAccountDetailsHandler(action) {
   try {
     const { storeId, accountId } = action.value;
-    const res = yield axios.get(`${config.apiDomain}/stores/${storeId}/accounts/${accountId}`, {
-      headers: {
-        authorization: localStorage.getItem(config.accessTokenKey),
-      },
-    });
+    const res = yield axios.get(
+      `${config.apiDomain}/stores/${storeId}/accounts/${accountId}`,
+      {
+        headers: {
+          authorization: localStorage.getItem(config.accessTokenKey),
+        },
+      }
+    );
 
     yield put(fetchAccountDetailsSuccess(res.data));
   } catch (error) {
     yield put(fetchAccountDetailsFailed());
+  }
+}
+
+export function* getAccountHandler(action) {
+  try {
+    const { storeId, accountId } = action.value;
+    const res = yield axios.get(
+      `${config.apiDomain}/stores/${storeId}/accounts/${accountId}`,
+      {
+        headers: {
+          authorization: localStorage.getItem(config.accessTokenKey),
+        },
+      }
+    );
+
+    yield put(fetchAccountSuccess(res.data));
+  } catch (error) {
+    yield put(fetchAccountFailed());
   }
 }
 
@@ -143,7 +190,9 @@ export function* upsertAccountHandler(action) {
     const { value } = action;
     const res = yield axios({
       method: value.mode === 'new' ? 'post' : 'put',
-      url: `${config.apiDomain}/stores/${value.storeId}/accounts${value.mode === 'new' ? '' : '/' + value.accountId}`,
+      url: `${config.apiDomain}/stores/${value.storeId}/accounts${
+        value.mode === 'new' ? '' : '/' + value.accountId
+      }`,
       headers: {
         authorization: localStorage.getItem(config.accessTokenKey),
         'Content-Type': 'application/json',
@@ -177,6 +226,7 @@ export function* updateAccountStatusHandler(action) {
 export const accountSagas = [
   takeEvery(GET_ALL, getAccountsHandler),
   takeEvery(GET_ITEM, getAccountDetailsHandler),
+  takeEvery(GET_ACCOUNT, getAccountHandler),
   takeEvery(SUBMIT, upsertAccountHandler),
   takeEvery(UPDATE_ITEM_STATUS, updateAccountStatusHandler),
 ];
