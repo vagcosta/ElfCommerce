@@ -1,6 +1,7 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
+/server/node_modules
 /client/node_modules
 /client/src/config.js
 .vscode
@@ -11,7 +12,7 @@
 .nyc_output/
 
 # production
-/build
+/server/build
 /client/build
 
 # uploaded files

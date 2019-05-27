@@ -58,24 +58,14 @@ senderEmail=SYSTEM_EMAIL_SENDER_EMAIL
 
 Step 3, install all dependancies for ExpressJS
 
-**Yarn**
-
 ```console
 cd server && yarn install
 ```
 
 Step 4, install all dependancies for ReactJS
 
-**Yarn**
-
 ```console
 cd client && yarn install
-```
-
-**NPM**
-
-```console
-cd client && npm install
 ```
 
 Step 5, create your own config.js in **client/src** directory with following settings:
@@ -116,8 +106,6 @@ claudia create --handler lambda.handler --deploy-proxy-api --region AWS_REGION_N
 
 ## How to run this?
 
-**Yarn**
-
 ```console
 cd client && yarn start
 ```
@@ -127,7 +115,8 @@ cd client && yarn start
 For every main directory (components, containers etc.), there should be a \_\_tests\_\_ directory for all unit test cases.
 
 ```console
-yarn test [test_directory]
+cd clint && yarn test [test_directory]
+cd server && yarn test [test_directory]
 ```
 
 ## How to contribute to this project?
