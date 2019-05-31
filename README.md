@@ -1,7 +1,7 @@
 # <img src="https://image.flaticon.com/icons/svg/235/235111.svg" width="64" /> ElfCommerce
 
 <p>
-  <img src="https://img.shields.io/badge/React-16.4.+-lightblue.svg">
+  <img src="https://img.shields.io/badge/React-16.8.+-lightblue.svg">
   <img src="https://img.shields.io/badge/Redux-4.0.+-purple.svg">
   <img src="https://img.shields.io/badge/Nodejs-8.10.+-green.svg">
   <img src="https://img.shields.io/badge/Express-4.16.+-black.svg">
