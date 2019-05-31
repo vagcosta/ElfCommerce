@@ -10,7 +10,7 @@
     "ecmaVersion": 2017
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "plugins": ["react"],
+  "plugins": ["react", "react-hooks"],
   "rules": {
     "no-unused-vars": 0,
     "max-len": [
@@ -34,6 +34,8 @@
       }
     ],
     "comma-dangle": [2, "always-multiline"],
-    "func-names": [2, "never"]
+    "func-names": [2, "never"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }
