@@ -3,7 +3,6 @@ import { manufacturerSagas } from './modules/manufacturer';
 import { supplierSagas } from './modules/supplier';
 import { productSagas } from './modules/product';
 import { accountSagas } from './modules/account';
-import { authSagas } from './modules/auth';
 import { categorySagas } from './modules/category';
 import { orderSagas } from './modules/order';
 import { reportSagas } from './modules/report';
@@ -18,7 +17,6 @@ export default function* rootSaga() {
     dashboardSagas,
     orderSagas,
     categorySagas,
-    authSagas,
     accountSagas,
     productSagas,
     supplierSagas,

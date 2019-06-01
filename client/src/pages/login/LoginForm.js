@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Input, Button, Alert } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
@@ -102,8 +101,6 @@ const LoginForm = props => {
 
 LoginForm.propTypes = {
   intl: PropTypes.object.isRequired,
-  auth: PropTypes.any,
-  history: PropTypes.object.isRequired,
 };
 
 export default withRouter(injectIntl(LoginForm));

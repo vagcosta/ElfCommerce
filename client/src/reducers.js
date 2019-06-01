@@ -5,7 +5,6 @@ import dashboardReducer from './modules/dashboard';
 import pathReducer from './modules/ui';
 import reportReducer from './modules/report';
 import settingReducer from './modules/setting';
-import authReducer from './modules/auth';
 import manufacturerReducer from './modules/manufacturer';
 import supplierReducer from './modules/supplier';
 import productReducer from './modules/product';
@@ -22,7 +21,6 @@ const rootReducer = combineReducers({
   pathReducer,
   reportReducer,
   settingReducer,
-  authReducer,
   manufacturerReducer,
   supplierReducer,
   publicReducer,

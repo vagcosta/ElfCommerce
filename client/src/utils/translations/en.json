@@ -164,5 +164,6 @@
   "sys.user": "User",
   "sys.joinedOn": "Joined on",
   "sys.revoke": "Revoke",
-  "sys.revoked": "Revoked"
+  "sys.revoked": "Revoked",
+  "sys.defaultPwd": "Default password: 123"
 }
