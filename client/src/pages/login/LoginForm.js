@@ -13,10 +13,7 @@ const LoginForm = props => {
   } = props;
 
   const [showLoading, setLoading] = useState(false);
-  const [values, setValues] = useState({
-    username: '',
-    password: '',
-  });
+  const [values, setValues] = useState(null);
   const [auth, setAuth] = useState(null);
 
   localStorage.removeItem(config.accessTokenKey);

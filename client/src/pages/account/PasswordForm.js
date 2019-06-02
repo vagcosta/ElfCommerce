@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -16,101 +16,108 @@ import {
   Col,
   Alert,
 } from 'reactstrap';
-import { submitAccount } from '../../modules/account';
+import config from '../../config';
 
 const passwordValidation = Yup.object().shape({
   password: Yup.string().required('Required'),
 });
 
-class PasswordForm extends Component {
-  onSubmit = data => {
-    const { dispatch, storeId, accountId } = this.props;
+const PasswordForm = props => {
+  const { storeId, accountId } = props;
+  const [submit, setSubmit] = useState(false);
+  const [error, setError] = useState(false);
+  const [values, setValues] = useState(null);
+  const [done, setDone] = useState(false);
 
-    data.storeId = storeId;
-    data.mode = 'update';
-    data.accountId = accountId;
+  useEffect(() => {
+    async function submit() {
+      try {
+        const res = await axios({
+          method: 'put',
+          url: `${config.apiDomain}/stores/${storeId}/accounts/${accountId}`,
+          headers: {
+            authorization: localStorage.getItem(config.accessTokenKey),
+            'Content-Type': 'application/json',
+          },
+          data: values,
+        });
+        setDone(true);
+      } catch (e) {
+        setError(true);
+      } finally {
+        setValues(null);
+      }
+    }
 
-    dispatch(submitAccount(data));
-  };
+    if (submit && values) {
+      submit();
+    }
+  }, [submit]);
 
-  render() {
-    const { error, done } = this.props;
-
-    return (
-      <Formik
-        enableReinitialize
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(true);
-          this.onSubmit(values);
-          setSubmitting(false);
-        }}
-        validationSchema={passwordValidation}
-      >
-        {({ handleChange, isSubmitting, errors }) => (
-          <Form id="reset-pwd-form">
-            <Card>
-              <CardHeader>
-                <FormattedMessage id="sys.resetPwd" />
-              </CardHeader>
-              <CardBody>
-                <FormGroup row>
-                  <Label for="current-pwd" sm={4}>
-                    <FormattedMessage id="sys.newPwd" />
-                    <span className="text-danger mandatory-field">*</span>
-                  </Label>
-                  <Col sm={8}>
-                    <Input
-                      type="password"
-                      name="password"
-                      id="password"
-                      onChange={handleChange}
-                    />
-                    {errors.password && (
-                      <div className="text-danger">{errors.password}</div>
-                    )}
-                  </Col>
-                </FormGroup>
-                <Button
-                  color="primary"
-                  style={{ marginTop: 10 }}
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  <FormattedMessage id="sys.save" />
-                </Button>
-                <br />
-                <br />
-                {error ? (
-                  <Alert color="danger">
-                    <FormattedMessage id="sys.newFailed" />
-                  </Alert>
-                ) : done ? (
-                  <Alert color="success">
-                    <FormattedMessage id="sys.newSuccess" />
-                  </Alert>
-                ) : null}
-              </CardBody>
-            </Card>
-          </Form>
-        )}
-      </Formik>
-    );
-  }
-}
-
-PasswordForm.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  storeId: PropTypes.string.isRequired,
-  accountId: PropTypes.string.isRequired,
-  error: PropTypes.bool,
-  done: PropTypes.bool.isRequired,
+  return (
+    <Formik
+      onSubmit={(values, { setSubmitting }) => {
+        setSubmitting(true);
+        setValues(values);
+        setSubmit(true);
+        setSubmitting(false);
+      }}
+      validationSchema={passwordValidation}
+    >
+      {({ handleChange, isSubmitting, errors }) => (
+        <Form id="reset-pwd-form">
+          <Card>
+            <CardHeader>
+              <FormattedMessage id="sys.resetPwd" />
+            </CardHeader>
+            <CardBody>
+              <FormGroup row>
+                <Label for="current-pwd" sm={4}>
+                  <FormattedMessage id="sys.newPwd" />
+                  <span className="text-danger mandatory-field">*</span>
+                </Label>
+                <Col sm={8}>
+                  <Input
+                    type="password"
+                    name="password"
+                    id="password"
+                    onChange={handleChange}
+                  />
+                  {errors.password && (
+                    <div className="text-danger">{errors.password}</div>
+                  )}
+                </Col>
+              </FormGroup>
+              <Button
+                color="primary"
+                style={{ marginTop: 10 }}
+                type="submit"
+                disabled={isSubmitting}
+              >
+                <FormattedMessage id="sys.save" />
+              </Button>
+              <br />
+              <br />
+              {error ? (
+                <Alert color="danger">
+                  <FormattedMessage id="sys.newFailed" />
+                </Alert>
+              ) : done ? (
+                <Alert color="success">
+                  <FormattedMessage id="sys.newSuccess" />
+                </Alert>
+              ) : null}
+            </CardBody>
+          </Card>
+        </Form>
+      )}
+    </Formik>
+  );
 };
 
-export default withRouter(
-  connect(state => {
-    return {
-      done: state.accountReducer.done,
-      error: state.accountReducer.error,
-    };
-  })(PasswordForm)
-);
+PasswordForm.propTypes = {
+  storeId: PropTypes.string.isRequired,
+  accountId: PropTypes.string.isRequired,
+};
+
+export default withRouter(PasswordForm);

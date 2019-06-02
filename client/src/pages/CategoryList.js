@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import axios from 'axios';
 import {
   Table,
   Col,
@@ -18,210 +18,204 @@ import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
 import CategoryListItem from './category/CategoryListItem';
 import { Loader } from '../components';
-import { fetchCategories, updateCategoryStatus } from '../modules/category';
 import config from '../config';
 
-class CategoryList extends Component {
-  constructor(props) {
-    super(props);
-    const {
-      data: { storeId },
-    } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+const CategoryList = props => {
+  const {
+    history,
+    intl: { formatMessage },
+  } = props;
 
-    this.state = {
-      storeId,
-      pageSize: 200,
-    };
-  }
+  const {
+    data: { storeId },
+  } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    /*TODO: The page size is temporarily set to 200 until 
-      I figure out a good way to handle pagination for list with sub-items
-    */
-    dispatch(
-      fetchCategories({
-        storeId: this.state.storeId,
-        pageSize: this.state.pageSize,
-        pageNo: 1,
-      })
-    );
-  }
+  const [pageNo, setPageNo] = useState(1);
+  const [pageSize, setPageSize] = useState(200);
+  const [result, setResult] = useState({ items: [], count: 0 });
+  const [total, setTotal] = useState(-1);
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  onViewClick = id => {
+  useEffect(() => {
+    async function fetchItems() {
+      try {
+        const res = await axios({
+          method: 'get',
+          url: `${
+            config.apiDomain
+          }/stores/${storeId}/categories?page=${pageNo}&size=${pageSize}`,
+          headers: {
+            authorization: localStorage.getItem(config.accessTokenKey),
+          },
+        });
+
+        const diff = res.data.count / pageSize;
+
+        setResult({ items: res.data.data, count: res.data.count });
+        setTotal(Number.isInteger(diff) ? diff : parseInt(diff) + 1);
+      } catch (e) {
+        //TODO: add error msg
+        setResult({ items: [], count: 0 });
+      }
+    }
+    fetchItems();
+  }, [pageNo, selectedItem]);
+
+  useEffect(() => {
+    async function updateStatus() {
+      try {
+        const res = await axios({
+          method: !selectedItem.status ? 'delete' : 'patch',
+          url: `${config.apiDomain}/stores/${storeId}/categories/${
+            selectedItem.id
+          }`,
+          headers: {
+            authorization: localStorage.getItem(config.accessTokenKey),
+          },
+        });
+      } catch (e) {
+        //TODO: to be rewritten
+        setSelectedItem(null);
+      } finally {
+        setSelectedItem(null);
+      }
+    }
+
+    if (selectedItem) {
+      updateStatus();
+    }
+  }, [selectedItem]);
+
+  const viewItem = id => {
     this.props.history.push(`/categories/${id}`);
   };
 
-  onStatusUpdateClick = (id, status) => {
-    const { dispatch } = this.props;
-
-    dispatch(
-      updateCategoryStatus({
-        storeId: this.state.storeId,
-        categoryId: id,
-        status,
-      })
-    );
+  const updateStatus = (id, status) => {
+    setSelectedItem({ id, status });
   };
 
-  onPageChange = page => {
-    const { dispatch } = this.props;
-    dispatch(
-      fetchCategories({
-        storeId: this.state.storeId,
-        pageSize: this.state.pageSize,
-        pageNo: page.selected + 1,
-      })
-    );
+  const changePage = page => {
+    setPageNo(page.selected + 1);
   };
 
-  render() {
-    const {
-      history,
-      categories,
-      total,
-      count,
-      loaded,
-      intl: { formatMessage },
-    } = this.props;
-
-    return (
-      <div>
-        <div className="page-navbar">
-          <div className="page-name">
-            <FormattedMessage id="sys.categories" />
-          </div>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Button color="link" onClick={() => history.push('/dashboard')}>
-                <FormattedMessage id="sys.dashboard" />
-              </Button>
-            </BreadcrumbItem>
-            <BreadcrumbItem active>
-              <FormattedMessage id="sys.categories" />
-            </BreadcrumbItem>
-          </Breadcrumb>
+  return (
+    <div>
+      <div className="page-navbar">
+        <div className="page-name">
+          <FormattedMessage id="sys.categories" />
         </div>
-        <div className="content-body">
-          <div className="table-container">
-            <Col md={12} className="table-content">
-              {!loaded ? (
-                <Loader />
-              ) : (
-                <div>
-                  <div
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Button color="link" onClick={() => history.push('/dashboard')}>
+              <FormattedMessage id="sys.dashboard" />
+            </Button>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>
+            <FormattedMessage id="sys.categories" />
+          </BreadcrumbItem>
+        </Breadcrumb>
+      </div>
+      <div className="content-body">
+        <div className="table-container">
+          <Col md={12} className="table-content">
+            {total < 0 ? (
+              <Loader />
+            ) : (
+              <div>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <div>
+                    <InputGroup size="sm">
+                      <Input
+                        placeholder={formatMessage({ id: 'sys.search' })}
+                      />
+                      <InputGroupAddon addonType="append">
+                        <Button color="secondary">
+                          <MdSearch />
+                        </Button>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </div>
+                  <Button
+                    size="sm"
+                    color="primary"
+                    className="pull-right form-btn"
+                    onClick={() => history.push('/new-category')}
                   >
-                    <div>
-                      <InputGroup size="sm">
-                        <Input
-                          placeholder={formatMessage({ id: 'sys.search' })}
-                        />
-                        <InputGroupAddon addonType="append">
-                          <Button color="secondary">
-                            <MdSearch />
-                          </Button>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </div>
-                    <Button
-                      size="sm"
-                      color="primary"
-                      className="pull-right form-btn"
-                      onClick={() => history.push('/new-category')}
-                    >
-                      <MdAddCircleOutline />
-                      &nbsp;
-                      <FormattedMessage id="sys.addNew" />
-                    </Button>
-                  </div>
-                  <br />
-                  <Table responsive size="sm">
-                    <thead className="table-header">
-                      <tr>
-                        <th width="40%">
-                          <FormattedMessage id="sys.name" />
-                        </th>
-                        <th width="10%">
-                          <FormattedMessage id="sys.status" />
-                        </th>
-                        <th width="10%" />
-                      </tr>
-                    </thead>
-
-                    {categories.length > 0 ? (
-                      categories.map(cat => (
-                        <CategoryListItem
-                          key={cat.code}
-                          id={cat.code}
-                          name={cat.name}
-                          level={cat.level}
-                          status={cat.status}
-                          onViewClick={this.onViewClick}
-                          onStatusUpdateClick={this.onStatusUpdateClick}
-                        />
-                      ))
-                    ) : (
-                      <tr>
-                        <td>
-                          <FormattedMessage id="sys.noRecords" />
-                        </td>
-                      </tr>
-                    )}
-                  </Table>
-                  <div className="pagination-container">
-                    <span className="text-muted">Total {count} entries</span>
-                    <ReactPaginate
-                      pageCount={total || 1}
-                      pageRangeDisplayed={3}
-                      marginPagesDisplayed={2}
-                      containerClassName="pagination"
-                      subContainerClassName="pages pagination"
-                      pageClassName="page-item"
-                      breakClassName="page-item"
-                      breakLabel="..."
-                      pageLinkClassName="page-link"
-                      previousLabel="‹"
-                      nextLabel="›"
-                      previousLinkClassName="page-link"
-                      nextLinkClassName="page-link"
-                      activeClassName="active"
-                      onPageChange={this.onPageChange}
-                    />
-                  </div>
+                    <MdAddCircleOutline />
+                    &nbsp;
+                    <FormattedMessage id="sys.addNew" />
+                  </Button>
                 </div>
-              )}
-            </Col>
-          </div>
+                <br />
+                <Table responsive size="sm">
+                  <thead className="table-header">
+                    <tr>
+                      <th width="40%">
+                        <FormattedMessage id="sys.name" />
+                      </th>
+                      <th width="10%">
+                        <FormattedMessage id="sys.status" />
+                      </th>
+                      <th width="10%" />
+                    </tr>
+                  </thead>
+
+                  {result.items.length ? (
+                    result.items.map(cat => (
+                      <CategoryListItem
+                        key={cat.code}
+                        id={cat.code}
+                        name={cat.name}
+                        level={cat.level}
+                        status={cat.status}
+                        onViewClick={viewItem}
+                        onStatusUpdateClick={updateStatus}
+                      />
+                    ))
+                  ) : (
+                    <tr>
+                      <td>
+                        <FormattedMessage id="sys.noRecords" />
+                      </td>
+                    </tr>
+                  )}
+                </Table>
+                <div className="pagination-container">
+                  <span className="text-muted">
+                    Total {result.count} entries
+                  </span>
+                  <ReactPaginate
+                    pageCount={total || 1}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    containerClassName="pagination"
+                    subContainerClassName="pages pagination"
+                    pageClassName="page-item"
+                    breakClassName="page-item"
+                    breakLabel="..."
+                    pageLinkClassName="page-link"
+                    previousLabel="‹"
+                    nextLabel="›"
+                    previousLinkClassName="page-link"
+                    nextLinkClassName="page-link"
+                    activeClassName="active"
+                    onPageChange={changePage}
+                  />
+                </div>
+              </div>
+            )}
+          </Col>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 CategoryList.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  categories: PropTypes.array.isRequired,
   intl: PropTypes.object.isRequired,
-  total: PropTypes.number.isRequired,
-  count: PropTypes.number.isRequired,
-  loaded: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => {
-  const diff = state.categoryReducer.categories.count / 20;
-  return {
-    categories: state.categoryReducer.categories.data,
-    count: state.categoryReducer.categories.count,
-    loaded: state.categoryReducer.loaded,
-    total: Number.isInteger(diff) ? diff : parseInt(diff) + 1,
-  };
-};
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    null
-  )(injectIntl(CategoryList))
-);
+export default withRouter(injectIntl(CategoryList));
