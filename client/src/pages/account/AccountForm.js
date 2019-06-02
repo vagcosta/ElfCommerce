@@ -39,11 +39,7 @@ const AccountForm = props => {
   const [submit, setSubmit] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-<<<<<<< HEAD
-  const [accountDetails, setAccountDetails] = useState({});
-=======
   const [accountDetails, setAccountDetails] = useState(null);
->>>>>>> hooks
 
   useEffect(() => {
     async function fetchAccountDetails({ storeId, id }) {
