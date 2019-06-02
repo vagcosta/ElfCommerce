@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import {
   Table,
   Col,
@@ -13,209 +13,219 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import {
-  MdAddCircleOutline,
-  MdSearch,
-} from 'react-icons/md';
+import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-import {
-  fetchSuppliers,
-  updateSupplierStatus,
-} from '../modules/supplier';
 import SupplierListItem from './supplier/SupplierListItem';
-import {
-  Loader,
-} from '../components';
+import { Loader } from '../components';
 import config from '../config';
 
-class SupplierList extends Component {
-  constructor(props) {
-    super(props);
-    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+const SupplierList = props => {
+  const {
+    history,
+    intl: { formatMessage },
+  } = props;
 
-    this.state = {
-      activePage: 1,
-      pageSize: 20,
-      storeId,
-    };
-  }
+  const {
+    data: { storeId },
+  } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
-  componentDidMount() {
-    const { dispatch } = this.props;
+  const [pageNo, setPageNo] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [result, setResult] = useState({ items: [], count: 0 });
+  const [total, setTotal] = useState(-1);
+  const [selectedItem, setSelectedItem] = useState(null);
 
-    dispatch(
-      fetchSuppliers(
-        {
-          storeId: this.state.storeId,
-          pageSize: this.state.pageSize,
-          pageNo: 1,
-        }
-      )
-    );
-  }
+  useEffect(() => {
+    async function fetchItems() {
+      try {
+        const res = await axios({
+          method: 'get',
+          url: `${
+            config.apiDomain
+          }/stores/${storeId}/suppliers?page=${pageNo}&size=${pageSize}`,
+          headers: {
+            authorization: localStorage.getItem(config.accessTokenKey),
+          },
+        });
 
-  onViewClick = id => {
-    this.props.history.push(`/suppliers/${id}`);
+        const diff = res.data.count / pageSize;
+        setResult({ items: res.data.data, count: res.data.count });
+        setTotal(Number.isInteger(diff) ? diff : parseInt(diff) + 1);
+      } catch (e) {
+        //TODO: add error msg
+        setResult({ items: [], count: 0 });
+      }
+    }
+    fetchItems();
+  }, [pageNo, selectedItem]);
+
+  useEffect(() => {
+    async function updateStatus() {
+      try {
+        const res = await axios({
+          method: !selectedItem.status ? 'delete' : 'patch',
+          url: `${config.apiDomain}/stores/${storeId}/suppliers/${
+            selectedItem.id
+          }`,
+          headers: {
+            authorization: localStorage.getItem(config.accessTokenKey),
+          },
+        });
+      } catch (e) {
+        //TODO: to be rewritten
+        setSelectedItem(null);
+      } finally {
+        setSelectedItem(null);
+      }
+    }
+
+    if (selectedItem) {
+      updateStatus();
+    }
+  }, [selectedItem]);
+
+  const viewItem = id => {
+    history.push(`/suppliers/${id}`);
   };
 
-  onStatusUpdateClick = (id, status) => {
-    const { dispatch } = this.props;
+  const updateStatus = (id, status) => {
+    setSelectedItem({ id, status });
+  };
 
-    dispatch(updateSupplierStatus({ storeId: this.state.storeId, supplierId: id, status }));
-  }
+  const changePage = page => {
+    setPageNo(page.selected + 1);
+  };
 
-  onPageChange = page => {
-    const { dispatch } = this.props;
-
-    dispatch(
-      fetchSuppliers(
-        {
-          storeId: this.state.storeId,
-          pageSize: this.state.pageSize,
-          pageNo: page.selected + 1,
-        }
-      )
-    );
-  }
-
-  render() {
-    const {
-      history,
-      suppliers,
-      total,
-      intl: { formatMessage },
-    } = this.props;
-
-    return (
-      <div>
-        <div className="page-navbar">
-          <div className="page-name"><FormattedMessage id="sys.suppliers" /></div>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <Button color="link" onClick={() => history.push('/dashboard')}>
-                <FormattedMessage id="sys.dashboard" />
-              </Button>
-            </BreadcrumbItem>
-            <BreadcrumbItem active>
-              <FormattedMessage id="sys.suppliers" />
-            </BreadcrumbItem>
-          </Breadcrumb>
+  return (
+    <div>
+      <div className="page-navbar">
+        <div className="page-name">
+          <FormattedMessage id="sys.suppliers" />
         </div>
-        <div className="content-body">
-          <div className="table-container">
-            <Col md={12} className="table-content">
-              {
-                !suppliers ? <Loader /> :
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Button color="link" onClick={() => history.push('/dashboard')}>
+              <FormattedMessage id="sys.dashboard" />
+            </Button>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>
+            <FormattedMessage id="sys.suppliers" />
+          </BreadcrumbItem>
+        </Breadcrumb>
+      </div>
+      <div className="content-body">
+        <div className="table-container">
+          <Col md={12} className="table-content">
+            {total < 0 ? (
+              <Loader />
+            ) : (
+              <div>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <div>
-                        <InputGroup size="sm">
-                          <Input placeholder={formatMessage({ id: 'sys.search' })} />
-                          <InputGroupAddon addonType="append">
-                            <Button color="secondary">
-                              <MdSearch />
-                            </Button>
-                          </InputGroupAddon>
-                        </InputGroup>
-                      </div>
-                      <Button
-                        size="sm"
-                        color="primary"
-                        className="pull-right form-btn"
-                        onClick={() => history.push('/new-supplier')}
-                      >
-                        <MdAddCircleOutline />
-                        &nbsp;
-                        <FormattedMessage id="sys.addNew" />
-                      </Button>
-                    </div>
-                    <br />
-                    <Table responsive size="sm">
-                      <thead className="table-header">
-                        <tr>
-                          <th width="10%">
-                            <FormattedMessage id="sys.logo" />
-                          </th>
-                          <th width="25%">
-                            <FormattedMessage id="sys.name" />
-                          </th>
-                          <th width="40%">
-                            <FormattedMessage id="sys.contactInfo" />
-                          </th>
-                          <th width="10%">
-                            <FormattedMessage id="sys.status" />
-                          </th>
-                          <th width="15%" />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {suppliers.data.length > 0 ? suppliers.data.map(product => (
-                          <SupplierListItem
-                            key={product.code}
-                            id={product.code}
-                            logo={product.logo}
-                            name={product.name}
-                            url={product.url}
-                            address={product.address}
-                            email={product.email}
-                            contact={product.contact}
-                            status={product.status}
-                            onViewClick={this.onViewClick}
-                            onStatusUpdateClick={this.onStatusUpdateClick}
-                          />
-                        )) : <tr><td><FormattedMessage id="sys.noRecords" /></td></tr>}
-                      </tbody>
-                    </Table>
-                    <div className="pagination-container">
-                      <span className="text-muted">Total {suppliers.count} entries</span>
-                      <ReactPaginate
-                        pageCount={total || 1}
-                        pageRangeDisplayed={3}
-                        marginPagesDisplayed={2}
-                        containerClassName="pagination"
-                        subContainerClassName="pages pagination"
-                        pageClassName="page-item"
-                        breakClassName="page-item"
-                        breakLabel="..."
-                        pageLinkClassName="page-link"
-                        previousLabel="‹"
-                        nextLabel="›"
-                        previousLinkClassName="page-link"
-                        nextLinkClassName="page-link"
-                        activeClassName="active"
-                        onPageChange={this.onPageChange}
+                    <InputGroup size="sm">
+                      <Input
+                        placeholder={formatMessage({ id: 'sys.search' })}
                       />
-                    </div>
+                      <InputGroupAddon addonType="append">
+                        <Button color="secondary">
+                          <MdSearch />
+                        </Button>
+                      </InputGroupAddon>
+                    </InputGroup>
                   </div>
-              }
-            </Col>
-          </div>
+                  <Button
+                    size="sm"
+                    color="primary"
+                    className="pull-right form-btn"
+                    onClick={() => history.push('/new-supplier')}
+                  >
+                    <MdAddCircleOutline />
+                    &nbsp;
+                    <FormattedMessage id="sys.addNew" />
+                  </Button>
+                </div>
+                <br />
+                <Table responsive size="sm">
+                  <thead className="table-header">
+                    <tr>
+                      <th width="10%">
+                        <FormattedMessage id="sys.logo" />
+                      </th>
+                      <th width="25%">
+                        <FormattedMessage id="sys.name" />
+                      </th>
+                      <th width="40%">
+                        <FormattedMessage id="sys.contactInfo" />
+                      </th>
+                      <th width="10%">
+                        <FormattedMessage id="sys.status" />
+                      </th>
+                      <th width="15%" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.items.length > 0 ? (
+                      result.items.map(item => (
+                        <SupplierListItem
+                          key={item.code}
+                          id={item.code}
+                          logo={item.logo}
+                          name={item.name}
+                          url={item.url}
+                          address={item.address}
+                          email={item.email}
+                          contact={item.contact}
+                          status={item.status}
+                          onViewClick={viewItem}
+                          onStatusUpdateClick={updateStatus}
+                        />
+                      ))
+                    ) : (
+                      <tr>
+                        <td>
+                          <FormattedMessage id="sys.noRecords" />
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+                <div className="pagination-container">
+                  <span className="text-muted">
+                    Total {result.count} entries
+                  </span>
+                  <ReactPaginate
+                    pageCount={total || 1}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    containerClassName="pagination"
+                    subContainerClassName="pages pagination"
+                    pageClassName="page-item"
+                    breakClassName="page-item"
+                    breakLabel="..."
+                    pageLinkClassName="page-link"
+                    previousLabel="‹"
+                    nextLabel="›"
+                    previousLinkClassName="page-link"
+                    nextLinkClassName="page-link"
+                    activeClassName="active"
+                    onPageChange={changePage}
+                  />
+                </div>
+              </div>
+            )}
+          </Col>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 SupplierList.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  suppliers: PropTypes.object,
-  total: PropTypes.number.isRequired,
   history: PropTypes.object.isRequired,
   intl: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => {
-  const diff = state.manufacturerReducer.suppliers ? state.supplierReducer.suppliers.count / 20 : 0;
-  return ({
-    suppliers: state.supplierReducer.suppliers,
-    total: Number.isInteger(diff) ? diff : parseInt(diff) + 1,
-  });
-};
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    null
-  )(injectIntl(SupplierList))
-);
+export default withRouter(injectIntl(SupplierList));

@@ -87,7 +87,7 @@ const CategoryList = props => {
   }, [selectedItem]);
 
   const viewItem = id => {
-    this.props.history.push(`/categories/${id}`);
+    history.push(`/categories/${id}`);
   };
 
   const updateStatus = (id, status) => {

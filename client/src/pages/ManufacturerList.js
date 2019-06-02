@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import {
   Table,
   Col,
@@ -86,7 +86,7 @@ const ManufacturerList = props => {
   }, [selectedItem]);
 
   const viewItem = id => {
-    this.props.history.push(`/manufacturers/${id}`);
+    history.push(`/manufacturers/${id}`);
   };
 
   const updateStatus = (id, status) => {

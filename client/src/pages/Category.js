@@ -1,11 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Col,
-  Button,
-  Breadcrumb,
-  BreadcrumbItem,
-} from 'reactstrap';
+import { Col, Button, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';
@@ -14,13 +9,20 @@ import config from '../config';
 
 class ProductCategory extends Component {
   render() {
-    const { history, match: { path } } = this.props;
-    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+    const {
+      history,
+      match: { path },
+    } = this.props;
+    const {
+      data: { storeId },
+    } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     return (
-      <div>
+      <Fragment>
         <div className="page-navbar">
-          <div className="page-name"><FormattedMessage id="sys.category" /></div>
+          <div className="page-name">
+            <FormattedMessage id="sys.category" />
+          </div>
           <Breadcrumb>
             <BreadcrumbItem>
               <Button color="link" onClick={() => history.push('/dashboard')}>
@@ -42,11 +44,12 @@ class ProductCategory extends Component {
             <Col md={12} className="table-content">
               <CategoryForm
                 mode={path === '/new-category' ? 'new' : 'update'}
-                storeId={storeId} />
+                storeId={storeId}
+              />
             </Col>
           </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }

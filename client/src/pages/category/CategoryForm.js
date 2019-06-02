@@ -1,184 +1,200 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
-import { Col, FormGroup, Label, Button, Input, Alert } from 'reactstrap';
+import { Col, FormGroup, Label, Button, Input, Alert, Row } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { MdSave } from 'react-icons/md';
-import {
-  fetchCategories,
-  fetchCategoryDetails,
-  submitCategory,
-  clearCategoryDetails,
-} from '../../modules/category';
 import { Loader } from '../../components';
+import config from '../../config';
 
 const categoryValidation = Yup.object().shape({
   name: Yup.string().required('Required'),
 });
 
-class CategoryForm extends Component {
-  constructor(props) {
-    super(props);
+const CategoryForm = props => {
+  const {
+    mode,
+    storeId,
+    match: {
+      params: { id },
+    },
+  } = props;
 
-    this.props.dispatch(clearCategoryDetails());
-  }
+  const [submit, setSubmit] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(false);
+  const [itemDetails, setItemDetails] = useState(null);
+  const [parentCategories, setParentCategories] = useState([]);
 
-  componentDidMount() {
-    const {
-      dispatch,
-      mode,
-      storeId,
-      match: {
-        params: { id },
-      },
-    } = this.props;
+  useEffect(() => {
+    async function fetchParentCategories() {
+      try {
+        const res = await axios({
+          method: 'get',
+          url: `${
+            config.apiDomain
+          }/stores/${storeId}/categories?page=1&size=200`,
+          headers: {
+            authorization: localStorage.getItem(config.accessTokenKey),
+          },
+        });
 
-    dispatch(fetchCategories({ storeId, pageSize: 200, pageNo: 1 }));
-    if (mode === 'update') {
-      dispatch(
-        fetchCategoryDetails({
-          storeId,
-          categoryId: id,
-        })
-      );
-    }
-  }
-
-  onSubmit = data => {
-    const {
-      dispatch,
-      mode,
-      storeId,
-      match: {
-        params: { id },
-      },
-    } = this.props;
-
-    data.storeId = storeId;
-    data.mode = mode;
-
-    if (mode === 'update') {
-      data.categoryId = id;
+        setParentCategories(res.data.data);
+      } catch (e) {
+        //TODO: add error msg
+      }
     }
 
-    dispatch(submitCategory(data));
-  };
+    fetchParentCategories();
+  }, []);
 
-  render() {
-    const { categories, categoryDetails, mode, done, error } = this.props;
+  useEffect(() => {
+    async function fetchItemDetails() {
+      try {
+        const res = await axios({
+          method: 'get',
+          url: `${config.apiDomain}/stores/${storeId}/categories/${id}`,
+          headers: {
+            authorization: localStorage.getItem(config.accessTokenKey),
+          },
+        });
 
-    return mode === 'update' && !('code' in categoryDetails) ? (
-      <Loader />
-    ) : (
-      <Formik
-        enableReinitialize
-        initialValues={{ ...categoryDetails }}
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(true);
-          this.onSubmit(values);
-          setSubmitting(false);
-        }}
-        validationSchema={categoryValidation}
-      >
-        {({
-          values: { name = '', parentId = '' },
-          handleChange,
-          isSubmitting,
-          errors,
-        }) => (
-          <Form>
-            <Button
-              type="submit"
-              size="sm"
-              color="primary"
-              className="pull-right form-btn"
-              disabled={isSubmitting}
-            >
-              <MdSave />
-              &nbsp;
-              <FormattedMessage id="sys.save" />
-            </Button>
-            <br />
-            <br />
-            {error ? (
-              <Alert color="danger">
-                <FormattedMessage id="sys.newFailed" />
-              </Alert>
-            ) : done ? (
-              <Alert color="success">
-                <FormattedMessage id="sys.newSuccess" />
-              </Alert>
-            ) : null}
-            <FormGroup row>
-              <Label for="name" sm={2}>
-                <FormattedMessage id="sys.categoryName" />
-                <span className="text-danger mandatory-field">*</span>
-              </Label>
-              <Col sm={10}>
-                <Input
-                  name="name"
-                  id="name"
-                  value={name}
-                  onChange={handleChange}
-                />
-                {errors.name && (
-                  <div className="text-danger">{errors.name}</div>
-                )}
-              </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="parent-id" sm={2}>
-                <FormattedMessage id="sys.parentCategory" />
-              </Label>
-              <Col sm={10}>
-                <Input
-                  type="select"
-                  id="parent-id"
-                  name="parentId"
-                  value={parentId}
-                  onChange={handleChange}
-                  disabled={categoryDetails.level === 1 ? true : false}
-                >
-                  <option value="">--</option>
-                  {categories
-                    .filter(cat => cat.level === 1)
-                    .map(cat => (
-                      <option key={cat.code} value={cat.code}>
-                        {cat.name}
-                      </option>
-                    ))}
-                </Input>
-              </Col>
-            </FormGroup>
-          </Form>
-        )}
-      </Formik>
-    );
-  }
-}
+        setItemDetails(res.data);
+      } catch (e) {
+        //TODO: add error msg
+      }
+    }
 
-CategoryForm.propTypes = {
-  categories: PropTypes.array.isRequired,
-  storeId: PropTypes.string.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
-  done: PropTypes.bool.isRequired,
-  categoryDetails: PropTypes.object.isRequired,
-  error: PropTypes.bool,
-  match: PropTypes.object,
-  mode: PropTypes.string.isRequired,
+    fetchItemDetails();
+  }, []);
+
+  useEffect(() => {
+    async function submitForm() {
+      try {
+        const res = await axios({
+          method: mode === 'new' ? 'post' : 'put',
+          url: `${config.apiDomain}/stores/${storeId}/categories${
+            mode === 'new' ? '' : '/' + id
+          }`,
+          headers: {
+            authorization: localStorage.getItem(config.accessTokenKey),
+            'Content-Type': 'application/json',
+          },
+          data: itemDetails,
+        });
+
+        setSubmitted(true);
+      } catch (e) {
+        setError(true);
+      } finally {
+        setSubmit(false);
+      }
+    }
+    if (submit && itemDetails) {
+      submitForm();
+    }
+  }, [submit]);
+
+  return mode === 'update' && !itemDetails ? (
+    <Loader />
+  ) : (
+    <Formik
+      enableReinitialize
+      initialValues={{ ...itemDetails }}
+      onSubmit={(values, { setSubmitting }) => {
+        setSubmitting(true);
+        setItemDetails(values);
+        setSubmit(true);
+        setSubmitting(false);
+      }}
+      validationSchema={categoryValidation}
+    >
+      {({
+        values: { name = '', parentId = '' },
+        handleChange,
+        isSubmitting,
+        errors,
+      }) => (
+        <Form>
+          <Row>
+            <Col sm="12">
+              <Button
+                type="submit"
+                size="sm"
+                color="primary"
+                className="pull-right form-btn"
+                disabled={isSubmitting}
+              >
+                <MdSave />
+                &nbsp;
+                <FormattedMessage id="sys.save" />
+              </Button>
+              <br />
+              <br />
+            </Col>
+          </Row>
+          {error ? (
+            <Alert color="danger">
+              <FormattedMessage id="sys.newFailed" />
+            </Alert>
+          ) : submitted ? (
+            <Alert color="success">
+              <FormattedMessage id="sys.newSuccess" />
+            </Alert>
+          ) : null}
+          <FormGroup row>
+            <Label for="name" sm={2}>
+              <FormattedMessage id="sys.categoryName" />
+              <span className="text-danger mandatory-field">*</span>
+            </Label>
+            <Col sm={10}>
+              <Input
+                name="name"
+                id="name"
+                value={name}
+                onChange={handleChange}
+              />
+              {errors.name && <div className="text-danger">{errors.name}</div>}
+            </Col>
+          </FormGroup>
+          <FormGroup row>
+            <Label for="parent-id" sm={2}>
+              <FormattedMessage id="sys.parentCategory" />
+            </Label>
+            <Col sm={10}>
+              <Input
+                type="select"
+                id="parent-id"
+                name="parentId"
+                value={parentId}
+                onChange={handleChange}
+                disabled={itemDetails && itemDetails.level === 1 ? true : false}
+              >
+                <option value="">--</option>
+                {parentCategories
+                  .filter(cat => cat.level === 1)
+                  .map(cat => (
+                    <option key={cat.code} value={cat.code}>
+                      {cat.name}
+                    </option>
+                  ))}
+              </Input>
+            </Col>
+          </FormGroup>
+        </Form>
+      )}
+    </Formik>
+  );
 };
 
-export default withRouter(
-  connect(state => {
-    return {
-      categoryDetails: state.categoryReducer.categoryDetails,
-      done: state.categoryReducer.done,
-      error: state.categoryReducer.error,
-      categories: state.categoryReducer.categories.data,
-    };
-  })(CategoryForm)
-);
+CategoryForm.propTypes = {
+  history: PropTypes.object.isRequired,
+  match: PropTypes.object,
+  mode: PropTypes.string.isRequired,
+  storeId: PropTypes.string.isRequired,
+};
+
+export default withRouter(CategoryForm);

@@ -66,8 +66,10 @@ router.put(
         name,
         req.params.storeId,
         res.locals.auth.accountId,
+        req.params.categoryId === parentId ? 1 : 2,
         parentId
       );
+
       const data = await category.update(category);
 
       res.send(data);

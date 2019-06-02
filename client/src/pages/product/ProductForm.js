@@ -29,7 +29,6 @@ import {
 } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
-import { fetchCategories } from '../../modules/category';
 import { fetchSuppliers } from '../../modules/supplier';
 import { fetchManufacturers } from '../../modules/manufacturer';
 import {
@@ -80,7 +79,6 @@ class ProductForm extends Component {
 
     const params = { storeId, pageSize: 200, pageNo: 1, activeOnly: true };
 
-    dispatch(fetchCategories(params));
     dispatch(fetchSuppliers(params));
     dispatch(fetchManufacturers(params));
 

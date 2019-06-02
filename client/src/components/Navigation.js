@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   Navbar,
   Nav,
@@ -15,91 +14,92 @@ import {
 import { FormattedMessage } from 'react-intl';
 import { MdNotificationsNone } from 'react-icons/md';
 import jwt from 'jsonwebtoken';
-import { fetchAccount } from '../modules/account';
 import config from '../config';
 
-class Navigation extends Component {
-  componentDidMount() {
-    const { dispatch } = this.props;
+const Navigation = props => {
+  const [account, setAccount] = useState(null);
 
-    if (window.location.pathname !== '/') {
-      if (localStorage.getItem(config.accessTokenKey)) {
+  if (
+    window.location.pathname !== '/' &&
+    !localStorage.getItem(config.accessTokenKey)
+  ) {
+    window.location.href = '/';
+  }
+
+  useEffect(() => {
+    async function fetchAccount() {
+      try {
         const {
           data: { storeId, accountId },
         } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
-        dispatch(fetchAccount({ storeId, accountId }));
-      } else {
+        const res = await axios.get(
+          `${config.apiDomain}/stores/${storeId}/accounts/${accountId}`,
+          {
+            headers: {
+              authorization: localStorage.getItem(config.accessTokenKey),
+            },
+          }
+        );
+        setAccount(res.data);
+      } catch (e) {
         window.location.href = '/';
       }
     }
-  }
-  render() {
-    const { account } = this.props;
 
-    return (
-      <div className="admin-navbar">
-        <Container fluid>
-          <Navbar light expand="md">
-            <Nav className="ml-auto">
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav>
-                  <MdNotificationsNone size={20} />
-                  <Badge color="danger">1</Badge>
-                </DropdownToggle>
-                <DropdownMenu style={{ marginLeft: -100, width: 280 }}>
-                  <DropdownItem>
-                    <NavLink href="#" style={{ whiteSpace: 'normal' }}>
-                      <b>A new product has been created.</b>
-                      <br />
-                      <span className="text-muted">
-                        Your collegue John Doe has created a new product:
-                        sdlfladsjf
-                      </span>
-                    </NavLink>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <NavLink href="#">
-                      <b>A new product has been created.</b>
-                    </NavLink>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  {account ? account.name : ''}
-                </DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    <NavLink href="/settings">
-                      <FormattedMessage id="sys.myAccount" />
-                    </NavLink>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <NavLink href="/">
-                      <FormattedMessage id="sys.logout" />
-                    </NavLink>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </Nav>
-          </Navbar>
-        </Container>
-      </div>
-    );
-  }
-}
+    fetchAccount();
+  }, []);
 
-Navigation.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  account: PropTypes.object,
+  return (
+    <div className="admin-navbar">
+      <Container fluid>
+        <Navbar light expand="md">
+          <Nav className="ml-auto">
+            <UncontrolledDropdown nav inNavbar>
+              <DropdownToggle nav>
+                <MdNotificationsNone size={20} />
+                <Badge color="danger">1</Badge>
+              </DropdownToggle>
+              <DropdownMenu style={{ marginLeft: -100, width: 280 }}>
+                <DropdownItem>
+                  <NavLink href="#" style={{ whiteSpace: 'normal' }}>
+                    <b>A new product has been created.</b>
+                    <br />
+                    <span className="text-muted">
+                      Your collegue John Doe has created a new product:
+                      sdlfladsjf
+                    </span>
+                  </NavLink>
+                </DropdownItem>
+                <DropdownItem>
+                  <NavLink href="#">
+                    <b>A new product has been created.</b>
+                  </NavLink>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+            <UncontrolledDropdown nav inNavbar>
+              <DropdownToggle nav caret>
+                {account ? account.name : ''}
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem>
+                  <NavLink href="/settings">
+                    <FormattedMessage id="sys.myAccount" />
+                  </NavLink>
+                </DropdownItem>
+                <DropdownItem>
+                  <NavLink href="/">
+                    <FormattedMessage id="sys.logout" />
+                  </NavLink>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </Nav>
+        </Navbar>
+      </Container>
+    </div>
+  );
 };
 
-const mapStateToProps = state => ({
-  account: state.accountReducer.accountSession,
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(Navigation);
+export default Navigation;

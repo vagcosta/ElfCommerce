@@ -9,13 +9,20 @@ import config from '../config';
 
 export class Account extends Component {
   render() {
-    const { history, match: { path } } = this.props;
-    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+    const {
+      history,
+      match: { path },
+    } = this.props;
+    const {
+      data: { storeId },
+    } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     return (
-      <div>
+      <Fragment>
         <div className="page-navbar">
-          <div className="page-name"><FormattedMessage id="sys.account" /></div>
+          <div className="page-name">
+            <FormattedMessage id="sys.account" />
+          </div>
           <Breadcrumb>
             <BreadcrumbItem>
               <Button color="link" onClick={() => history.push('/dashboard')}>
@@ -42,7 +49,7 @@ export class Account extends Component {
             </Col>
           </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }
@@ -51,6 +58,5 @@ Account.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
 };
-
 
 export default withRouter(Account);

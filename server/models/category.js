@@ -157,11 +157,11 @@ Category.prototype.add = function(category) {
 Category.prototype.update = function(category) {
   return new Promise((resolve, reject) => {
     if (category instanceof Category) {
-      const { code, name, storeId, addedBy, parentId } = category;
+      const { code, name, storeId, addedBy, level, parentId } = category;
 
       (this.db || db).query(
-        `update category set name = '${name}', level = ${parentId ? 2 : 1}, 
-         parent_id = '${parentId ? parentId : code}' 
+        `update category set name = '${name}', level = ${level}, 
+         parent_id = '${parentId}' 
          where code = '${code}' and added_by = '${addedBy}'`,
         (error, results) => {
           if (error || results.affectedRows == 0) {

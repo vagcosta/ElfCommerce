@@ -16,10 +16,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { MdAddCircleOutline, MdSearch } from 'react-icons/md';
 import ReactPaginate from 'react-paginate';
 import jwt from 'jsonwebtoken';
-<<<<<<< HEAD
-import { updateAccountStatus } from '../modules/account';
-=======
->>>>>>> hooks
 import AccountListItem from './account/AccountListItem';
 import { Loader } from '../components';
 import config from '../config';
@@ -36,20 +32,12 @@ const AccountList = props => {
 
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-<<<<<<< HEAD
-  const [result, setResult] = useState({ accounts: [], count: 0 });
-=======
   const [result, setResult] = useState({ items: [], count: 0 });
->>>>>>> hooks
   const [total, setTotal] = useState(-1);
   const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
-<<<<<<< HEAD
-    async function fetchAccounts() {
-=======
     async function fetchItems() {
->>>>>>> hooks
       try {
         const res = await axios({
           method: 'get',
@@ -63,16 +51,6 @@ const AccountList = props => {
 
         const diff = res.data.count / pageSize;
 
-<<<<<<< HEAD
-        setResult({ accounts: res.data.data, count: res.data.count });
-        setTotal(Number.isInteger(diff) ? diff : parseInt(diff) + 1);
-      } catch (e) {
-        //TODO: add error msg
-        setResult({ accounts: [], count: 0 });
-      }
-    }
-    fetchAccounts();
-=======
         setResult({ items: res.data.data, count: res.data.count });
         setTotal(Number.isInteger(diff) ? diff : parseInt(diff) + 1);
       } catch (e) {
@@ -81,7 +59,6 @@ const AccountList = props => {
       }
     }
     fetchItems();
->>>>>>> hooks
   }, [pageNo, selectedItem]);
 
   useEffect(() => {
@@ -97,10 +74,7 @@ const AccountList = props => {
           },
         });
       } catch (e) {
-<<<<<<< HEAD
-=======
         //TODO: to be rewritten
->>>>>>> hooks
         setSelectedItem(null);
       } finally {
         setSelectedItem(null);
@@ -194,18 +168,6 @@ const AccountList = props => {
                     </tr>
                   </thead>
                   <tbody>
-<<<<<<< HEAD
-                    {result.accounts.length ? (
-                      result.accounts.map(acct => (
-                        <AccountListItem
-                          key={acct.code}
-                          id={acct.code}
-                          name={acct.name}
-                          email={acct.email}
-                          joinedOn={acct.joinedOn}
-                          role={acct.role}
-                          status={acct.status}
-=======
                     {result.items.length ? (
                       result.items.map(item => (
                         <AccountListItem
@@ -216,7 +178,6 @@ const AccountList = props => {
                           joinedOn={item.joinedOn}
                           role={item.role}
                           status={item.status}
->>>>>>> hooks
                           onViewClick={viewItem}
                           onStatusUpdateClick={updateStatus}
                         />
