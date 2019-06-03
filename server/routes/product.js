@@ -4,14 +4,8 @@ const router = require('express').Router();
 const shortid = require('shortid');
 const moment = require('moment');
 require('dotenv').load();
-const {
-  authMiddleware,
-  storeIdVerifier,
-} = require('../middlewares');
-const {
-  Product,
-  ProductAttribute,
-} = require('../models');
+const { authMiddleware, storeIdVerifier } = require('../middlewares');
+const { Product, ProductAttribute } = require('../models');
 const { UnauthorisedError } = require('../exceptions');
 
 router.get(
@@ -48,6 +42,8 @@ router.put(
         unitPrice,
         cost,
         coverImage,
+        manufacturerId,
+        supplierId,
       } = req.body;
       const product = new Product(
         req.params.productId,
@@ -62,7 +58,9 @@ router.put(
         res.locals.auth.accountId,
         unitPrice,
         cost,
-        coverImage
+        coverImage,
+        manufacturerId,
+        supplierId
       );
 
       const data = await product.update(product);
@@ -119,7 +117,10 @@ router.get(
         req.query.size || 20,
         req.query.q || null
       );
-      const count = await product.getTotalCountByStoreId(req.params.storeId, req.query.q || null);
+      const count = await product.getTotalCountByStoreId(
+        req.params.storeId,
+        req.query.q || null
+      );
 
       res.send({ data, count });
     } catch (err) {
@@ -162,7 +163,7 @@ router.post(
         cost,
         coverImage,
         manufacturerId,
-        supplierId,
+        supplierId
       );
       const data = await product.add(product);
 
@@ -179,11 +180,13 @@ router.get(
   async (req, res) => {
     try {
       const aroductAttribute = new ProductAttribute();
-      const data = await aroductAttribute.getAllByProductId(req.params.productId);
+      const data = await aroductAttribute.getAllByProductId(
+        req.params.productId
+      );
 
       res.send(data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(err.statusCode).send(err);
     }
   }
@@ -194,12 +197,7 @@ router.post(
   [authMiddleware, storeIdVerifier],
   async (req, res) => {
     try {
-      const {
-        name,
-        quantity,
-        varPrice,
-        productAttributeCategoryId,
-      } = req.body;
+      const { name, quantity, varPrice, productAttributeCategoryId } = req.body;
       const aroductAttribute = new ProductAttribute(
         shortid.generate(),
         name,
@@ -224,12 +222,7 @@ router.put(
   [authMiddleware, storeIdVerifier],
   async (req, res) => {
     try {
-      const {
-        name,
-        quantity,
-        varPrice,
-        productAttributeCategoryId,
-      } = req.body;
+      const { name, quantity, varPrice, productAttributeCategoryId } = req.body;
       const aroductAttribute = new ProductAttribute(
         req.params.attributeId,
         name,

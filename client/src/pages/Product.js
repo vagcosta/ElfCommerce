@@ -1,27 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Button,
-  Row,
-  Col,
-} from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Button, Row, Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import jwt from 'jsonwebtoken';
 import { FormattedMessage } from 'react-intl';
 import ProductForm from './product/ProductForm';
+import { FormContext } from './contexts';
 import config from '../config';
 
 class Product extends Component {
   render() {
-    const { history, match: { path } } = this.props;
-    const { data: { storeId } } = jwt.decode(localStorage.getItem(config.accessTokenKey));
+    const {
+      history,
+      match: {
+        path,
+        params: { id },
+      },
+    } = this.props;
+    const {
+      data: { storeId },
+    } = jwt.decode(localStorage.getItem(config.accessTokenKey));
 
     return (
-      <div>
+      <FormContext.Provider value={{ storeId, id }}>
         <div className="page-navbar">
-          <div className="page-name"><FormattedMessage id="sys.product" /></div>
+          <div className="page-name">
+            <FormattedMessage id="sys.product" />
+          </div>
           <Breadcrumb>
             <BreadcrumbItem>
               <Button color="link" onClick={() => history.push('/dashboard')}>
@@ -41,13 +46,11 @@ class Product extends Component {
         <div className="content-body">
           <Row>
             <Col md={12}>
-              <ProductForm
-                mode={path === '/new-product' ? 'new' : 'update'}
-                storeId={storeId} />
+              <ProductForm mode={path === '/new-product' ? 'new' : 'update'} />
             </Col>
           </Row>
         </div>
-      </div>
+      </FormContext.Provider>
     );
   }
 }

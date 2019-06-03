@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 import { Col, FormGroup, Label, Button, Input, Alert, Row } from 'reactstrap';
-import { withRouter } from 'react-router-dom';
 import { MdSave } from 'react-icons/md';
 import { Loader } from '../../components';
+import { FormContext } from '../contexts';
 import config from '../../config';
 
 const categoryValidation = Yup.object().shape({
@@ -15,14 +15,8 @@ const categoryValidation = Yup.object().shape({
 });
 
 const CategoryForm = props => {
-  const {
-    mode,
-    storeId,
-    match: {
-      params: { id },
-    },
-  } = props;
-
+  const { mode } = props;
+  const { storeId, id } = useContext(FormContext);
   const [submit, setSubmit] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -192,9 +186,7 @@ const CategoryForm = props => {
 
 CategoryForm.propTypes = {
   history: PropTypes.object.isRequired,
-  match: PropTypes.object,
   mode: PropTypes.string.isRequired,
-  storeId: PropTypes.string.isRequired,
 };
 
-export default withRouter(CategoryForm);
+export default CategoryForm;

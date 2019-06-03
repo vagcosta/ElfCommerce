@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
   Col,
@@ -19,6 +18,7 @@ import {
 } from 'reactstrap';
 import { MdSave } from 'react-icons/md';
 import { Loader } from '../../components';
+import { FormContext } from '../contexts';
 import config from '../../config';
 
 const accountValidation = Yup.object().shape({
@@ -28,14 +28,8 @@ const accountValidation = Yup.object().shape({
 });
 
 const AccountForm = props => {
-  const {
-    mode,
-    storeId,
-    match: {
-      params: { id },
-    },
-  } = props;
-
+  const { mode } = props;
+  const { storeId, id } = useContext(FormContext);
   const [submit, setSubmit] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -247,7 +241,6 @@ const AccountForm = props => {
 AccountForm.propTypes = {
   match: PropTypes.object,
   mode: PropTypes.string.isRequired,
-  storeId: PropTypes.string.isRequired,
 };
 
-export default withRouter(AccountForm);
+export default AccountForm;

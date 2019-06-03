@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import {
   CardHeader,
@@ -16,6 +14,7 @@ import {
   Col,
   Alert,
 } from 'reactstrap';
+import { FormContext } from '../contexts';
 import config from '../../config';
 
 const passwordValidation = Yup.object().shape({
@@ -23,7 +22,7 @@ const passwordValidation = Yup.object().shape({
 });
 
 const PasswordForm = props => {
-  const { storeId, accountId } = props;
+  const { storeId, id } = useContext(FormContext);
   const [submit, setSubmit] = useState(false);
   const [error, setError] = useState(false);
   const [values, setValues] = useState(null);
@@ -34,7 +33,7 @@ const PasswordForm = props => {
       try {
         const res = await axios({
           method: 'put',
-          url: `${config.apiDomain}/stores/${storeId}/accounts/${accountId}`,
+          url: `${config.apiDomain}/stores/${storeId}/accounts/${id}`,
           headers: {
             authorization: localStorage.getItem(config.accessTokenKey),
             'Content-Type': 'application/json',
@@ -115,9 +114,4 @@ const PasswordForm = props => {
   );
 };
 
-PasswordForm.propTypes = {
-  storeId: PropTypes.string.isRequired,
-  accountId: PropTypes.string.isRequired,
-};
-
-export default withRouter(PasswordForm);
+export default PasswordForm;
