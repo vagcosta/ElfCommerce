@@ -11,19 +11,6 @@
 
 ElfCommerce is an open source ecommerce dashboard written in ReactJS + ExpressJS and curretly under active development. The goal of this project is to provide a data-driven backoffice solution for SMEs. It will allow yout to manage your inventory, orders, supply chain, shipments, payments and everything else in one place with intuitive UI.
 
-Please join me to work on this special project together. I'm looking for volunteers:
-
-- Coders: React, Node
-- UX designers
-- Supply Chain domain experts
-
-## ElfCommerce is suitable for
-
-- Online store businesses
-- Retail businesses
-- F&B businesses
-- Importers & Exporters
-- Dropshippers
 
 ## Demo account
 
