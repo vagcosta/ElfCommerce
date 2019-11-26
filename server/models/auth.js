@@ -32,6 +32,7 @@ OAuth2Request.prototype.authByPassword = function(username, pwd) {
       (error, results) => {
         // Check if account is valid and active
         if (error || results.length == 0) {
+          console.log(error);
           reject(new UnauthorisedError('Not authorised.'));
         } else {
           const {

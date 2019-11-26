@@ -6,7 +6,7 @@
 /client/src/config.js
 .vscode
 
-/server/node_modules
+node_modules
 # testing
 /coverage
 .nyc_output/
