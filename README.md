@@ -11,13 +11,11 @@
 
 ElfCommerce is an open source ecommerce dashboard written in ReactJS + ExpressJS and curretly under active development. The goal of this project is to provide a data-driven backoffice solution for SMEs. It will allow yout to manage your inventory, orders, supply chain, shipments, payments and everything else in one place with intuitive UI.
 
-
 ## Demo account
 
 Username: test@test.com
 
 Password: 123
-
 
 <img src="https://media.giphy.com/media/6utXdpDYcFfa3szDcI/giphy.gif" />
 
@@ -112,63 +110,65 @@ Your contribution is appreicated. For the purpose of having good project managem
 **_Project restructured based on Fractal + ducks for greater scalability_**
 
 ````
-├── .circleci                    # CircleCI config file
-├── client                       # The web frontend written in ReactJS
-│   ├── public                   # Static public assets and uploads
-│   ├── src                      # ReactJS source code
-│   │   ├── components           # Shared components, like Button, Input etc.
-│   │   │   ├── __tests__        # Unit test for components
-│   │   ├── pages                # Top level components
-│   │   │   ├── __tests__        # Unit test for containers
-│   │   │   ├── ...              # Sub components of top level components
-│   │   ├── modules              # Actions + Reducers using ducks file structure
-│   │   │   ├── __tests__        # Unit test for reducers
-│   │   ├── utils                # Utilities like language, date utils, string utils etc.
-│   │   │   ├── languages        # All language translation .json files
-│   │   │   │   └── en.json      # Language file
-│   │   └── App.css              # Your customized styles should be added here
-│   │   └── App.js               # ** Where React webapp routes configured.
-│   │   └── index.js             # React webapp start point
-│   │   └── config.js            # All global configurations(not included in this repo)
-├── server                       # The web server part
-│   ├── db                       # Directory for database raw sql file, migration script etc.
-│   ├── exceptions               # Directory for all API exception types
-│   ├── models                   # Directory for all API models
-│   │   ├── tests                # Directory for all API models test cases
-│   │   └── account.js           # User model
-│   │   └── auth.js              # Authentication model
-│   │   └── categorty.js         # Category model
-│   │   └── index.js             # Aggregates all model files
-│   │   └── manufacturer.js      # Manufacturer model
-│   │   └── order.js             # Order model
-│   │   └── product.js           # Product model
-│   │   └── public.js            # Public data model
-│   │   └── report.js            # Report model
-│   │   └── store.js             # Store model
-│   │   └── supplier.js          # Supplier model
-│   │   ├── vendor               # For 3rd party modules
-│   ├── routes                   # Directory for all router files
-│   │   └── auth.js              # Router for authentication endpoints
-│   │   └── category.js          # Router for category endpoints
-│   │   └── common.js            # Router for public data endpoints
-│   │   └── index.js             # Aggregates all router files
-│   │   └── manufacturer.js      # Router for manufacturer endpoints
-│   │   └── order.js             # Router for order endpoints
-│   │   └── product.js           # Router for product endpoints
-│   │   └── store.js             # Router for store endpoints
-│   │   └── supplier.js          # Router for supplier endpoints
-│   │   ├── vendor               # For 3rd party modules
-│   ├── uploads                  # Directory for image uploading, will be created automatically(not included in this repo)
-│   └── .env                     # Global environment variables(not included in this repo)
-│   └── app.js                   # Restful APIs written in ExpressJS
-│   └── app.local.js             # Wrapper file for claudia.js
-│   └── lambda.js                # Used by claudiajs for severless deployment, **Don't change contents here.
-│   └── package.json             # All project dependancies
-│   └── middlewares.js           # Middlewares for ExpressJS routes
-└── .eslintrc.json               # **Don't change settings here.
+├── .circleci                        # CircleCI config file
+├── packages                         # The web frontend written in ReactJS
+│   ├── elf-dashboard                # The web frontend written in ReactJS
+│   │   ├── public                   # Static public assets and uploads
+│   │   ├── src                      # ReactJS source code
+│   │   │   ├── components           # Shared components, like Button, Input etc.
+│   │   │   │   ├── __tests__        # Unit test for components
+│   │   │   ├── pages                # Top level components
+│   │   │   │   ├── __tests__        # Unit test for containers
+│   │   │   │   ├── ...              # Sub components of top level components
+│   │   │   ├── modules              # Actions + Reducers using ducks file structure
+│   │   │   │   ├── __tests__        # Unit test for reducers
+│   │   │   ├── utils                # Utilities like language, date utils, string utils etc.
+│   │   │   │   ├── languages        # All language translation .json files
+│   │   │   │   │   └── en.json      # Language file
+│   │   │   └── App.css              # Your customized styles should be added here
+│   │   │   └── App.js               # ** Where React webapp routes configured.
+│   │   │   └── index.js             # React webapp start point
+│   │   │   └── config.js            # All global configurations(not included in this repo)
+│   ├── elf-api                      # The web server part
+│   │   ├── db                       # Directory for database raw sql file, migration script etc.
+│   │   ├── exceptions               # Directory for all API exception types
+│   │   ├── models                   # Directory for all API models
+│   │   │   ├── tests                # Directory for all API models test cases
+│   │   │   └── account.js           # User model
+│   │   │   └── auth.js              # Authentication model
+│   │   │   └── categorty.js         # Category model
+│   │   │   └── index.js             # Aggregates all model files
+│   │   │   └── manufacturer.js      # Manufacturer model
+│   │   │   └── order.js             # Order model
+│   │   │   └── product.js           # Product model
+│   │   │   └── public.js            # Public data model
+│   │   │   └── report.js            # Report model
+│   │   │   └── store.js             # Store model
+│   │   │   └── supplier.js          # Supplier model
+│   │   │   ├── vendor               # For 3rd party modules
+│   │   ├── routes                   # Directory for all router files
+│   │   │   └── auth.js              # Router for authentication endpoints
+│   │   │   └── category.js          # Router for category endpoints
+│   │   │   └── common.js            # Router for public data endpoints
+│   │   │   └── index.js             # Aggregates all router files
+│   │   │   └── manufacturer.js      # Router for manufacturer endpoints
+│   │   │   └── order.js             # Router for order endpoints
+│   │   │   └── product.js           # Router for product endpoints
+│   │   │   └── store.js             # Router for store endpoints
+│   │   │   └── supplier.js          # Router for supplier endpoints
+│   │   │   ├── vendor               # For 3rd party modules
+│   │   ├── uploads                  # Directory for image uploading, will be created automatically(not included in this repo)
+│   │   └── .env                     # Global environment variables(not included in this repo)
+│   │   └── app.js                   # Restful APIs written in ExpressJS
+│   │   └── app.local.js             # Wrapper file for claudia.js
+│   │   └── lambda.js                # Used by claudiajs for severless deployment, **Don't change contents here.
+│   │   └── package.json             # All project dependancies
+│   │   └── middlewares.js           # Middlewares for ExpressJS routes
+│└──.eslintrc.json               # **Don't change settings here.
 └── .prettierrc                  # **Don't change settings here.
 └── LICENSE                      # Project license file, **Don't change contents here.
 └── README.md                    # **Don't change contents here.
+
 ### 1. Always work on your own feature or bugfix branch.
 
 You will need to follow the naming convention if it's a new feature:
