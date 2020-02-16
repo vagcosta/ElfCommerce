@@ -1,8 +1,0 @@
-{
-  "name": "create-elf-app",
-  "version": "1.0.0",
-  "main": "index.js",
-  "author": "ccwukong",
-  "license": "Apache-2.0",
-  "private": false
-}
