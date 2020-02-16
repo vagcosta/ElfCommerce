@@ -56,17 +56,17 @@ Step 5, create your own config.js in **client/src** directory with following set
 
 ```javascript
 const config = {
-  apiDomain: 'API_DOMAIN',
-  accessTokenKey: 'THE_KEY_FOR_LOCAL_STORAGE_TO_STORE_ACCESS_TOKEN',
-  googleApiKey: 'GOOGLE_API_KEY',
-  mediaFileDomain: 'http://localhost:8080', //If you allow images to be uploaded to your local server
+  apiDomain: "API_DOMAIN",
+  accessTokenKey: "THE_KEY_FOR_LOCAL_STORAGE_TO_STORE_ACCESS_TOKEN",
+  googleApiKey: "GOOGLE_API_KEY",
+  mediaFileDomain: "http://localhost:8080", //If you allow images to be uploaded to your local server
   saveMediaFileLocal: false, //Set this to true if you allow images to be uploaded to your local server
-  sendgridApiKey: 'SENDGRID_API_KEY',
-  sendgridDailyLimit: 'SENDGRID_DAILY_LIMIT_FOR_FREETIER',
-  elasticemailApiKey: 'ELASTICEMAIL_API_KEY',
-  elasticemailDailyLimit: 'ELASTICEMAIL_DAILY_LIMIT_FOR_FREETIER',
-  passwordCallbackUrl: 'https://www.example.com',
-  senderEmail: 'SYSTEM_EMAIL_SENDER_EMAIL',
+  sendgridApiKey: "SENDGRID_API_KEY",
+  sendgridDailyLimit: "SENDGRID_DAILY_LIMIT_FOR_FREETIER",
+  elasticemailApiKey: "ELASTICEMAIL_API_KEY",
+  elasticemailDailyLimit: "ELASTICEMAIL_DAILY_LIMIT_FOR_FREETIER",
+  passwordCallbackUrl: "https://www.example.com",
+  senderEmail: "SYSTEM_EMAIL_SENDER_EMAIL"
 };
 
 export default config;
@@ -164,8 +164,6 @@ Your contribution is appreicated. For the purpose of having good project managem
 │   │   └── lambda.js                # Used by claudiajs for severless deployment, **Don't change contents here.
 │   │   └── package.json             # All project dependancies
 │   │   └── middlewares.js           # Middlewares for ExpressJS routes
-│└──.eslintrc.json               # **Don't change settings here.
-└── .prettierrc                  # **Don't change settings here.
 └── LICENSE                      # Project license file, **Don't change contents here.
 └── README.md                    # **Don't change contents here.
 

@@ -1,0 +1,41 @@
+{
+  "env": {
+    "es6": true,
+    "browser": true,
+    "jest": true,
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["react", "react-hooks"],
+  "rules": {
+    "no-unused-vars": 0,
+    "max-len": [
+      2,
+      {
+        "code": 120
+      },
+      {
+        "ignoreComments": true
+      }
+    ],
+    "indent": [2, 2],
+    "quotes": [2, "single"],
+    "semi": [2, "always"],
+    "class-methods-use-this": 0,
+    "import/no-named-as-default": 0,
+    "react/jsx-filename-extension": [
+      2,
+      {
+        "extensions": [".js"]
+      }
+    ],
+    "comma-dangle": [2, "always-multiline"],
+    "func-names": [2, "never"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
