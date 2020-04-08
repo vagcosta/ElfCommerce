@@ -3,7 +3,7 @@ jobs:
   frontend_test:
     docker:
       - image: circleci/node:8.10
-    working_directory: ~/repo/
+    working_directory: ~/repo/client/
     steps:
       - checkout
       - run: cd client && npm install && npm run test
